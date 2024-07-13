@@ -382,33 +382,33 @@ htmlwidgets::saveWidget(
 
 [Python Code](topic_modeling/index.html)
 
-<iframe src="topic_modeling/results/fig_cluster.html" width="900" height="600">
+<iframe src="topic_modeling/results/fig_cluster.html" width="750" height="600">
 
 </iframe>
 
-<iframe src="topic_modeling/results/topic_model_fig.html" width="900" height="600">
+<iframe src="topic_modeling/results/topic_model_fig.html" width="750" height="600">
 
 </iframe>
 
-<iframe src="topic_modeling/results/topic_word_barchart.html" width="900" height="900">
+<iframe src="topic_modeling/results/topic_word_barchart.html" width="750" height="900">
 
 </iframe>
 
-<iframe src="topic_modeling/results/heatmap.html" width="800" height="800">
+<iframe src="topic_modeling/results/heatmap.html" width="750" height="600">
 
 </iframe>
 
-<iframe src="topic_modeling/results/hierarchical_topics_fig.html" width="900" height="500">
+<iframe src="topic_modeling/results/hierarchical_topics_fig.html" width="750" height="500">
 
 </iframe>
 
 ## N-grams
 
-<iframe src="topic_modeling/results/ngram_count_fig.html" width="900" height="900">
+<iframe src="topic_modeling/results/ngram_count_fig.html" width="750" height="900">
 
 </iframe>
 
-<iframe src="topic_modeling/results/ngram_proportion_fig.html" width="900" height="900">
+<iframe src="topic_modeling/results/ngram_proportion_fig.html" width="750" height="900">
 
 </iframe>
 
@@ -416,7 +416,7 @@ htmlwidgets::saveWidget(
 
 Dynamic Plot: <https://scd-network.dev>
 
-<iframe src="https://scd-network.dev" width="1000" height="600">
+<iframe src="https://scd-network.dev" width="750" height="600">
 
 </iframe>
 :::
