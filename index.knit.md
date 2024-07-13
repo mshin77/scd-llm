@@ -1,15 +1,13 @@
 ---
 title: 'Exploring Landscape of Technology Use in Single-Case Design Research Methodology Through Large Language Models'
-date: "`r Sys.Date()`"
+date: "2024-07-13"
 format:
   html:
     code-fold: true
     code-tools: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
-```
+
 
 ```{=html}
 <style>
@@ -19,10 +17,14 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
   }
 </style>
 ```
+
 ::: panel-tabset
 ## Retrieval
 
-```{r, eval=FALSE}
+
+::: {.cell}
+
+```{.r .cell-code}
 suppressPackageStartupMessages({
 #| code-fold: false
   library(bibliometrix)
@@ -30,11 +32,15 @@ suppressPackageStartupMessages({
   library(dplyr)
 })
 ```
+:::
+
 
 #### Import data search the Web of Science (WoS)
 
-```{r, eval=FALSE}
-#| code-fold: false
+
+::: {.cell}
+
+```{.r .cell-code  code-fold="false"}
 wos_1_500 <- convert2df("1_500.ciw", dbsource = "wos", format = "endnote")
 wos_501_1000 <- convert2df("501_1000.ciw", dbsource = "wos", format = "endnote")
 wos_1001_1500 <- convert2df("1001_1500.ciw", dbsource = "wos", format = "endnote")
@@ -46,9 +52,11 @@ wos_3501_4000 <- convert2df("3501_4000.ciw", dbsource = "wos", format = "endnote
 wos_4001_4500 <- convert2df("4001_4500.ciw", dbsource = "wos", format = "endnote")
 wos_4501_4860 <- convert2df("4501_4860.ciw", dbsource = "wos", format = "endnote")
 ```
+:::
 
-```{r, eval=FALSE}
-#| code-fold: false
+::: {.cell}
+
+```{.r .cell-code  code-fold="false"}
 wos_4860 <- rbind.fill(wos_1_500,
                        wos_501_1000,
                        wos_1001_1500,
@@ -63,6 +71,8 @@ wos_4860 <- rbind.fill(wos_1_500,
 save(wos_4860, file = "wos_4860.Rdata")
 openxlsx::write.xlsx(wos_4860, "../data/init_all_data.xlsx", rowNames = FALSE)
 ```
+:::
+
 
 ## Screening
 
@@ -79,7 +89,10 @@ openxlsx::write.xlsx(wos_4860, "../data/init_all_data.xlsx", rowNames = FALSE)
 
 #### Display published total number of publications over time.
 
-```{r}
+
+::: {.cell}
+
+```{.r .cell-code}
 suppressPackageStartupMessages({
   library(knitr)
   library(bibliometrix)
@@ -166,13 +179,17 @@ year_2010s_plus <- data_descriptive %>%
     summarize(publication_number = n()) %>%
     ungroup()
 ```
+:::
+
 
 ![](images/year_citation_plot.png)
 
 #### Main findings about the collection
 
-```{r, eval=FALSE}
-#| code-fold: false
+
+::: {.cell}
+
+```{.r .cell-code  code-fold="false"}
 data_descriptive$DT <- case_when(
    data_descriptive$DT == "ARTICLE" ~ "Article",
     data_descriptive$DT == "BOOK CHAPTER" ~ "Book Chapter",
@@ -215,53 +232,19 @@ source_combined <- left_join(source_detail, source_hindex, by = "SO")
 source_combined <- source_combined %>%
     arrange(desc(total_citation), desc(publication_number)) 
 ```
+:::
 
-```{r, echo=FALSE, eval=FALSE}
-write.xlsx(source_combined, file = "../results/summary/source_combined.xlsx", colNames = TRUE)
+::: {.cell}
 
-results <- biblioAnalysis(data_descriptive)
+:::
 
-# sum(results$TotalCitation)
-# sum(results$TotalCitation)
-
-CountryCollaboration <- results$CountryCollaboration %>% tibble 
-
-write.xlsx(CountryCollaboration, file = "../results/summary/CountryCollaboration.xlsx", colNames = TRUE)
-
-descriptive_summary <- summary(results, k=71, pause=F, width=130)
-
-MainInformationDF <- descriptive_summary$MainInformationDF 
-write.xlsx(MainInformationDF, file = "../results/summary/MainInformationDF.xlsx", colNames = TRUE)
-
-MostProdAuthors <- descriptive_summary$MostProdAuthors
-write.xlsx(MostProdAuthors, file = "../results/summary/MostProdAuthors.xlsx", colNames = TRUE)
-
-MostCitedPapers <- descriptive_summary$MostCitedPapers
-write.xlsx(MostCitedPapers, file = "../results/summary/MostCitedPapers.xlsx", colNames = TRUE)
-
-# descriptive_summary$AnnualGrowthRate
-
-AnnualProduction <- descriptive_summary$AnnualProduction
-write.xlsx(AnnualProduction, file = "../results/summary/AnnualProduction.xlsx", colNames = TRUE)
-
-MostProdCountries <- descriptive_summary$MostProdCountries
-write.xlsx(MostProdCountries, file = "../results/summary/MostProdCountries.xlsx", colNames = TRUE)
-
-TCperCountries <- descriptive_summary$TCperCountries
-write.xlsx(TCperCountries, file = "../results/summary/TCperCountries.xlsx", colNames = TRUE)
-
-MostRelSources <- descriptive_summary$MostRelSources
-write.xlsx(MostRelSources, file = "../results/summary/MostRelSources.xlsx", colNames = TRUE)
-
-MostRelKeywords <- descriptive_summary$MostRelKeywords
-write.xlsx(MostRelKeywords, file = "../results/summary/MostRelKeywords.xlsx", colNames = TRUE)
-
-# descriptive_summary$AnnualGrowthRate
-```
 
 #### World map
 
-```{r, eval=FALSE, fig.width=8, fig.height=5, out.extra='class="responsive-figure"'}
+
+::: {.cell}
+
+```{.r .cell-code}
 MostProdCountries$Articles <- as.numeric(MostProdCountries$Articles)
 MostProdCountries$Freq <- as.numeric(MostProdCountries$Freq)
 MostProdCountries$SCP <- as.numeric(MostProdCountries$SCP)
@@ -362,21 +345,16 @@ world_map <- world_sf %>%
 ggsave('../figures/world_map.png',
        width = 7.5, height = 4.5, dpi = 300)
 ```
+:::
+
 
 ![](images/world_map.png)
 
-```{r, echo=FALSE, eval=FALSE}
-world_map_interactive <- girafe(ggobj = world_map)
-world_map_interactive <- girafe_options(x = world_map_interactive,
-                    opts_hover(css = "fill:#B3B3B3; cursor:pointer; font-family:Arial;"))
 
-world_map_interactive
-  
-htmlwidgets::saveWidget(
-  widget = world_map_interactive, 
-  file = "world_map_interactive/index.html",
-  selfcontained = TRUE)
-```
+::: {.cell}
+
+:::
+
 
 ## Topic Modeling
 
@@ -420,3 +398,4 @@ Dynamic Plot: <https://scd-network.dev>
 
 </iframe>
 :::
+
