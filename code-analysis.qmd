@@ -19,10 +19,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
   }
 </style>
 ```
-::: panel-tabset
-## Screening
 
-#### Extract Web of Science (WoS) data
+::: panel-tabset
+## Retrieval
 
 ```{r}
 suppressPackageStartupMessages({
@@ -30,13 +29,10 @@ suppressPackageStartupMessages({
   library(bibliometrix)
   library(plyr)
   library(dplyr)
-  library(readxl)
-  library(DT)
-  
 })
 ```
 
-#### Import Wos data search
+#### Import data search the Web of Science (WoS)
 
 ```{r, eval=FALSE}
 #| code-fold: false
@@ -69,36 +65,22 @@ save(wos_4860, file = "wos_4860.Rdata")
 openxlsx::write.xlsx(wos_4860, "../data/init_all_data.xlsx", rowNames = FALSE)
 ```
 
-#### Text classifier for screening
+## Screening
+
+#### Text Classifier for Screening
 
 -   [Employing single case design](screening_single_case/index.html)
-
-    ![](files/single-case-results.png)
-
 -   [Use of technology](screening_technology_use/index.html)
 
-    ![](files/technology-use-results.png)
-
-#### Filtering via regular expressions
+#### Filtering via Regular Expressions
 
 -   [Regarding single case design methodology](methodology/index.html)
-
-    ```         
-    A list of 77 wild expressions, composed with regular expressions to process
-    patterns = [
-      r'\banaly\w*',
-      r'\bartificial\w*\s+intelligen\w*',
-      r'\bbehavior\w*\s+change\w*',
-      r'\bcalculate\w*,
-              ...
-    ]
-    ```
 
 ## Bibliometrics
 
 #### Display published total number of publications over time.
 
-```{r, eval=FALSE}
+```{r}
 suppressPackageStartupMessages({
   library(knitr)
   library(bibliometrix)
@@ -108,6 +90,10 @@ suppressPackageStartupMessages({
   library(ggplot2)
   library(stringr)
   library(openxlsx)
+  library(TextAnalysisR)
+  library(quanteda)
+  library(tidytext)
+  library(lwgeom)
   library(sf)
   library(rnaturalearth)
   library(ggrepel)
@@ -184,11 +170,12 @@ year_2010s_plus <- data_descriptive %>%
     ungroup()
 ```
 
-![](files/year_citation_plot.png)
+![](images/year_citation_plot.png)
 
 #### Main findings about the collection
 
-```{r, eval=FALSE}
+```{r}
+#| code-fold: false
 data_descriptive$DT <- case_when(
    data_descriptive$DT == "ARTICLE" ~ "Article",
     data_descriptive$DT == "BOOK CHAPTER" ~ "Book Chapter",
@@ -230,7 +217,9 @@ source_combined <- left_join(source_detail, source_hindex, by = "SO")
 
 source_combined <- source_combined %>%
     arrange(desc(total_citation), desc(publication_number)) 
+```
 
+```{r, echo=FALSE}
 write.xlsx(source_combined, file = "../results/summary/source_combined.xlsx", colNames = TRUE)
 
 results <- biblioAnalysis(data_descriptive)
@@ -273,14 +262,9 @@ write.xlsx(MostRelKeywords, file = "../results/summary/MostRelKeywords.xlsx", co
 # descriptive_summary$AnnualGrowthRate
 ```
 
-```{r, echo=FALSE}
-MainInformationDF <- read_excel("files/MainInformationDF.xlsx")
-datatable(MainInformationDF, options = list(pageLength = 10))
-```
+#### World map
 
-## World Map
-
-```{r, eval=FALSE}
+```{r, fig.width=8, fig.height=5, out.extra='class="responsive-figure"'}
 MostProdCountries$Articles <- as.numeric(MostProdCountries$Articles)
 MostProdCountries$Freq <- as.numeric(MostProdCountries$Freq)
 MostProdCountries$SCP <- as.numeric(MostProdCountries$SCP)
@@ -343,26 +327,23 @@ world_joined_filtered <- world_joined_filtered %>%
 
 world_sf <- st_as_sf(world_joined_filtered, coords = c("longitude", "latitude"), crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
 
+# Define breaks for the color scale
 b <- c(200, 2000, 5000, 10000, 20000, 40000, 60000, 70000)
 
 # Create the world map with centroids and labels
 world_map <- world_sf %>%
   ggplot() +
-  geom_sf_interactive(aes(fill = `Total Citations`, 
-                          tooltip = paste("TC: ", admin, `Total Citations`)), 
-                      size = 0.25) +
+  geom_sf(aes(fill = `Total Citations`), size = 0.25) +
   geom_label_repel(
     size = 3.3,
     aes(geometry = geometry, label = admin),
     alpha = 0.7,
-    max.overlaps = 13,
+    max.overlaps = 25,
     stat = "sf_coordinates"
   ) +
   scale_fill_viridis_c(option = "viridis", trans = "sqrt", na.value = "white", breaks = b, direction = -1) +
-  geom_point_interactive(
-    aes(size = Articles,
-        geometry = geometry,
-        tooltip = paste("TP: ", admin, Articles)),
+  geom_point(
+    aes(size = Articles, geometry = geometry),
     color = "#CC5500",
     shape = 21,
     stat = "sf_coordinates",
@@ -375,53 +356,70 @@ world_map <- world_sf %>%
     legend.title = element_text(size = 11),
     legend.text = element_text(size = 10)
   ) +
-  labs(fill = "Total citations (TC)", size = "Total publications (TP)") +
+  labs(fill = "Total citations", size = "Total publications") +
   guides(
     fill = guide_colourbar(title.position = "top", title.hjust = 0.5, barwidth = 18, barheight = 1),
     size = guide_legend(title.position = "top", title.hjust = 0.5)
   )
 
-world_map_interactive <- girafe(ggobj = world_map, width_svg = 10, height_svg = 5) %>%
-    girafe_options(
-    opts_hover(css = "fill:cyan;"),
-    opts_sizing(rescale = TRUE),
-    css = "div.girafe-container { padding-top: 0px; margin-top: -20px; }
-           .ggiraph-toolbar { position: absolute; bottom: 10px; right: 10px; }"
-  )
+ggsave('../figures/world_map.png',
+       width = 7.5, height = 4.5, dpi = 300)
+```
 
+![](images/world_map.png)
+
+```{r, echo=FALSE}
+world_map_interactive <- girafe(ggobj = world_map)
+world_map_interactive <- girafe_options(x = world_map_interactive,
+                    opts_hover(css = "fill:#B3B3B3; cursor:pointer; font-family:Arial;"))
+
+world_map_interactive
+  
 htmlwidgets::saveWidget(
   widget = world_map_interactive, 
   file = "world_map_interactive/index.html",
   selfcontained = TRUE)
 ```
 
-<iframe src="world_map_interactive/index.html" width="750" height="750"></iframe>
-
 ## Topic Modeling
 
 [Python Code](topic_modeling/index.html)
 
-<iframe src="topic_modeling/results/fig_cluster.html" width="750" height="600"></iframe>
+<iframe src="topic_modeling/results/fig_cluster.html" width="900" height="600">
 
-<iframe src="topic_modeling/results/topic_model_fig.html" width="750" height="600"></iframe>
+</iframe>
 
-<iframe src="topic_modeling/results/topic_word_barchart.html" width="750" height="900"></iframe>
+<iframe src="topic_modeling/results/topic_model_fig.html" width="900" height="600">
 
-<iframe src="topic_modeling/results/docs_topics.html" width="750" height="600"></iframe>
+</iframe>
 
-<iframe src="topic_modeling/results/heatmap.html" width="750" height="600"></iframe>
+<iframe src="topic_modeling/results/topic_word_barchart.html" width="900" height="900">
 
-<iframe src="topic_modeling/results/hierarchical_topics_fig.html" width="750" height="600"></iframe>
+</iframe>
+
+<iframe src="topic_modeling/results/heatmap.html" width="900" height="600">
+
+</iframe>
+
+<iframe src="topic_modeling/results/hierarchical_topics_fig.html" width="900" height="500">
+
+</iframe>
 
 ## N-grams
 
-<iframe src="topic_modeling/results/ngram_count_fig.html" width="750" height="750"></iframe>
+<iframe src="topic_modeling/results/ngram_count_fig.html" width="900" height="900">
 
-<iframe src="topic_modeling/results/ngram_proportion_fig.html" width="750" height="750"></iframe>
+</iframe>
+
+<iframe src="topic_modeling/results/ngram_proportion_fig.html" width="900" height="900">
+
+</iframe>
 
 ## Word Networks
 
 Dynamic Plot: <https://scd-network.dev>
 
-<iframe src="https://scd-network.dev" width="750" height="800"></iframe>
+<iframe src="https://scd-network.dev" width="900" height="700">
+
+</iframe>
 :::
