@@ -90,7 +90,7 @@ openxlsx::write.xlsx(wos_4860, "../data/init_all_data.xlsx", rowNames = FALSE)
 
     ![](files/single-case-results.png)
 
--   [Code: Using of technology](screening_technology_use/index.html)
+-   [Code: Using technology](screening_technology_use/index.html)
 
     ![](files/technology-use-results.png)
 
