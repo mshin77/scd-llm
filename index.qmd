@@ -1,10 +1,14 @@
 ---
 title: 'Exploring Landscape of Technology Use in Single-Case Design Research Methodology Through Large Language Models'
 date: "`r Sys.Date()`"
-format:
+code-annotations: hover
+sidebar: false
+toc: false
+format: 
   html:
     code-fold: true
     code-tools: true
+    highlight: tango
 ---
 
 ```{r setup, include=FALSE}
@@ -19,21 +23,32 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
   }
 </style>
 ```
+
 ::: panel-tabset
+
 ## Screening
 
 #### Extract Web of Science (WoS) data
 
 ```{r}
-suppressPackageStartupMessages({
 #| code-fold: false
+suppressPackageStartupMessages({
+  library(knitr)
+  library(readxl)
+  library(DT)
   library(bibliometrix)
   library(plyr)
   library(dplyr)
-  library(readxl)
-  library(DT)
-  
+  library(tidyr)
+  library(ggplot2)
+  library(stringr)
+  library(openxlsx)
+  library(sf)
+  library(rnaturalearth)
+  library(ggrepel)
+  library(ggiraph)
 })
+
 ```
 
 #### Import Wos data search
@@ -69,19 +84,19 @@ save(wos_4860, file = "wos_4860.Rdata")
 openxlsx::write.xlsx(wos_4860, "../data/init_all_data.xlsx", rowNames = FALSE)
 ```
 
-#### Text classifier for screening
+#### Text classifier and prediction for screening
 
--   [Employing single case design](screening_single_case/index.html)
+-   [Code: Using single case design](screening_single_case/index.html)
 
     ![](files/single-case-results.png)
 
--   [Use of technology](screening_technology_use/index.html)
+-   [Code: Using of technology](screening_technology_use/index.html)
 
     ![](files/technology-use-results.png)
 
 #### Filtering via regular expressions
 
--   [Regarding single case design methodology](methodology/index.html)
+-   [Code: Targeting single case design methodology](methodology/index.html)
 
     ```         
     A list of 77 wild expressions, composed with regular expressions to process
@@ -96,24 +111,9 @@ openxlsx::write.xlsx(wos_4860, "../data/init_all_data.xlsx", rowNames = FALSE)
 
 ## Bibliometrics
 
-#### Display published total number of publications over time.
+#### Display published total number of publications over time
 
 ```{r, eval=FALSE}
-suppressPackageStartupMessages({
-  library(knitr)
-  library(bibliometrix)
-  library(plyr)
-  library(dplyr)
-  library(tidyr)
-  library(ggplot2)
-  library(stringr)
-  library(openxlsx)
-  library(sf)
-  library(rnaturalearth)
-  library(ggrepel)
-  library(ggiraph)
-})
-
 data <- read.xlsx("../data/all_data.xlsx")
 
 data <- data %>% filter(data$filtered == "Yes")
@@ -356,7 +356,8 @@ world_map <- world_sf %>%
     aes(geometry = geometry, label = admin),
     alpha = 0.7,
     max.overlaps = 13,
-    stat = "sf_coordinates"
+    stat = "sf_coordinates",
+    font_size = 3.3
   ) +
   scale_fill_viridis_c(option = "viridis", trans = "sqrt", na.value = "white", breaks = b, direction = -1) +
   geom_point_interactive(
@@ -395,11 +396,14 @@ htmlwidgets::saveWidget(
   selfcontained = TRUE)
 ```
 
-<iframe src="world_map_interactive/index.html" width="750" height="750"></iframe>
+```{r, echo=FALSE, width=10, height=8}
+load("files/world_map_interactive.Rdata")
+world_map_interactive
+```
 
 ## Topic Modeling
 
-[Python Code](topic_modeling/index.html)
+[Code: Topic modeling via large language models](topic_modeling/index.html)
 
 <iframe src="topic_modeling/results/fig_cluster.html" width="750" height="600"></iframe>
 
