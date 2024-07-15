@@ -1,9 +1,10 @@
 ---
 title: 'Exploring Landscape of Technology Use in Single-Case Design Research Methodology Through Large Language Models'
+# logo: ''
 date: "`r Sys.Date()`"
 code-annotations: hover
 sidebar: false
-toc: false
+toc: true
 format: 
   html:
     code-fold: true
@@ -24,11 +25,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 </style>
 ```
 
-::: panel-tabset
+# Screening
 
-## Screening
-
-#### Extract Web of Science (WoS) data
+### Extract Web of Science (WoS) Data
 
 ```{r}
 #| code-fold: false
@@ -51,7 +50,7 @@ suppressPackageStartupMessages({
 
 ```
 
-#### Import Wos data search
+### Import Wos Data
 
 ```{r, eval=FALSE}
 #| code-fold: false
@@ -67,51 +66,37 @@ wos_4001_4500 <- convert2df("4001_4500.ciw", dbsource = "wos", format = "endnote
 wos_4501_4860 <- convert2df("4501_4860.ciw", dbsource = "wos", format = "endnote")
 ```
 
-```{r, eval=FALSE}
-#| code-fold: false
-wos_4860 <- rbind.fill(wos_1_500,
-                       wos_501_1000,
-                       wos_1001_1500,
-                       wos_1501_2000,
-                       wos_2001_2500,
-                       wos_2501_3000,
-                       wos_3001_3500,
-                       wos_3501_4000,
-                       wos_4001_4500,
-                       wos_4501_4860)
-
-save(wos_4860, file = "wos_4860.Rdata")
-openxlsx::write.xlsx(wos_4860, "../data/init_all_data.xlsx", rowNames = FALSE)
+```{r, echo=FALSE, eval=FALSE}
+wos_4860 <- rbind.fill(
+  wos_1_500,
+  wos_501_1000,
+  wos_1001_1500,
+  wos_1501_2000,
+  wos_2001_2500,
+  wos_2501_3000,
+  wos_3001_3500,
+  wos_3501_4000,
+  wos_4001_4500,
+  wos_4501_4860)
 ```
 
-#### Text classifier and prediction for screening
+### Text Classification and Prediction
 
--   [Code: Using single case design](screening_single_case/index.html)
+#### **`Step 1. Text classifition for using single case design`** [Code](screening_single_case/index.html)
 
-    ![](files/single-case-results.png)
+![](files/single-case-results.png)
 
--   [Code: Using technology](screening_technology_use/index.html)
+#### **`Step 2. Text classification for using technology`** [Code](screening_technology_use/index.html)
 
-    ![](files/technology-use-results.png)
+![](files/technology-use-results.png)
 
-#### Filtering via regular expressions
+#### **`Step 3. Filtering studies including methodology content`** [Code](methodology/index.html)
 
--   [Code: Targeting single case design methodology](methodology/index.html)
+-   Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
 
-    ```         
-    A list of 77 wild expressions, composed with regular expressions to process
-    patterns = [
-      r'\banaly\w*',
-      r'\bartificial\w*\s+intelligen\w*',
-      r'\bbehavior\w*\s+change\w*',
-      r'\bcalculate\w*,
-              ...
-    ]
-    ```
+# Bibliometrics
 
-## Bibliometrics
-
-#### Display published total number of publications over time
+### Total Publications and Citations
 
 ```{r, eval=FALSE}
 data <- read.xlsx("../data/all_data.xlsx")
@@ -186,7 +171,7 @@ year_2010s_plus <- data_descriptive %>%
 
 ![](files/year_citation_plot.png)
 
-#### Main findings about the collection
+### Main Findings
 
 ```{r, eval=FALSE}
 data_descriptive$DT <- case_when(
@@ -235,42 +220,13 @@ write.xlsx(source_combined, file = "../results/summary/source_combined.xlsx", co
 
 results <- biblioAnalysis(data_descriptive)
 
-# sum(results$TotalCitation)
-# sum(results$TotalCitation)
-
-CountryCollaboration <- results$CountryCollaboration %>% tibble 
-
-write.xlsx(CountryCollaboration, file = "../results/summary/CountryCollaboration.xlsx", colNames = TRUE)
-
 descriptive_summary <- summary(results, k=71, pause=F, width=130)
 
 MainInformationDF <- descriptive_summary$MainInformationDF 
 write.xlsx(MainInformationDF, file = "../results/summary/MainInformationDF.xlsx", colNames = TRUE)
 
-MostProdAuthors <- descriptive_summary$MostProdAuthors
-write.xlsx(MostProdAuthors, file = "../results/summary/MostProdAuthors.xlsx", colNames = TRUE)
-
-MostCitedPapers <- descriptive_summary$MostCitedPapers
-write.xlsx(MostCitedPapers, file = "../results/summary/MostCitedPapers.xlsx", colNames = TRUE)
-
-# descriptive_summary$AnnualGrowthRate
-
-AnnualProduction <- descriptive_summary$AnnualProduction
-write.xlsx(AnnualProduction, file = "../results/summary/AnnualProduction.xlsx", colNames = TRUE)
-
 MostProdCountries <- descriptive_summary$MostProdCountries
 write.xlsx(MostProdCountries, file = "../results/summary/MostProdCountries.xlsx", colNames = TRUE)
-
-TCperCountries <- descriptive_summary$TCperCountries
-write.xlsx(TCperCountries, file = "../results/summary/TCperCountries.xlsx", colNames = TRUE)
-
-MostRelSources <- descriptive_summary$MostRelSources
-write.xlsx(MostRelSources, file = "../results/summary/MostRelSources.xlsx", colNames = TRUE)
-
-MostRelKeywords <- descriptive_summary$MostRelKeywords
-write.xlsx(MostRelKeywords, file = "../results/summary/MostRelKeywords.xlsx", colNames = TRUE)
-
-# descriptive_summary$AnnualGrowthRate
 ```
 
 ```{r, echo=FALSE}
@@ -278,7 +234,9 @@ MainInformationDF <- read_excel("files/MainInformationDF.xlsx")
 datatable(MainInformationDF, options = list(pageLength = 10))
 ```
 
-## World Map
+# World Map
+
+### Total Citations and Publications
 
 ```{r, eval=FALSE}
 MostProdCountries$Articles <- as.numeric(MostProdCountries$Articles)
@@ -396,36 +354,43 @@ htmlwidgets::saveWidget(
   selfcontained = TRUE)
 ```
 
-```{r, echo=FALSE, width=10, height=8}
+[Interactive Plot](world_map_interactive/index.html)
+
+```{r, echo=FALSE}
 load("files/world_map_interactive.Rdata")
 world_map_interactive
 ```
 
-## Topic Modeling
+# Topic Modeling
 
-[Code: Topic modeling via large language models](topic_modeling/index.html)
+### Stetps of Employing Large Language Models
 
-<iframe src="topic_modeling/results/fig_cluster.html" width="750" height="600"></iframe>
+[Code](topic_modeling/index.html)
 
-<iframe src="topic_modeling/results/topic_model_fig.html" width="750" height="600"></iframe>
+[Step 1](topic_modeling/results/fig_cluster.html) <iframe src="topic_modeling/results/fig_cluster.html" width="800" height="600"></iframe>
 
-<iframe src="topic_modeling/results/topic_word_barchart.html" width="750" height="900"></iframe>
+[Step 1](topic_modeling/results/topic_model_fig.html) <iframe src="topic_modeling/results/topic_model_fig.html" width="800" height="600"></iframe>
 
-<iframe src="topic_modeling/results/docs_topics.html" width="750" height="600"></iframe>
+[Step 3](topic_modeling/results/topic_word_barchart.html) <iframe src="topic_modeling/results/topic_word_barchart.html" width="800" height="900"></iframe>
 
-<iframe src="topic_modeling/results/heatmap.html" width="750" height="600"></iframe>
+[Step 4](topic_modeling/results/docs_topics.html) <iframe src="topic_modeling/results/docs_topics.html" width="800" height="600"></iframe>
 
-<iframe src="topic_modeling/results/hierarchical_topics_fig.html" width="750" height="600"></iframe>
+[Step 5](topic_modeling/results/heatmap.html) <iframe src="topic_modeling/results/heatmap.html" width="800" height="600"></iframe>
 
-## N-grams
+[Step 6](topic_modeling/results/hierarchical_topics_fig.html) <iframe src="topic_modeling/results/hierarchical_topics_fig.html" width="800" height="600"></iframe>
 
-<iframe src="topic_modeling/results/ngram_count_fig.html" width="750" height="750"></iframe>
+# N-grams
 
-<iframe src="topic_modeling/results/ngram_proportion_fig.html" width="750" height="750"></iframe>
+### Visualization of N-grams Usage
 
-## Word Networks
+[Interactive Plot](topic_modeling/results/ngram_count_fig.html) <iframe src="topic_modeling/results/ngram_count_fig.html" width="800" height="800"></iframe>
 
-Dynamic Plot: <https://scd-network.dev>
+[Interactive Plot](topic_modeling/results/ngram_proportion_fig.html) <iframe src="topic_modeling/results/ngram_proportion_fig.html" width="800" height="800"></iframe>
 
-<iframe src="https://scd-network.dev" width="750" height="800"></iframe>
-:::
+# Word Networks
+
+<https://scd-network.dev>
+
+<iframe src="https://scd-network.dev" width="800" height="1000">
+
+</iframe>
