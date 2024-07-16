@@ -84,9 +84,13 @@ wos_4860 <- rbind.fill(
 
 #### **`Step 1. Text classifition for using single case design`** [Code](screening_single_case/index.html)
 
+**Figure 1. Single Case Design Classification**
+
 ![](files/single-case-results.png)
 
 #### **`Step 2. Text classification for using technology`** [Code](screening_technology_use/index.html)
+
+**Figure 2. Technology Use Classification**
 
 ![](files/technology-use-results.png)
 
@@ -168,6 +172,8 @@ year_2010s_plus <- data_descriptive %>%
     summarize(publication_number = n()) %>%
     ungroup()
 ```
+
+**Figure 3**
 
 ![](files/year_citation_plot.png)
 
@@ -354,7 +360,7 @@ htmlwidgets::saveWidget(
   selfcontained = TRUE)
 ```
 
-[Interactive Plot](world_map_interactive/index.html)
+[Figure 4](world_map_interactive/index.html)
 
 ```{r, echo=FALSE}
 load("files/world_map_interactive.Rdata")
@@ -367,29 +373,29 @@ world_map_interactive
 
 [Code](topic_modeling/index.html)
 
-[Step 1](topic_modeling/results/fig_cluster.html) <iframe src="topic_modeling/results/fig_cluster.html" width="800" height="600"></iframe>
+[Figure 5](topic_modeling/fig_cluster.html) <iframe src="topic_modeling/fig_cluster.html" width="800" height="600"></iframe>
 
-[Step 1](topic_modeling/results/topic_model_fig.html) <iframe src="topic_modeling/results/topic_model_fig.html" width="800" height="600"></iframe>
+[Figure 6](topic_modeling/topic_model_fig.html) <iframe src="topic_modeling/topic_model_fig.html" width="800" height="600"></iframe>
 
-[Step 3](topic_modeling/results/topic_word_barchart.html) <iframe src="topic_modeling/results/topic_word_barchart.html" width="800" height="900"></iframe>
+[Figure 7](topic_modeling/topic_word_barchart.html) <iframe src="topic_modeling/topic_word_barchart.html" width="800" height="900"></iframe>
 
-[Step 4](topic_modeling/results/docs_topics.html) <iframe src="topic_modeling/results/docs_topics.html" width="800" height="600"></iframe>
+[Figure 8](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
 
-[Step 5](topic_modeling/results/heatmap.html) <iframe src="topic_modeling/results/heatmap.html" width="800" height="600"></iframe>
+[Figure 9](topic_modeling/heatmap.html) <iframe src="topic_modeling/heatmap.html" width="800" height="600"></iframe>
 
-[Step 6](topic_modeling/results/hierarchical_topics_fig.html) <iframe src="topic_modeling/results/hierarchical_topics_fig.html" width="800" height="600"></iframe>
+[Figure 10](topic_modeling/hierarchical_topics_fig.html) <iframe src="topic_modeling/hierarchical_topics_fig.html" width="800" height="600"></iframe>
 
 # N-grams
 
 ### Visualization of N-grams Usage
 
-[Interactive Plot](topic_modeling/results/ngram_count_fig.html) <iframe src="topic_modeling/results/ngram_count_fig.html" width="800" height="800"></iframe>
+[Figure 11](topic_modeling/ngram_count_fig.html) <iframe src="topic_modeling/ngram_count_fig.html" width="800" height="800"></iframe>
 
-[Interactive Plot](topic_modeling/results/ngram_proportion_fig.html) <iframe src="topic_modeling/results/ngram_proportion_fig.html" width="800" height="800"></iframe>
+[Figure 12](topic_modeling/ngram_proportion_fig.html) <iframe src="topic_modeling/ngram_proportion_fig.html" width="800" height="800"></iframe>
 
 # Word Networks
 
-<https://scd-network.dev>
+**Figure 13** <https://scd-network.dev>
 
 <iframe src="https://scd-network.dev" width="800" height="1000">
 
