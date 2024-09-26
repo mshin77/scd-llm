@@ -607,8 +607,4 @@ htmlwidgets::saveWidget(co_citation_network, "co_citation_network/index.html")
 
 # Word Networks
 
-**Figure 14** <https://scd-network.dev>
-
-<iframe src="https://scd-network.dev" width="800" height="1000">
-
-</iframe>
+[Figure 14](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
