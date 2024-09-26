@@ -1,5 +1,5 @@
 ---
-title: 'Exploring the Landscape of Technology Use in Single-Case Design Research Methodology Through Text Mining With Large Language Models'
+title: 'Exploring the Landscape of Single-Case Design Research Methodology Using Technology: Text Mining With Large Language Models'
 # logo: ''
 date: "`r Sys.Date()`"
 code-annotations: hover
@@ -16,14 +16,12 @@ format:
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-```{=html}
 <style>
   .responsive-figure {
     width: 100% !important;
     height: auto;
   }
 </style>
-```
 
 # Screening
 
@@ -34,6 +32,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 suppressPackageStartupMessages({
   library(knitr)
   library(readxl)
+  library(data.table)
   library(DT)
   library(bibliometrix)
   library(plyr)
@@ -46,8 +45,11 @@ suppressPackageStartupMessages({
   library(rnaturalearth)
   library(ggrepel)
   library(ggiraph)
+  library(stringi)
+  library(igraph)
+  library(networkD3)
+  library(visNetwork)
 })
-
 ```
 
 ### Import Wos Data
@@ -393,9 +395,219 @@ world_map_interactive
 
 [Figure 12](topic_modeling/ngram_proportion_fig.html) <iframe src="topic_modeling/ngram_proportion_fig.html" width="800" height="800"></iframe>
 
+# Co-Citation Networks
+
+### Visualization of Co-Citations
+
+```{r, eval=FALSE}
+df <- read_excel("../data/df.xlsx")
+df <- df %>% select(UT, CustomName)
+data <- data %>% left_join(df, by = "UT")
+
+setDT(data)
+
+clean_reference <- function(refs) {
+  
+  refs_cleaned <- gsub("&#\\d+;", "", refs)
+  refs_cleaned <- gsub("\\d+\\.\\d+\\.\\p{L}+", "", refs_cleaned, perl = TRUE)
+  refs_cleaned <- stri_replace_all_regex(refs_cleaned, "\\s+", " ")
+  refs_cleaned <- trimws(refs_cleaned)
+  
+  return(refs_cleaned)
+}
+
+data[, CR_cleaned := clean_reference(CR)]
+
+data[, CR_list := strsplit(CR_cleaned, ";\\s*")]
+
+data[, doc_id := .I]
+
+ref_data <- data[, .(
+  doc_id,
+  reference = unlist(CR_list),
+  group = CustomName  
+), by = UT]
+
+ref_data <- ref_data[reference != "" & !is.na(reference)]
+
+reference_freq <- ref_data[, .N, by = reference]
+
+ref_data[, reference := gsub(",\\s*doi.*$", "", reference, ignore.case = TRUE)]
+
+ref_data <- ref_data[!grepl("\\bAnonymous\\b", reference, ignore.case = TRUE) & 
+                     !grepl("^\\d+$", reference)]
+
+ref_data[, reference := gsub("\\s+", " ", reference)]
+ref_data[, reference := trimws(reference)]
+
+ref_data <- ref_data[!duplicated(ref_data[, .(doc_id, reference)]), ]
+
+doc_ref_counts <- ref_data[, .N, by = doc_id]
+
+reference_freq <- ref_data[, .N, by = reference]
+
+duplicate_refs_across_docs <- reference_freq[N > 1]
+
+co_citation_pairs <- ref_data[, {
+  if (.N > 1) {
+    pairs <- t(combn(reference, 2))
+    data.table(from = pairs[, 1], to = pairs[, 2])
+  } else {
+    NULL
+  }
+}, by = doc_id]
+
+co_citation_freq <- co_citation_pairs[, .N, by = .(from, to)]
+co_citation_freq_filtered <- co_citation_freq[N > 1]
+
+total_citations <- sum(reference_freq$N)
+
+reference_freq <- reference_freq[order(-N)]
+
+percentile <- 0.95  
+threshold <- quantile(reference_freq$N, probs = percentile)
+percentile_n <- reference_freq[N >= threshold, .N]
+
+top_n <- max(percentile_n)
+
+cat("Automatically determined top_n:", top_n, "\n")
+
+top_references <- reference_freq[1:top_n, reference]
+
+co_citation_top <- co_citation_freq[from %in% top_references & to %in% top_references]
+
+g <- graph_from_data_frame(d = co_citation_top[, .(from, to)], directed = FALSE)
+
+eigen_centrality_scores <- eigen_centrality(g, directed = FALSE, scale = TRUE)$vector
+V(g)$eigen_centrality <- eigen_centrality_scores
+
+max_node_size <- 15  
+min_node_size <- 5   
+V(g)$size <- ((V(g)$eigen_centrality / max(V(g)$eigen_centrality)) * (max_node_size - min_node_size)) + min_node_size
+
+max_edge_thickness <- 200  
+min_edge_thickness <- 2    
+
+co_citation_top[, log_weight := log10(N + 1)]  
+co_citation_top[, scaled_weight := ((log_weight / max(log_weight)) * (max_edge_thickness - min_edge_thickness)) + min_edge_thickness]
+
+E(g)$weight <- co_citation_top$scaled_weight
+
+category_colors <- c(
+  "Video modeling" = '#EF553B', 
+  "Telehealth training" = '#00CC96', 
+  "Function-based interventions" = '#AB63FA', 
+  "Rehabilitation interventions" = '#FFA15A',
+  "Communication and speech" = '#19D3F3', 
+  "Mental health treatments" = '#FF6692', 
+  "Reading instruction" = '#B6E880', 
+  "Single-case data and analysis" = '#FF97FF',
+  "Behavior strategies" = '#FECB52', 
+  "Mathematics instruction" = '#636EFA', 
+  "Aphasia and auditory treatments" = "#a799e8", 
+  "Applied behavior analysis" = "#9cd4f7",
+  "Sports behavioral training" = "#9cf4f7", 
+  "Staff training" = "#7CF3A0", 
+  "Multiple disabilities" = "#fb9a99", 
+  "Self-monitoring" = "#BCBD22",
+  "Outlier" = "#C5C5C5"
+)
+
+reference_to_group <- setNames(ref_data$group, ref_data$reference)
+V(g)$group <- reference_to_group[V(g)$name]
+
+V(g)$group_color <- category_colors[V(g)$group]
+
+communities <- cluster_louvain(g)
+
+N <- 200
+high_degree_nodes <- V(g)[order(degree(g), decreasing = TRUE)[1:N]]
+g_sub <- induced_subgraph(g, high_degree_nodes)
+
+edge_threshold <- quantile(E(g_sub)$weight, 0.90)
+g_filtered <- delete.edges(g_sub, E(g_sub)[E(g_sub)$weight < edge_threshold])
+
+eigen_centrality_scores <- eigen_centrality(g_filtered)$vector
+V(g_filtered)$size <- (eigen_centrality_scores / max(eigen_centrality_scores)) * 15 + 5  
+
+sorted_nodes <- order(V(g_filtered)$size, decreasing = TRUE)
+top_20_nodes <- sorted_nodes[1:20]
+
+simplified_labels <- sub("^([^\\s]+)\\s\\S+\\s(\\d{4}).*", "\\1 \\2", V(g_filtered)$name)
+
+nodes <- data.frame(
+  id = V(g_filtered)$name,                  
+  label = ifelse(seq_along(V(g_filtered)) %in% top_20_nodes, simplified_labels, NA),  
+  title = simplified_labels,  
+  size = V(g_filtered)$size,                
+  color = V(g_filtered)$group_color,        
+  font.size = V(g_filtered)$size * 2,  
+  x = layout_with_fr(g_filtered)[, 1],                         
+  y = layout_with_fr(g_filtered)[, 2]                          
+)
+
+max_weight <- max(E(g_filtered)$weight)
+edges <- data.frame(
+  from = as.character(ends(g_filtered, E(g_filtered))[, 1]),  
+  to = as.character(ends(g_filtered, E(g_filtered))[, 2]),    
+  width = E(g_filtered)$weight / max_weight * 5,  
+  color = rgb(0.1, 0.1, 0.1, 0.1 + 0.1 * (E(g_filtered)$weight / max_weight))  
+)
+
+co_citation_network <- visNetwork(nodes, edges, height = "700px", width = "100%") %>%
+  visNodes(
+    color = list(
+      background = ~color,
+      border = "black"
+    ),
+    labelHighlightBold = TRUE,  
+    font = list(
+      size = ~font.size*0.5,         
+      background = "yellow",      
+      border = "black",          
+      align = "center",                     
+      multi = TRUE               
+    ),
+    shape = "dot"
+  ) %>%
+  visEdges(
+    width = ~width,  
+    color = list(color = ~color),  
+    smooth = TRUE  
+  ) %>%
+  visPhysics(
+    solver = "repulsion",  
+    repulsion = list(
+      nodeDistance = 150,       
+      springLength = 100,       
+      springConstant = 0.05,    
+      damping = 0.4            
+    ),
+    stabilization = FALSE               
+  ) %>%
+  visOptions(
+    highlightNearest = list(
+      enabled = TRUE,
+      degree = 3,  
+      hover = TRUE
+    ),
+    nodesIdSelection = FALSE  
+  ) %>%
+  visInteraction(
+    tooltipDelay = 0,
+    hover = TRUE,
+    navigationButtons = TRUE
+  ) %>%
+  visLayout(randomSeed = 123)  
+
+htmlwidgets::saveWidget(co_citation_network, "co_citation_network/index.html")
+```
+
+[Figure 13](co_citation_network/index.html) <iframe src="co_citation_network/index.html" width="800" height="800"></iframe>
+
 # Word Networks
 
-**Figure 13** <https://scd-network.dev>
+**Figure 14** <https://scd-network.dev>
 
 <iframe src="https://scd-network.dev" width="800" height="1000">
 
