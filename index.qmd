@@ -406,14 +406,14 @@ data <- data %>% left_join(df, by = "UT")
 
 setDT(data)
 
-clean_reference <- function(refs) {
+clean_reference <- function(pubs) {
   
-  refs_cleaned <- gsub("&#\\d+;", "", refs)
-  refs_cleaned <- gsub("\\d+\\.\\d+\\.\\p{L}+", "", refs_cleaned, perl = TRUE)
-  refs_cleaned <- stri_replace_all_regex(refs_cleaned, "\\s+", " ")
-  refs_cleaned <- trimws(refs_cleaned)
+  pubs_cleaned <- gsub("&#\\d+;", "", pubs)
+  pubs_cleaned <- gsub("\\d+\\.\\d+\\.\\p{L}+", "", pubs_cleaned, perl = TRUE)
+  pubs_cleaned <- stri_replace_all_regex(pubs_cleaned, "\\s+", " ")
+  pubs_cleaned <- trimws(pubs_cleaned)
   
-  return(refs_cleaned)
+  return(pubs_cleaned)
 }
 
 data[, CR_cleaned := clean_reference(CR)]
@@ -422,33 +422,33 @@ data[, CR_list := strsplit(CR_cleaned, ";\\s*")]
 
 data[, doc_id := .I]
 
-ref_data <- data[, .(
+wos_data <- data[, .(
   doc_id,
   reference = unlist(CR_list),
   group = CustomName  
 ), by = UT]
 
-ref_data <- ref_data[reference != "" & !is.na(reference)]
+wos_data <- wos_data[reference != "" & !is.na(reference)]
 
-reference_freq <- ref_data[, .N, by = reference]
+reference_freq <- wos_data[, .N, by = reference]
 
-ref_data[, reference := gsub(",\\s*doi.*$", "", reference, ignore.case = TRUE)]
+wos_data[, reference := gsub(",\\s*doi.*$", "", reference, ignore.case = TRUE)]
 
-ref_data <- ref_data[!grepl("\\bAnonymous\\b", reference, ignore.case = TRUE) & 
+wos_data <- wos_data[!grepl("\\bAnonymous\\b", reference, ignore.case = TRUE) & 
                      !grepl("^\\d+$", reference)]
 
-ref_data[, reference := gsub("\\s+", " ", reference)]
-ref_data[, reference := trimws(reference)]
+wos_data[, reference := gsub("\\s+", " ", reference)]
+wos_data[, reference := trimws(reference)]
 
-ref_data <- ref_data[!duplicated(ref_data[, .(doc_id, reference)]), ]
+wos_data <- wos_data[!duplicated(wos_data[, .(doc_id, reference)]), ]
 
-doc_ref_counts <- ref_data[, .N, by = doc_id]
+doc_ref_counts <- wos_data[, .N, by = doc_id]
 
-reference_freq <- ref_data[, .N, by = reference]
+reference_freq <- wos_data[, .N, by = reference]
 
-duplicate_refs_across_docs <- reference_freq[N > 1]
+duplicate_pubs_across_docs <- reference_freq[N > 1]
 
-co_citation_pairs <- ref_data[, {
+co_citation_pairs <- wos_data[, {
   if (.N > 1) {
     pairs <- t(combn(reference, 2))
     data.table(from = pairs[, 1], to = pairs[, 2])
@@ -513,7 +513,7 @@ category_colors <- c(
   "Outlier" = "#C5C5C5"
 )
 
-reference_to_group <- setNames(ref_data$group, ref_data$reference)
+reference_to_group <- setNames(wos_data$group, wos_data$reference)
 V(g)$group <- reference_to_group[V(g)$name]
 
 V(g)$group_color <- category_colors[V(g)$group]
