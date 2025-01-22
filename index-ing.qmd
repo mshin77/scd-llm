@@ -1,0 +1,623 @@
+---
+title: 'Exploring the Landscape of Technology Use in Single-Case Design Research Methodology Through Text Mining With Large Language Models'
+# logo: ''
+date: "`r Sys.Date()`"
+code-annotations: hover
+sidebar: false
+toc: true
+format: 
+  html:
+    code-fold: true
+    code-tools: true
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
+```
+
+```{=html}
+<style>
+  .responsive-figure {
+    width: 100% !important;
+    height: auto;
+  }
+</style>
+```
+# Screening
+
+### Extract Web of Science (WoS) Data
+
+```{r}
+
+suppressPackageStartupMessages({
+  library(knitr)
+  library(readxl)
+  library(data.table)
+  library(DT)
+  library(bibliometrix)
+  library(plyr)
+  library(dplyr)
+  library(tidyr)
+  library(ggplot2)
+  library(stringr)
+  library(openxlsx)
+  library(sf)
+  library(rnaturalearth)
+  library(ggrepel)
+  library(ggiraph)
+  library(stringi)
+  library(igraph)
+  library(networkD3)
+  library(visNetwork)
+})
+
+```
+
+### Import Wos Data
+
+```{r}
+
+wos_1_500 <- convert2df("../wos/1_500.ciw", dbsource = "wos", format = "endnote")
+wos_501_1000 <- convert2df("../wos/501_1000.ciw", dbsource = "wos", format = "endnote")
+wos_1001_1500 <- convert2df("../wos/1001_1500.ciw", dbsource = "wos", format = "endnote")
+wos_1501_2000 <- convert2df("../wos/1501_2000.ciw", dbsource = "wos", format = "endnote")
+wos_2001_2500 <- convert2df("../wos/2001_2500.ciw", dbsource = "wos", format = "endnote")
+wos_2501_3000 <- convert2df("../wos/2501_3000.ciw", dbsource = "wos", format = "endnote")
+wos_3001_3500 <- convert2df("../wos/3001_3500.ciw", dbsource = "wos", format = "endnote")
+wos_3501_4000 <- convert2df("../wos/3501_4000.ciw", dbsource = "wos", format = "endnote")
+wos_4001_4500 <- convert2df("../wos/4001_4500.ciw", dbsource = "wos", format = "endnote")
+wos_4501_4860 <- convert2df("../wos/4501_4860.ciw", dbsource = "wos", format = "endnote")
+```
+
+```{r}
+wos_4860 <- rbind.fill(
+  wos_1_500,
+  wos_501_1000,
+  wos_1001_1500,
+  wos_1501_2000,
+  wos_2001_2500,
+  wos_2501_3000,
+  wos_3001_3500,
+  wos_3501_4000,
+  wos_4001_4500,
+  wos_4501_4860)
+```
+
+### Text Classification and Prediction
+
+#### **`Step 1. Text classifition for using single case design`** [Code](screening_single_case/index.html)
+
+**Figure 1. Single Case Design Classification**
+
+![](files/single-case-results.png)
+
+#### **`Step 2. Text classification for using technology`** [Code](screening_technology_use/index.html)
+
+**Figure 2. Technology Use Classification**
+
+![](files/technology-use-results.png)
+
+#### **`Step 3. Filtering studies including methodology content`** [Code](methodology/index.html)
+
+-   Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
+
+# Bibliometrics
+
+### Total Publications and Citations
+
+```{r}
+data <- read.xlsx("../data/all_data.xlsx")
+
+data <- data %>% filter(data$filtered == "Yes")
+```
+
+
+```{r}
+data_descriptive <- data %>%
+    mutate(Study = paste("study", row_number(), sep = "")) %>%
+    mutate(document = paste(Study, PY, sep = "_")) %>% 
+    ungroup()
+
+data_descriptive <- data_descriptive %>% 
+    dplyr::select(document, everything())
+
+year_doc <- data_descriptive %>%
+  group_by(PY) %>%
+  summarize(publication_number = n()) %>%
+  ungroup()
+
+year_TC <- data_descriptive %>%
+    group_by(PY) %>%
+    summarize(total_citation = sum(TC)) %>%
+    ungroup()
+
+year_doc_counts_all <-  left_join(year_doc, year_TC, by = "PY")
+
+year_citation_plot <- year_doc_counts_all %>%
+    ggplot() +
+    geom_col(aes(PY, publication_number*10), fill = "#B3B3B3") +
+    geom_line(aes(PY, total_citation), linewidth = 0.5, color="#4C4E52") +
+    geom_point(aes(PY, total_citation), size = 1.5, color = "#4C4E52") +
+    scale_y_continuous(sec.axis = sec_axis(~./10, name = "Number of total publications")) +
+    labs(x = "Year", y = "Number of total citations", fill = "") +
+    theme_classic(base_size = 12) +
+        theme(
+        axis.line = element_line(color = "#404040", linewidth = 0.2),
+        axis.title = element_text(size = 11, color = "#404040"),
+        axis.text.y.left = element_text(margin = margin(l = 7)),
+        axis.text.y.right = element_text(margin = margin(r = 10))
+)
+
+ggsave('../figures/year_citation_plot.png',
+       width = 6, height = 3.5, dpi = 300, plot = year_citation_plot)
+
+year_source_type <- data_descriptive %>%
+    mutate(study_number = row_number()) %>%
+    group_by(SO) %>%
+    summarize(publication_number = nrow(data.frame(study_number))) %>% 
+    ungroup()
+
+year_doc_counts <- data_descriptive %>%
+    mutate(study_number = row_number()) %>%
+    group_by(PY) %>%
+    summarize(publication_number = n()) %>%
+    ungroup()
+
+year_1990s <- data_descriptive %>% 
+    filter(PY >=1990 & PY <= 1999) %>%
+    summarize(publication_number = n()) %>%
+    ungroup()
+
+year_2000s <- data_descriptive %>% 
+    filter(PY>=2000 & PY <= 2009) %>%
+    summarize(publication_number = n()) %>%
+    ungroup()
+
+year_2010s_plus <- data_descriptive %>% 
+    filter(PY >=2010 & PY <= 2022) %>%
+    summarize(publication_number = n()) %>%
+    ungroup()
+```
+
+**Figure 3**
+
+![](files/year_citation_plot.png)
+
+### Main Findings
+
+```{r}
+data_descriptive$DT <- case_when(
+   data_descriptive$DT == "ARTICLE" ~ "Article",
+    data_descriptive$DT == "BOOK CHAPTER" ~ "Book Chapter",
+    data_descriptive$DT == "ARTICLE; BOOK CHAPTER" ~ "Book Chapter",
+    data_descriptive$DT == "REVIEW; BOOK CHAPTER" ~ "Book Chapter",
+    data_descriptive$DT == "ARTICLE; DATA PAPER" ~ "Article",
+    data_descriptive$DT == "EARLY ACCESS" ~ "Early Access",
+    data_descriptive$DT == "ARTICLE; EARLY ACCESS" ~ "Article",
+    data_descriptive$DT == "REVIEW; EARLY ACCESS" ~ "Review",
+    data_descriptive$DT == "PROCEEDINGS PAPER" ~ "Proceeding Paper",
+    data_descriptive$DT == "ARTICLE; PROCEEDINGS PAPER" ~ "Article",
+    data_descriptive$DT == "REVIEW" ~ "Review",
+    data_descriptive$DT == "EDITORIAL MATERIAL" ~ "Editorial Material",
+    data_descriptive$DT == "MEETING ABSTRACT" ~ "Meeting Abstract",
+    TRUE ~ as.character(data_descriptive$DT)
+)
+
+source_hindex <- bibliometrix::Hindex(data_descriptive, years = Inf, field = "source")$H
+source_hindex$SO <- source_hindex$Element
+source_hindex$m_index <- round(source_hindex$m_index, 2) 
+
+source_TC <- data_descriptive %>% 
+    group_by(SO) %>%
+    summarize(total_citation = sum(TC)) %>%
+    mutate(total_citation_per = round((total_citation / sum(total_citation) * 100),2)) %>%
+    ungroup()
+
+source_TP <- data_descriptive %>% 
+    group_by(SO) %>%
+    summarize(publication_number = n()) %>%
+    mutate(publication_number_per = round((publication_number / sum(publication_number) * 100),2)) %>%
+    ungroup()
+
+source_detail <- left_join(source_TC, source_TP, by = "SO")
+
+source_detail <- source_detail %>% arrange(desc(total_citation), desc(publication_number))
+ 
+source_combined <- left_join(source_detail, source_hindex, by = "SO")
+
+source_combined <- source_combined %>%
+    arrange(desc(total_citation), desc(publication_number)) 
+
+write.xlsx(source_combined, file = "../results/summary/source_combined.xlsx", colNames = TRUE)
+
+results <- biblioAnalysis(data_descriptive)
+
+descriptive_summary <- summary(results, k=71, pause=F, width=130)
+
+MainInformationDF <- descriptive_summary$MainInformationDF 
+write.xlsx(MainInformationDF, file = "../results/summary/MainInformationDF.xlsx", colNames = TRUE)
+
+MostProdCountries <- descriptive_summary$MostProdCountries
+write.xlsx(MostProdCountries, file = "../results/summary/MostProdCountries.xlsx", colNames = TRUE)
+```
+
+```{r}
+MainInformationDF <- read_excel("files/MainInformationDF.xlsx")
+datatable(MainInformationDF, options = list(pageLength = 10))
+```
+
+# World Map
+
+### Total Citations and Publications
+
+```{r}
+MostProdCountries$Articles <- as.numeric(MostProdCountries$Articles)
+MostProdCountries$Freq <- as.numeric(MostProdCountries$Freq)
+MostProdCountries$SCP <- as.numeric(MostProdCountries$SCP)
+MostProdCountries$MCP <- as.numeric(MostProdCountries$MCP)
+MostProdCountries$MCP_Ratio <- as.numeric(MostProdCountries$MCP_Ratio)
+TCperCountries$`Total Citations` <- as.numeric(TCperCountries$`Total Citations`)
+TCperCountries$`Average Article Citations` <- as.numeric(TCperCountries$`Average Article Citations`)
+colnames(TCperCountries) <- trimws(colnames(TCperCountries))
+
+Countries_Prod_TC <- left_join(MostProdCountries, TCperCountries, by = "Country")
+
+Countries_Prod_TC$Country <- stringr::str_trim(Countries_Prod_TC$Country, "both")
+
+Countries_Prod_TC$Country <- stringr::str_to_title(Countries_Prod_TC$Country)
+
+Countries_Prod_TC <- Countries_Prod_TC %>% 
+    mutate(Country = case_when(
+      Country == "Usa" ~ "USA",
+        Country == "Korea" ~ "South Korea",
+        Country == "U Arab Emirates" ~ "UAE",
+        Country == "United Kingdom" ~ "UK",
+        TRUE ~ as.character(Country)
+    ))
+
+write.xlsx(Countries_Prod_TC, file = "../results/summary/Countries_Prod_TC.xlsx", colNames = TRUE)
+
+# Disable spherical geometry
+sf::sf_use_s2(FALSE)
+
+# Obtain country boundaries with small scale
+world <- ne_countries(scale = "small", returnclass = "sf")
+
+world <- world %>% 
+  mutate(admin = case_when(
+    admin == "United States of America" ~ "USA",
+    admin == "United Arab Emirates" ~ "UAE",
+    admin == "United Kingdom" ~ "UK",
+    admin == "United Republic of Tanzania" ~ "Tanzania",
+    admin == "Republic of Serbia" ~ "Serbia",
+    TRUE ~ as.character(admin)
+  ))
+
+wintr_proj <- "+proj=wintri +datum=WGS84 +no_defs +over"
+
+world_projected <- lwgeom::st_transform_proj(world, crs = wintr_proj)
+
+# Calculate centroids in the projected CRS
+centroids_projected <- st_centroid(world_projected)
+
+centroids_geo <- st_transform(centroids_projected, crs = st_crs(world))
+
+world_centroids <- cbind(world, st_coordinates(centroids_geo))
+
+world_joined <- left_join(world, Countries_Prod_TC, by = c("admin" = "Country"))
+
+world_joined_filtered <- world_joined %>% filter(!is.na(Articles))
+
+world_joined_filtered <- world_joined_filtered %>%
+  mutate(country_article = paste(admin, Articles))
+
+world_sf <- st_as_sf(world_joined_filtered, coords = c("longitude", "latitude"), crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+
+b <- c(200, 2000, 5000, 10000, 20000, 40000, 60000, 70000)
+
+# Create the world map with centroids and labels
+world_map <- world_sf %>%
+  ggplot() +
+  geom_sf_interactive(aes(fill = `Total Citations`, 
+                          tooltip = paste("TC: ", admin, `Total Citations`)), 
+                      size = 0.25) +
+  geom_label_repel(
+    size = 3.3,
+    aes(geometry = geometry, label = admin),
+    alpha = 0.7,
+    max.overlaps = 13,
+    stat = "sf_coordinates",
+    font_size = 3.3
+  ) +
+  scale_fill_viridis_c(option = "viridis", trans = "sqrt", na.value = "white", breaks = b, direction = -1) +
+  geom_point_interactive(
+    aes(size = Articles,
+        geometry = geometry,
+        tooltip = paste("TP: ", admin, Articles)),
+    color = "#CC5500",
+    shape = 21,
+    stat = "sf_coordinates",
+    stroke = 0.5
+  ) +
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.title = element_text(size = 11),
+    legend.text = element_text(size = 10)
+  ) +
+  labs(fill = "Total citations (TC)", size = "Total publications (TP)") +
+  guides(
+    fill = guide_colourbar(title.position = "top", title.hjust = 0.5, barwidth = 18, barheight = 1),
+    size = guide_legend(title.position = "top", title.hjust = 0.5)
+  )
+
+world_map_interactive <- girafe(ggobj = world_map, width_svg = 10, height_svg = 5) %>%
+    girafe_options(
+    opts_hover(css = "fill:cyan;"),
+    opts_sizing(rescale = TRUE),
+    css = "div.girafe-container { padding-top: 0px; margin-top: -20px; }
+           .ggiraph-toolbar { position: absolute; bottom: 10px; right: 10px; }"
+  )
+
+htmlwidgets::saveWidget(
+  widget = world_map_interactive, 
+  file = "world_map_interactive/index.html",
+  selfcontained = TRUE)
+```
+
+[Figure 4](world_map_interactive/index.html)
+
+```{r}
+load("files/world_map_interactive.Rdata")
+world_map_interactive
+```
+
+# Topic Modeling
+
+### Stetps of Employing Large Language Models
+
+[Code](topic_modeling/index.html)
+
+[Figure 5](topic_modeling/fig_cluster.html) <iframe src="topic_modeling/fig_cluster.html" width="800" height="600"></iframe>
+
+[Figure 6](topic_modeling/topic_model_fig.html) <iframe src="topic_modeling/topic_model_fig.html" width="800" height="600"></iframe>
+
+[Figure 7](topic_modeling/topic_word_barchart.html) <iframe src="topic_modeling/topic_word_barchart.html" width="800" height="900"></iframe>
+
+[Figure 8](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
+
+[Figure 9](topic_modeling/heatmap.html) <iframe src="topic_modeling/heatmap.html" width="800" height="600"></iframe>
+
+[Figure 10](topic_modeling/hierarchical_topics_fig.html) <iframe src="topic_modeling/hierarchical_topics_fig.html" width="800" height="600"></iframe>
+
+```{r}
+df <- read_excel("../data/df.xlsx")
+df <- df %>% select(UT, CustomName)
+data_combined <- data %>% left_join(df, by = "UT")
+
+data <- read_excel("../data/data_combined.xlsx")
+
+setDT(data)
+
+clean_reference <- function(refs) {
+  
+  refs_cleaned <- gsub("&#\\d+;", "", refs)
+  refs_cleaned <- gsub("\\d+\\.\\d+\\.\\p{L}+", "", refs_cleaned, perl = TRUE)
+  refs_cleaned <- stri_replace_all_regex(refs_cleaned, "\\s+", " ")
+  refs_cleaned <- trimws(refs_cleaned)
+  
+  return(refs_cleaned)
+}
+
+data[, CR_cleaned := clean_reference(CR)]
+
+data[, CR_list := strsplit(CR_cleaned, ";\\s*")]
+
+data[, doc_id := .I]
+
+ref_data <- data[, .(
+  doc_id,
+  reference = unlist(CR_list),
+  group = CustomName  
+), by = UT]
+
+ref_data <- ref_data[reference != "" & !is.na(reference)]
+
+reference_freq <- ref_data[, .N, by = reference]
+
+ref_data[, reference := gsub(",\\s*doi.*$", "", reference, ignore.case = TRUE)]
+
+ref_data <- ref_data[!grepl("\\bAnonymous\\b", reference, ignore.case = TRUE) & 
+                     !grepl("^\\d+$", reference)]
+
+ref_data[, reference := gsub("\\s+", " ", reference)]
+ref_data[, reference := trimws(reference)]
+
+ref_data <- ref_data[!duplicated(ref_data[, .(doc_id, reference)]), ]
+
+doc_ref_counts <- ref_data[, .N, by = doc_id]
+
+reference_freq <- ref_data[, .N, by = reference]
+
+duplicate_refs_across_docs <- reference_freq[N > 1]
+
+co_citation_pairs <- ref_data[, {
+  if (.N > 1) {
+    pairs <- t(combn(reference, 2))
+    data.table(from = pairs[, 1], to = pairs[, 2])
+  } else {
+    NULL
+  }
+}, by = doc_id]
+
+co_citation_freq <- co_citation_pairs[, .N, by = .(from, to)]
+co_citation_freq_filtered <- co_citation_freq[N > 1]
+
+total_citations <- sum(reference_freq$N)
+
+reference_freq <- reference_freq[order(-N)]
+
+percentile <- 0.99 
+threshold <- quantile(reference_freq$N, probs = percentile)
+percentile_n <- reference_freq[N >= threshold, .N]
+
+top_n <- max(percentile_n)
+
+cat("Automatically determined top_n:", top_n, "\n")
+
+top_references <- reference_freq[1:top_n, reference]
+
+co_citation_top <- co_citation_freq[from %in% top_references & to %in% top_references]
+
+g <- graph_from_data_frame(d = co_citation_top[, .(from, to)], directed = FALSE)
+
+eigen_centrality_scores <- eigen_centrality(g, directed = FALSE, scale = TRUE)$vector
+V(g)$eigen_centrality <- eigen_centrality_scores
+
+max_node_size <- 40  
+min_node_size <- 10   
+V(g)$size <- ((V(g)$eigen_centrality / max(V(g)$eigen_centrality)) * (max_node_size - min_node_size)) + min_node_size
+
+max_edge_thickness <- 200  
+min_edge_thickness <- 2    
+
+co_citation_top[, log_weight := log10(N + 1)]  
+co_citation_top[, scaled_weight := ((log_weight / max(log_weight)) * (max_edge_thickness - min_edge_thickness)) + min_edge_thickness]
+
+E(g)$weight <- co_citation_top$scaled_weight
+
+category_colors <- c(
+  "Video modeling" = '#EF553B', 
+  "Telehealth training" = '#00CC96', 
+  "Function-based interventions" = '#AB63FA', 
+  "Rehabilitation interventions" = '#FFA15A',
+  "Communication and speech" = '#19D3F3', 
+  "Mental health treatments" = '#FF6692', 
+  "Reading instruction" = '#B6E880', 
+  "Single-case data and analysis" = '#FF97FF',
+  "Behavior strategies" = '#FECB52', 
+  "Mathematics instruction" = '#636EFA', 
+  "Aphasia and auditory treatments" = "#a799e8", 
+  "Applied behavior analysis" = "#9cd4f7",
+  "Sports behavioral training" = "#9cf4f7", 
+  "Staff training" = "#7CF3A0", 
+  "Multiple disabilities" = "#fb9a99", 
+  "Self-monitoring" = "#BCBD22",
+  "Outlier" = "#C5C5C5"
+)
+
+reference_to_group <- setNames(ref_data$group, ref_data$reference)
+V(g)$group <- reference_to_group[V(g)$name]
+
+V(g)$group_color <- category_colors[V(g)$group]
+
+communities <- cluster_louvain(g)
+
+N <- 200
+high_degree_nodes <- V(g)[order(degree(g), decreasing = TRUE)[1:N]]
+g_sub <- induced_subgraph(g, high_degree_nodes)
+
+edge_threshold <- quantile(E(g_sub)$weight, 0.90)
+g_filtered <- delete.edges(g_sub, E(g_sub)[E(g_sub)$weight < edge_threshold])
+
+eigen_centrality_scores <- eigen_centrality(g_filtered)$vector
+V(g_filtered)$size <- (eigen_centrality_scores / max(eigen_centrality_scores)) * 15 + 5  
+
+sorted_nodes <- order(V(g_filtered)$size, decreasing = TRUE)
+top_20_nodes <- sorted_nodes[1:20]
+
+simplified_labels <- sub("^([^\\s]+)\\s\\S+\\s(\\d{4}).*", "\\1 \\2", V(g_filtered)$name)
+
+nodes <- data.frame(
+  id = V(g_filtered)$name,                  
+  label = ifelse(seq_along(V(g_filtered)) %in% top_20_nodes, simplified_labels, NA),  
+  title = simplified_labels,  
+  size = V(g_filtered)$size,                
+  color = V(g_filtered)$group_color,  
+  font.size = V(g_filtered)$size * 3,
+  x = layout_with_fr(g_filtered)[, 1],                         
+  y = layout_with_fr(g_filtered)[, 2]                          
+)
+
+max_weight <- max(E(g_filtered)$weight)
+edges <- data.frame(
+  from = as.character(ends(g_filtered, E(g_filtered))[, 1]),  
+  to = as.character(ends(g_filtered, E(g_filtered))[, 2]),    
+  width = E(g_filtered)$weight / max_weight * 5,  
+  color = rgb(0.1, 0.1, 0.1, 0.1 + 0.1 * (E(g_filtered)$weight / max_weight))  
+)
+```
+
+
+```{r}
+co_citation_network <- visNetwork(nodes, edges, height = "690px", width = "100%") %>%
+  visNodes(
+    color = list(
+      background = ~color,
+      border = "black"
+    ),
+    labelHighlightBold = TRUE,  
+    font = list(
+      # vadjust = -20,
+      size = ~(font.siz)*3,         
+      background = "yellow",      
+      border = "black",          
+      align = "top",                     
+      multi = FALSE               
+    ),
+    shape = "dot"
+  ) %>%
+  visEdges(
+    width = ~width,  
+    color = list(color = ~color),  
+    smooth = TRUE  
+  ) %>%
+  visPhysics(
+    solver = "repulsion",  
+    repulsion = list(
+      nodeDistance = 200,       
+      springLength = 100,       
+      springConstant = 0.05,    
+      damping = 0.4,
+      centralGravity = 0.1,
+      avoidOverlap = 1,
+      gravitationalConstant = -2000
+    ),
+    stabilization = FALSE               
+  ) %>%
+  visOptions(
+    highlightNearest = list(
+      enabled = TRUE,
+      degree = 3,  
+      hover = TRUE
+    ),
+    nodesIdSelection = FALSE  
+  ) %>%
+  visInteraction(
+    tooltipDelay = 0,
+    hover = TRUE,
+    navigationButtons = TRUE
+  ) %>%
+  visLayout(randomSeed = 123)  
+
+# htmlwidgets::saveWidget(co_citation_network, "../results/co_citation_network/index.html")
+htmlwidgets::saveWidget(co_citation_network, "../results/index.html")
+```
+
+# N-grams
+
+### Visualization of N-grams Usage
+
+[Figure 11](topic_modeling/ngram_count_fig.html) <iframe src="topic_modeling/ngram_count_fig.html" width="800" height="800"></iframe>
+
+[Figure 12](topic_modeling/ngram_proportion_fig.html) <iframe src="topic_modeling/ngram_proportion_fig.html" width="800" height="800"></iframe>
+
+# Word Networks
+
+**Figure 13** <https://scd-network.dev>
+
+<iframe src="https://scd-network.dev" width="800" height="1000">
+
+</iframe>
