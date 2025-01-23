@@ -7545,7 +7545,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>January 22, 2025
+<pre>January 23, 2025
 </pre>
 </div>
 </div>
@@ -7584,7 +7584,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Wed Jan 22 02:26:04 2025       
+<pre>Thu Jan 23 02:11:04 2025       
 +---------------------------------------------------------------------------------------+
 | NVIDIA-SMI 535.104.05             Driver Version: 535.104.05   CUDA Version: 12.2     |
 |-----------------------------------------+----------------------+----------------------+
@@ -7593,7 +7593,7 @@ a.anchor-link {
 |                                         |                      |               MIG M. |
 |=========================================+======================+======================|
 |   0  NVIDIA A100-SXM4-40GB          Off | 00000000:00:04.0 Off |                    0 |
-| N/A   34C    P0              49W / 400W |      2MiB / 40960MiB |      0%      Default |
+| N/A   32C    P0              42W / 400W |      2MiB / 40960MiB |      0%      Default |
 |                                         |                      |             Disabled |
 +-----------------------------------------+----------------------+----------------------+
                                                                                          
@@ -7632,7 +7632,7 @@ a.anchor-link {
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>               total        used        free      shared  buff/cache   available
-Mem:            83Gi       901Mi        78Gi       1.0Mi       4.1Gi        81Gi
+Mem:            83Gi       857Mi        78Gi       1.0Mi       4.0Gi        81Gi
 Swap:             0B          0B          0B
 </pre>
 </div>
@@ -7742,86 +7742,85 @@ Swap:             0B          0B          0B
 <div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="sa">r</span><span class="s1">'\banaly\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bartificial\w*\s+intelligen\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bbehavior\w*\s+change\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bcalculate\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bclassif\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bcollect\w*\s+data\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bcompar\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bcondition\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bconsisten\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bconstruct\w*\s+graph\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bcreate\w*\s+graph\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bcriter\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdata\s+analy\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdata\s+collect\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdata\s+extract\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdata\s+record\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdata\s+shar\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdecision\w*\s+mak\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdesign\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bdual\w*\s+criteri\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\beffect\s+size\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bethic\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bevidence\w*base\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bexamin\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bexperiment\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bextract\w*\s+data\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bfeature\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bformula\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bfunction\w*\s+relation\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bgeneraliz\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\binspect\w*\s+visual\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\binterrupted\s+time\s+seri\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\blevel\s+change\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bliterature\s+review\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bmachine\w*\s+learn\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bmaintenance\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bmeta\w*\s+analys\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bmethod\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bmodel\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bmulti\w*level\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bN\w*of\w*1\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bnetwork\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bnon\w*parametric\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bopen\s+science\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\boverlap\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bparametric\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bphase\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bprobabilit\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bpre\w*register\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bpiecewise\s+growth\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bPRISMA\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bprocedure\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bprocess\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bprotocol\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bqualit\w*\s+indicator\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bquantif\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\brandomiz\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\brecord\w*\s+data\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\breplication\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\brepresent\w*\s+visual\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bresponse\w*\s+guide\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\brigor\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\brubric\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\brisk\w*\s+assess\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bscale\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bscreen\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bsession\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bshar\w*\s+data\b'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bstandard\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bsynthes\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\btest\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\btechnique\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\btrend\s+change\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bvariable\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bvisual\w*\s+analy\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bvisual\w*\s+inspect\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bvisual\w*\s+represent\w*'</span><span class="p">,</span>
-    <span class="sa">r</span><span class="s1">'\bwhat\s+works\s+clearinghouse\b'</span>
-<span class="p">]</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="n">patterns</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span>
+    <span class="sa">r</span><span class="s1">'\banaly\w*\b'</span><span class="p">,</span>  <span class="c1"># "analyze", "analysis"</span>
+    <span class="sa">r</span><span class="s1">'\bartificial\w*[-\s]+intelligen\w*\b'</span><span class="p">,</span>  <span class="c1"># "artificial intelligence", "artificial-intelligence"</span>
+    <span class="sa">r</span><span class="s1">'\bbehavior\w*[-\s]+chang\w*\b|\bchang\w*[-\s]*behavior\w*\b'</span><span class="p">,</span>  <span class="c1"># "behavior change", "change behavior"</span>
+    <span class="sa">r</span><span class="s1">'\bbehavior\w*\b'</span><span class="p">,</span>  <span class="c1"># "behavior", "behaviors"</span>
+    <span class="sa">r</span><span class="s1">'\bcollect\w*[-\s]+data\b|\bdata[-\s]*collect\w*\b'</span><span class="p">,</span>  <span class="c1"># "collect data", "data collection"</span>
+    <span class="sa">r</span><span class="s1">'\bconstruct\w*[-\s]+graph\w*\b|\bgraph[-\s]*construct\w*\b'</span><span class="p">,</span>  <span class="c1"># "construct graph", "graph construct"</span>
+    <span class="sa">r</span><span class="s1">'\bcreate\w*[-\s]+graph\w*\b|\bgraph[-\s]*create\w*\b'</span><span class="p">,</span>  <span class="c1"># "create graph", "graph create"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]+analy\w*\b|\banaly\w*[-\s]*data\b'</span><span class="p">,</span>  <span class="c1"># "data analysis", "analyze data"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*based\b'</span><span class="p">,</span>  <span class="c1"># "data-based", "databased"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*driven\b'</span><span class="p">,</span>  <span class="c1"># "data-driven", "data driven"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*extract\w*\b|\bextract\w*[-\s]+data\b'</span><span class="p">,</span>  <span class="c1"># "data extraction", "extract data"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*gather\w*\b|\bgather\w*[-\s]*data\b'</span><span class="p">,</span>  <span class="c1"># "data gathering", "gather data"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*informed\b'</span><span class="p">,</span>  <span class="c1"># "data-informed", "data informed"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*record\w*\b|\brecord\w*[-\s]+data\b'</span><span class="p">,</span>  <span class="c1"># "data recording", "record data"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*retriev\w*\b|\bretriev\w*[-\s]*data\b'</span><span class="p">,</span>  <span class="c1"># "data retrieving", "retrieve data"</span>
+    <span class="sa">r</span><span class="s1">'\bdata[-\s]*shar\w*\b|\bshar\w*[-\s]+data\b'</span><span class="p">,</span>  <span class="c1"># "data sharing", "share data"</span>
+    <span class="sa">r</span><span class="s1">'\bdecision\w*[-\s]*mak\w*\b|\bmak\w*[-\s]*decision\w*\b'</span><span class="p">,</span>  <span class="c1"># "decision-making", "make decisions"</span>
+    <span class="sa">r</span><span class="s1">'\bdependent[-\s]+variable\w*\b'</span><span class="p">,</span>  <span class="c1"># "dependent variable", "dependent variables"</span>
+    <span class="sa">r</span><span class="s1">'\bdesign\w*\b'</span><span class="p">,</span>  <span class="c1"># "design", "designing"</span>
+    <span class="sa">r</span><span class="s1">'\bdual\w*[-\s]+criteri\w*\b'</span><span class="p">,</span>  <span class="c1"># "dual criteria", "dual-criterion"</span>
+    <span class="sa">r</span><span class="s1">'\beffect\w*[-\s]+size\w*\b'</span><span class="p">,</span>  <span class="c1"># "effect size", "effect sizes"</span>
+    <span class="sa">r</span><span class="s1">'\bethic\w*\b'</span><span class="p">,</span>  <span class="c1"># "ethic", "ethics"</span>
+    <span class="sa">r</span><span class="s1">'\bevidence[-\s]*base\w*\b'</span><span class="p">,</span>  <span class="c1"># "evidence-based", "evidencebased"</span>
+    <span class="sa">r</span><span class="s1">'\bevidence\w*\b'</span><span class="p">,</span>  <span class="c1"># "evidence", "evidences"</span>
+    <span class="sa">r</span><span class="s1">'\bexamin\w*\b'</span><span class="p">,</span>  <span class="c1"># "examine", "examination"</span>
+    <span class="sa">r</span><span class="s1">'\bexperiment\w*\b'</span><span class="p">,</span>  <span class="c1"># "experiment", "experimental"</span>
+    <span class="sa">r</span><span class="s1">'\bfunction\w*[-\s]+relation\w*\b'</span><span class="p">,</span>  <span class="c1"># "functional relationship", "function-related"</span>
+    <span class="sa">r</span><span class="s1">'\bgeneraliz\w*\b'</span><span class="p">,</span>  <span class="c1"># "generalize", "generalization"</span>
+    <span class="sa">r</span><span class="s1">'\bindependent[-\s]+variable\w*\b'</span><span class="p">,</span>  <span class="c1"># "independent variable", "independent variables"</span>
+    <span class="sa">r</span><span class="s1">'\binspect\w*[-\s]+visual\w*\b|\bvisual\w*[-\s]+inspect\w*\b'</span><span class="p">,</span>  <span class="c1"># "inspect visually", "visual inspection"</span>
+    <span class="sa">r</span><span class="s1">'\binterrupted[-\s]+time[-\s]+seri\w*\b'</span><span class="p">,</span>  <span class="c1"># "interrupted time series", "interrupted-timeseries"</span>
+    <span class="sa">r</span><span class="s1">'\blevel[-\s]*chang\w*\b|\bchang\w*[-\s]*level\b'</span><span class="p">,</span>  <span class="c1"># "level change", "change level"</span>
+    <span class="sa">r</span><span class="s1">'\bmachine\w*[-\s]+learn\w*\b'</span><span class="p">,</span>  <span class="c1"># "machine learning", "machine-learning"</span>
+    <span class="sa">r</span><span class="s1">'\bmaintain\w*\b'</span><span class="p">,</span>  <span class="c1"># "maintain", "maintenance"</span>
+    <span class="sa">r</span><span class="s1">'\bmeasure\w*\b'</span><span class="p">,</span>  <span class="c1"># "measure", "measurement"</span>
+    <span class="sa">r</span><span class="s1">'\bmeta\w*[-\s]*analys\w*\b'</span><span class="p">,</span>  <span class="c1"># "meta-analysis", "meta analysis"</span>
+    <span class="sa">r</span><span class="s1">'\bmethod\w*\b'</span><span class="p">,</span>  <span class="c1"># "method", "methodology"</span>
+    <span class="sa">r</span><span class="s1">'\bmodel\w*\b'</span><span class="p">,</span>  <span class="c1"># "model", "modeling"</span>
+    <span class="sa">r</span><span class="s1">'\bmoment[-\s]+to[-\s]+moment\b'</span><span class="p">,</span>  <span class="c1"># "moment-to-moment", "moment to moment"</span>
+    <span class="sa">r</span><span class="s1">'\bmulti\w*level\w*\b'</span><span class="p">,</span>  <span class="c1"># "multilevel", "multi-level"</span>
+    <span class="sa">r</span><span class="s1">'\bN[-\s]*of[-\s]*1\w*\b'</span><span class="p">,</span>  <span class="c1"># "N-of-1", "N of 1"</span>
+    <span class="sa">r</span><span class="s1">'\bnetwork\w*\b'</span><span class="p">,</span>  <span class="c1"># "network", "networking"</span>
+    <span class="sa">r</span><span class="s1">'\bnon\w*parametric\w*\b'</span><span class="p">,</span>  <span class="c1"># "non-parametric", "nonparametric"</span>
+    <span class="sa">r</span><span class="s1">'\bopen[-\s]+science\b'</span><span class="p">,</span>  <span class="c1"># "open science", "open-science"</span>
+    <span class="sa">r</span><span class="s1">'\boverlap\w*\b'</span><span class="p">,</span>  <span class="c1"># "overlap", "overlapping"</span>
+    <span class="sa">r</span><span class="s1">'\bparametric\w*\b'</span><span class="p">,</span>  <span class="c1"># "parametric", "parametrics"</span>
+    <span class="sa">r</span><span class="s1">'\bphase\w*\b'</span><span class="p">,</span>  <span class="c1"># "phase", "phases"</span>
+    <span class="sa">r</span><span class="s1">'\bpre\w*[-\s]*register\w*\b'</span><span class="p">,</span>  <span class="c1"># "pre-register", "preregister"</span>
+    <span class="sa">r</span><span class="s1">'\bPRISMA\b'</span><span class="p">,</span>  <span class="c1"># "PRISMA", "prisma"</span>
+    <span class="sa">r</span><span class="s1">'\bprocedure\w*\b'</span><span class="p">,</span>  <span class="c1"># "procedure", "procedures"</span>
+    <span class="sa">r</span><span class="s1">'\bprocess\w*\b'</span><span class="p">,</span>  <span class="c1"># "process", "processes"</span>
+    <span class="sa">r</span><span class="s1">'\bprompt\w*\b'</span><span class="p">,</span>  <span class="c1"># "prompt", "prompting"</span>
+    <span class="sa">r</span><span class="s1">'\bprotocol\b'</span><span class="p">,</span>  <span class="c1"># "protocol", "protocols"</span>
+    <span class="sa">r</span><span class="s1">'\bqualit\w*[-\s]+indicator\w*\b'</span><span class="p">,</span>  <span class="c1"># "quality indicator", "quality-indicators"</span>
+    <span class="sa">r</span><span class="s1">'\bquantif\w*\b'</span><span class="p">,</span>  <span class="c1"># "quantify", "quantification"</span>
+    <span class="sa">r</span><span class="s1">'\brandomiz\w*\b'</span><span class="p">,</span>  <span class="c1"># "randomize", "randomization"</span>
+    <span class="sa">r</span><span class="s1">'\breinforc\w*\b'</span><span class="p">,</span>  <span class="c1"># "reinforce", "reinforcer"</span>
+    <span class="sa">r</span><span class="s1">'\breliabilit\w*\b'</span><span class="p">,</span>  <span class="c1"># "reliability", "reliable"</span>
+    <span class="sa">r</span><span class="s1">'\breplicat\w*\b'</span><span class="p">,</span>  <span class="c1"># "replication", "replicate"</span>
+    <span class="sa">r</span><span class="s1">'\brepresent\w*[-\s]+visual\w*\b|\bvisual\w*[-\s]+represent\w*\b'</span><span class="p">,</span>  <span class="c1"># "represent visually", "visual representation"</span>
+    <span class="sa">r</span><span class="s1">'\bresponse\w*\b'</span><span class="p">,</span>  <span class="c1"># "response", "responses"</span>
+    <span class="sa">r</span><span class="s1">'\bguided[-\s]*response\w*\b|\bresponse[-\s]*guided\b'</span><span class="p">,</span>  <span class="c1"># "guided response", "response guided"</span>
+    <span class="sa">r</span><span class="s1">'\brigor\w*\b'</span><span class="p">,</span>  <span class="c1"># "rigor", "rigorous"</span>
+    <span class="sa">r</span><span class="s1">'\brisk\w*[-\s]+assess\w*\b'</span><span class="p">,</span>  <span class="c1"># "risk assessment", "risk-assessments"</span>
+    <span class="sa">r</span><span class="s1">'\brubric\w*\b'</span><span class="p">,</span>  <span class="c1"># "rubric", "rubrics"</span>
+    <span class="sa">r</span><span class="s1">'\bscreen\w*\b'</span><span class="p">,</span>  <span class="c1"># "screen", "screening"</span>
+    <span class="sa">r</span><span class="s1">'\bsetting\w*\b'</span><span class="p">,</span>  <span class="c1"># "setting", "settings"</span>
+    <span class="sa">r</span><span class="s1">'\bstandard\w*\b'</span><span class="p">,</span>  <span class="c1"># "standard", "standards"</span>
+    <span class="sa">r</span><span class="s1">'\bstimul\w*\b'</span><span class="p">,</span>  <span class="c1"># "stimulus", "stimuli"</span>
+    <span class="sa">r</span><span class="s1">'\bsynthes\w*\b'</span><span class="p">,</span>  <span class="c1"># "synthesize", "synthesis"</span>
+    <span class="sa">r</span><span class="s1">'\btechnique\w*\b'</span><span class="p">,</span>  <span class="c1"># "technique", "techniques"</span>
+    <span class="sa">r</span><span class="s1">'\btest\w*\b'</span><span class="p">,</span>  <span class="c1"># "test", "testing"</span>
+    <span class="sa">r</span><span class="s1">'\btrend\w*\b'</span><span class="p">,</span>  <span class="c1"># "trend", "trending"</span>
+    <span class="sa">r</span><span class="s1">'\btreatment\w*\b'</span><span class="p">,</span>  <span class="c1"># "treatment", "treatments"</span>
+    <span class="sa">r</span><span class="s1">'\bvalidit\w*\b'</span><span class="p">,</span>  <span class="c1"># "validity", "validities"</span>
+    <span class="sa">r</span><span class="s1">'\bvisual\w*[-\s]*analy\w*\b|\banaly\w*[-\s]*visual\w*\b'</span><span class="p">,</span>  <span class="c1"># "visual analysis", "analyze visually"</span>
+    <span class="sa">r</span><span class="s1">'\bwhat[-\s]+works[-\s]+clearinghouse\b'</span>  <span class="c1"># "what works clearinghouse", "what-works-clearinghouse"</span>
+<span class="p">]))</span>
 
 <span class="n">pattern_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
 
@@ -7845,7 +7844,7 @@ Swap:             0B          0B          0B
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Number of 'Yes' predictions for methodology: 5615
+<pre>Number of 'Yes' predictions for methodology: 5666
 </pre>
 </div>
 </div>
@@ -7880,7 +7879,7 @@ Swap:             0B          0B          0B
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Number of 'Yes' predictions for filtered studies: 3544
+<pre>Number of 'Yes' predictions for filtered studies: 3597
 Data saved to files/all_data.xlsx
 </pre>
 </div>
@@ -7892,7 +7891,7 @@ Data saved to files/all_data.xlsx
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">nbconvert</span> <span class="kn">import</span> <span class="n">HTMLExporter</span>
