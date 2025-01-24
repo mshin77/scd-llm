@@ -67,11 +67,11 @@ wos_3501_4000 <- convert2df("3501_4000.ciw", dbsource = "wos", format = "endnote
 wos_4001_4500 <- convert2df("4001_4500.ciw", dbsource = "wos", format = "endnote")
 wos_4501_5000 <- convert2df("4501_5000.ciw", dbsource = "wos", format = "endnote")
 wos_5001_5500 <- convert2df("5001_5500.ciw", dbsource = "wos", format = "endnote")
-wos_5501_5716 <- convert2df("5501_5716.ciw", dbsource = "wos", format = "endnote")
+wos_5501_5718 <- convert2df("5501_5718.ciw", dbsource = "wos", format = "endnote")
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
-wos_5716 <- rbind.fill(wos_1_500,
+wos_5718 <- rbind.fill(wos_1_500,
                        wos_501_1000,
                        wos_1001_1500,
                        wos_1501_2000,
@@ -82,7 +82,11 @@ wos_5716 <- rbind.fill(wos_1_500,
                        wos_4001_4500,
                        wos_4501_5000,
                        wos_5001_5500,
-                       wos_5501_5716)
+                       wos_5501_5718)
+
+wos <- wos_5718 %>% filter(PY <= 2024)
+
+openxlsx::write.xlsx(wos, "init_all_data.xlsx", rowNames = FALSE)
 ```
 
 ### Text Classification and Prediction
@@ -107,7 +111,7 @@ wos_5716 <- rbind.fill(wos_1_500,
 
 ### Total Publications and Citations
 
-```{r,eval=FALSE}
+```{r, eval=FALSE}
 data <- read.xlsx("../data/all_data.xlsx")
 
 data <- data %>% filter(data$filtered == "Yes")
