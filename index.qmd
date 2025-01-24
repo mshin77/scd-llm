@@ -70,23 +70,17 @@ wos_5001_5500 <- convert2df("5001_5500.ciw", dbsource = "wos", format = "endnote
 wos_5501_5718 <- convert2df("5501_5718.ciw", dbsource = "wos", format = "endnote")
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-wos_5718 <- rbind.fill(wos_1_500,
-                       wos_501_1000,
-                       wos_1001_1500,
-                       wos_1501_2000,
-                       wos_2001_2500,
-                       wos_2501_3000,
-                       wos_3001_3500,
-                       wos_3501_4000,
-                       wos_4001_4500,
-                       wos_4501_5000,
-                       wos_5001_5500,
-                       wos_5501_5718)
+### Bind Rows and Filter Publications 
 
-wos <- wos_5718 %>% filter(PY <= 2024)
+```{r, eval=FALSE}
+#| code-fold: false
+wos_5718 <- rbind.fill(wos_1_500, wos_501_1000, wos_1001_1500, wos_1501_2000,
+                       wos_2001_2500,wos_2501_3000, wos_3001_3500, wos_3501_4000,
+                       wos_4001_4500, wos_4501_5000, wos_5001_5500, wos_5501_5718)
 
-openxlsx::write.xlsx(wos, "init_all_data.xlsx", rowNames = FALSE)
+wos_5707 <- wos_5718 %>% filter(PY <= 2024)
+
+openxlsx::write.xlsx(wos_5707, "init_all_data.xlsx", rowNames = FALSE)
 ```
 
 ### Text Classification and Prediction
