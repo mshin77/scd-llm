@@ -245,11 +245,150 @@ write.xlsx(MainInformationDF, file = "files/MainInformationDF.xlsx", colNames = 
 MostProdCountries <- descriptive_summary$MostProdCountries
 
 write.xlsx(MostProdCountries, file = "files/MostProdCountries.xlsx", colNames = TRUE)
+
+TCperCountries <- descriptive_summary$TCperCountries
+
+write.xlsx(TCperCountries, file = "files/TCperCountries.xlsx", colNames = TRUE)
 ```
 
 ```{r, echo=FALSE}
 MainInformationDF <- read_excel("files/MainInformationDF.xlsx")
 datatable(MainInformationDF, options = list(pageLength = 10))
+```
+
+# World Map
+
+### Map Publications and Citations Across Countries 
+
+```{r, eval=FALSE}
+MostProdCountries <- MostProdCountries %>%
+  mutate(
+    Articles = as.numeric(Articles),
+    Freq = as.numeric(Freq),
+    SCP = as.numeric(SCP),
+    MCP = as.numeric(MCP),
+    MCP_Ratio = as.numeric(MCP_Ratio)
+  )
+
+TCperCountries <- TCperCountries %>%
+  mutate(
+    `Total Citations` = as.numeric(`Total Citations`),
+    `Average Article Citations` = as.numeric(`Average Article Citations`)
+  )
+
+colnames(TCperCountries) <- stringr::str_trim(colnames(TCperCountries))
+
+Countries_Prod_TC <- MostProdCountries %>%
+  left_join(TCperCountries, by = "Country")
+
+Countries_Prod_TC <- Countries_Prod_TC %>%
+  mutate(Country = str_trim(Country, "both") %>% str_to_title())
+
+Countries_Prod_TC <- Countries_Prod_TC %>% 
+    mutate(Country = case_when(
+      Country == "Usa" ~ "USA",
+        Country == "Korea" ~ "South Korea",
+        Country == "U Arab Emirates" ~ "UAE",
+        Country == "United Kingdom" ~ "UK",
+        TRUE ~ as.character(Country)
+    ))
+
+write.xlsx(Countries_Prod_TC, file = "files/Countries_Prod_TC.xlsx", colNames = TRUE)
+
+sf::sf_use_s2(TRUE)
+
+world <- ne_countries(scale = "small", returnclass = "sf")
+
+world <- world %>% 
+  mutate(admin = case_when(
+    admin == "United States of America" ~ "USA",
+    admin == "United Arab Emirates" ~ "UAE",
+    admin == "United Kingdom" ~ "UK",
+    admin == "United Republic of Tanzania" ~ "Tanzania",
+    admin == "Republic of Serbia" ~ "Serbia",
+    TRUE ~ as.character(admin)
+  ))
+
+wintr_proj <- "+proj=wintri +datum=WGS84 +no_defs +over"
+
+if (is.na(st_crs(world))) {
+  st_crs(world) <- 4326
+}
+
+world_projected <- lwgeom::st_transform_proj(world, crs = wintr_proj)
+centroids_projected <- st_centroid(st_geometry(world_projected))
+centroids_geo <- st_transform(centroids_projected, crs = st_crs(world))
+world_centroids <- cbind(world, st_coordinates(centroids_geo))
+world_joined <- left_join(world, Countries_Prod_TC, by = c("admin" = "Country"))
+world_joined_filtered <- world_joined %>% filter(!is.na(Articles))
+world_joined_filtered <- world_joined_filtered %>%
+  mutate(country_article = paste(admin, Articles))
+
+world_sf <- st_as_sf(world_joined_filtered, coords = c("longitude", "latitude"), crs = "+proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0")
+
+b <- c(200, 2000, 5000, 10000, 20000, 40000, 60000, 70000)
+
+# Create the world map with centroids and labels
+world_map <- world_sf %>%
+  ggplot() +
+  geom_sf_interactive(aes(fill = `Total Citations`, 
+                          tooltip = paste("TC: ", admin, `Total Citations`)), 
+                      size = 0.25) +
+  geom_label_repel(
+    size = 3.3,
+    aes(geometry = geometry, label = admin),
+    alpha = 0.7,
+    max.overlaps = 13,
+    stat = "sf_coordinates"
+  ) +
+  scale_fill_viridis_c(trans = "sqrt", na.value = "white", breaks = b, direction = -1, alpha = 0.9, begin = 0.6, end = 1) +
+  geom_point_interactive(
+    aes(size = Articles,
+        geometry = geometry,
+        tooltip = paste("TP: ", admin, Articles)),
+    stat = "sf_coordinates",
+    stroke = 1,
+    shape = 21,
+    color = "#A84268",
+    alpha = 0.6
+  ) + 
+  theme_void() +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.title = element_text(size = 11),
+    legend.text = element_text(size = 10)
+  ) +
+  labs(fill = "Total citations (TC)", size = "Total publications (TP)") +
+  guides(
+    fill = guide_colourbar(title.position = "top", title.hjust = 0.5, barwidth = 18, barheight = 1),
+    size = guide_legend(title.position = "top", title.hjust = 0.5)
+  )
+
+world_map_interactive <- girafe(ggobj = world_map, width_svg = 10, height_svg = 5) %>%
+    girafe_options(
+    opts_hover(css = "fill:cyan;"),
+    opts_sizing(rescale = TRUE),
+    css = "div.girafe-container { padding-top: 0px; margin-top: -20px; }
+           .ggiraph-toolbar { position: absolute; bottom: 10px; right: 10px; }"
+  )
+
+htmlwidgets::saveWidget(
+  widget = world_map_interactive, 
+  file = "world_map_interactive/index.html",
+  selfcontained = TRUE)
+
+ggsave('files/world_map.png',
+       width = 7, height = 3.5, dpi = 300, plot = world_map)
+
+save(world_map_interactive, file = "files/world_map_interactive.RData")
+```
+
+[Figure 4](world_map_interactive/index.html)
+
+```{r, echo=FALSE}
+load("files/world_map_interactive.Rdata")
+world_map_interactive
 ```
 
 # Topic Modeling
