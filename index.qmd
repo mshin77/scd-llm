@@ -23,7 +23,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
   }
 </style>
 
-# Publication Screening 
+# Screening 
 
 ### Extract Web of Science (WoS) Data
 
@@ -87,13 +87,13 @@ wos_5716 <- rbind.fill(wos_1_500,
 
 ### Text Classification and Prediction
 
-#### **`Step 1. Text classifition for using single case design`** [Code](screening_single_case/index.html)
+#### **`Step 1. Text classifition for using single case design`** [Code](single_case/index.html)
 
 **Figure 1. Single Case Design Classification**
 
 ![](files/single-case-results.png)
 
-#### **`Step 2. Text classification for using technology`** [Code](screening_technology_use/index.html)
+#### **`Step 2. Text classification for using technology`** [Code](technology_use/index.html)
 
 **Figure 2. Technology Use Classification**
 
@@ -329,7 +329,7 @@ world_sf <- st_as_sf(world_joined_filtered, coords = c("longitude", "latitude"),
 b <- c(200, 2000, 5000, 10000, 20000, 40000, 60000, 70000)
 
 # Create the world map with centroids and labels
-world_map <- world_sf %>%
+world_map_init <- world_sf %>%
   ggplot() +
   geom_sf_interactive(aes(fill = `Total Citations`, 
                           tooltip = paste("TC: ", admin, `Total Citations`)), 
@@ -365,7 +365,7 @@ world_map <- world_sf %>%
     size = guide_legend(title.position = "top", title.hjust = 0.5)
   )
 
-world_map_interactive <- girafe(ggobj = world_map, width_svg = 10, height_svg = 5) %>%
+world_map <- girafe(ggobj = world_map_init, width_svg = 10, height_svg = 5) %>%
     girafe_options(
     opts_hover(css = "fill:cyan;"),
     opts_sizing(rescale = TRUE),
@@ -374,21 +374,21 @@ world_map_interactive <- girafe(ggobj = world_map, width_svg = 10, height_svg = 
   )
 
 htmlwidgets::saveWidget(
-  widget = world_map_interactive, 
-  file = "world_map_interactive/index.html",
+  widget = world_map, 
+  file = "world_map/index.html",
   selfcontained = TRUE)
 
 ggsave('files/world_map.png',
-       width = 7, height = 3.5, dpi = 300, plot = world_map)
+       width = 7, height = 3.5, dpi = 300, plot = world_map_init)
 
-save(world_map_interactive, file = "files/world_map_interactive.RData")
+save(world_map, file = "files/world_map.RData")
 ```
 
-[Figure 4](world_map_interactive/index.html)
+[Figure 4](world_map/index.html)
 
 ```{r, echo=FALSE}
-load("files/world_map_interactive.Rdata")
-world_map_interactive
+load("files/world_map.Rdata")
+world_map
 ```
 
 # Topic Modeling
