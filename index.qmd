@@ -1,7 +1,7 @@
 ---
-title: 'Exploring the Landscape of Single-Case Design Research Methodology Using Technology: Text Mining With Large Language Models'
+title: 'Exploring the Research Landscape on Single-Case Design Methodology Using Technology Through Text Mining and Large Language Models'
 # logo: ''
-# date: "`r Sys.Date()`"
+date: "`r Sys.Date()`"
 code-annotations: hover
 sidebar: false
 toc: true
