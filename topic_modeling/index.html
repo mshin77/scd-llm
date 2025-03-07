@@ -7572,7 +7572,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>February 24, 2025
+<pre>March 06, 2025
 </pre>
 </div>
 </div>
@@ -7600,7 +7600,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Mon Feb 24 04:10:48 2025       
+<pre>Thu Mar  6 21:31:53 2025       
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
 |-----------------------------------------+------------------------+----------------------+
@@ -7609,7 +7609,7 @@ a.anchor-link {
 |                                         |                        |               MIG M. |
 |=========================================+========================+======================|
 |   0  NVIDIA A100-SXM4-40GB          Off |   00000000:00:04.0 Off |                    0 |
-| N/A   41C    P0             49W /  400W |       0MiB /  40960MiB |      0%      Default |
+| N/A   31C    P0             50W /  400W |       0MiB /  40960MiB |      0%      Default |
 |                                         |                        |             Disabled |
 +-----------------------------------------+------------------------+----------------------+
                                                                                          
@@ -7648,7 +7648,7 @@ a.anchor-link {
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>               total        used        free      shared  buff/cache   available
-Mem:            83Gi       2.1Gi        55Gi       6.0Mi        25Gi        80Gi
+Mem:            83Gi       1.1Gi        57Gi       4.0Mi        24Gi        81Gi
 Swap:             0B          0B          0B
 </pre>
 </div>
@@ -7749,8 +7749,8 @@ Swap:             0B          0B          0B
 
 <span class="c1"># Natural Language Processing</span>
 <span class="kn">import</span> <span class="nn">nltk</span>
-<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'wordnet'</span><span class="p">)</span>
-<span class="kn">import</span> <span class="nn">spacy</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="kn">import</span> <span class="n">pos_tag</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="kn">import</span> <span class="n">stopwords</span><span class="p">,</span> <span class="n">wordnet</span>
 <span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">WordNetLemmatizer</span>
 <span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span><span class="p">,</span> <span class="n">TfidfVectorizer</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">cosine_similarity</span>
@@ -7758,6 +7758,8 @@ Swap:             0B          0B          0B
 <span class="kn">from</span> <span class="nn">bertopic</span> <span class="kn">import</span> <span class="n">BERTopic</span>
 <span class="kn">from</span> <span class="nn">bertopic.representation</span> <span class="kn">import</span> <span class="n">KeyBERTInspired</span>
 <span class="kn">from</span> <span class="nn">bertopic.vectorizers</span> <span class="kn">import</span> <span class="n">ClassTfidfTransformer</span>
+
+<span class="kn">import</span> <span class="nn">spacy</span>
 
 <span class="c1"># Generating Topic Labels</span>
 <span class="kn">import</span> <span class="nn">openai</span>
@@ -7788,6 +7790,10 @@ Swap:             0B          0B          0B
 
 <span class="c1"># Display HTML</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">IFrame</span>
+
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'wordnet'</span><span class="p">)</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'stopwords'</span><span class="p">)</span>
+<span class="n">nltk</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="s1">'averaged_perceptron_tagger_eng'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7802,7 +7808,19 @@ Swap:             0B          0B          0B
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
 <pre>[nltk_data] Downloading package wordnet to /root/nltk_data...
 [nltk_data]   Package wordnet is already up-to-date!
+[nltk_data] Downloading package stopwords to /root/nltk_data...
+[nltk_data]   Package stopwords is already up-to-date!
+[nltk_data] Downloading package averaged_perceptron_tagger_eng to
+[nltk_data]     /root/nltk_data...
+[nltk_data]   Package averaged_perceptron_tagger_eng is already up-to-
+[nltk_data]       date!
 </pre>
+</div>
+</div>
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
+<pre>True</pre>
 </div>
 </div>
 </div>
@@ -7922,7 +7940,7 @@ Swap:             0B          0B          0B
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="Cluster-documents">Cluster documents<a class="anchor-link" href="#Cluster-documents">¶</a></h4>
+<h4 id="Preprocess-documents">Preprocess documents<a class="anchor-link" href="#Preprocess-documents">¶</a></h4>
 </div>
 </div>
 </div>
@@ -7951,6 +7969,36 @@ Swap:             0B          0B          0B
 <div class="highlight hl-python"><pre><span></span><span class="n">publication_embeddings</span> <span class="o">=</span> <span class="n">sentence_model</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'combined_text'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">show_progress_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">publication_embeddings_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">publication_embeddings</span><span class="p">)</span>
 <span class="n">publication_embeddings_df</span><span class="p">[</span><span class="s1">'UT'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'UT'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
+<span class="n">stop_words</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">'english'</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">get_wordnet_pos</span><span class="p">(</span><span class="n">treebank_tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="n">pos_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">'J'</span><span class="p">:</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">ADJ</span><span class="p">,</span>
+        <span class="s1">'V'</span><span class="p">:</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">VERB</span><span class="p">,</span>
+        <span class="s1">'N'</span><span class="p">:</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">NOUN</span><span class="p">,</span>
+        <span class="s1">'R'</span><span class="p">:</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">ADV</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">pos_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">treebank_tag</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">wordnet</span><span class="o">.</span><span class="n">NOUN</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">preprocess_texts</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'http\S+|www\S+|https\S+'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[^\w\s-]'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\d+'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">token</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">'-'</span><span class="p">)</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">lemmatize_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">pos_tags</span> <span class="o">=</span> <span class="n">pos_tag</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+    <span class="n">lemmatized_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">lemmatizer</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">get_wordnet_pos</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span> <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">pos_tags</span><span class="p">]</span>
+    <span class="k">return</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lemmatized_tokens</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'preprocessed_text'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'combined_text'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">preprocess_texts</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'preprocessed_text'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lemmatize_text</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7968,7 +8016,18 @@ Swap:             0B          0B          0B
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h4 id="Topic-modeling">Topic modeling<a class="anchor-link" href="#Topic-modeling">¶</a></h4>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7989,7 +8048,8 @@ Swap:             0B          0B          0B
 <span class="n">reduced_embeddings_df</span><span class="p">[</span><span class="s1">'UT'</span><span class="p">]</span> <span class="o">=</span> <span class="n">publication_embeddings_df</span><span class="p">[</span><span class="s1">'UT'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
 <span class="n">hdbscan_model</span> <span class="o">=</span> <span class="n">HDBSCAN</span><span class="p">(</span>
-    <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span>
+    <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">min_samples</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
     <span class="n">metric</span><span class="o">=</span><span class="s1">'euclidean'</span><span class="p">,</span>
     <span class="n">cluster_selection_method</span><span class="o">=</span><span class="s1">'eom'</span><span class="p">,</span>
     <span class="n">prediction_data</span><span class="o">=</span><span class="kc">True</span>
@@ -7997,61 +8057,6 @@ Swap:             0B          0B          0B
 
 <span class="n">hdbscan_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">reduced_embeddings</span><span class="p">)</span>
 <span class="n">labels</span> <span class="o">=</span> <span class="n">hdbscan_model</span><span class="o">.</span><span class="n">labels_</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="Topic-modeling">Topic modeling<a class="anchor-link" href="#Topic-modeling">¶</a></h4>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">topic_model</span> <span class="o">=</span> <span class="n">BERTopic</span><span class="p">()</span>
-<span class="n">topics</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">topic_model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'combined_text'</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">lemmatizer</span> <span class="o">=</span> <span class="n">WordNetLemmatizer</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">lemmatize_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="n">lemmatized_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">lemmatizer</span><span class="o">.</span><span class="n">lemmatize</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">]</span>
-    <span class="k">return</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lemmatized_tokens</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">preprocess_texts</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'http\S+|www\S+|https\S+'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'[^\w\s-]'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">'\d+'</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-    <span class="n">tokens</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-    <span class="k">return</span> <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
-
-<span class="n">df</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'combined_text'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">lemmatize_text</span><span class="p">)</span>
-
-<span class="n">df</span><span class="p">[</span><span class="s1">'preprocessed_text'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">preprocess_texts</span><span class="p">)</span>
 
 <span class="n">vectorizer_model</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">ngram_range</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">stop_words</span><span class="o">=</span><span class="s1">'english'</span><span class="p">)</span>
 <span class="n">ctfidf_model</span> <span class="o">=</span> <span class="n">ClassTfidfTransformer</span><span class="p">()</span>
@@ -8067,25 +8072,13 @@ Swap:             0B          0B          0B
   <span class="n">calculate_probabilities</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
   <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">topics</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">topic_model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'preprocessed_text'</span><span class="p">])</span>
+
+<span class="n">topics</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">topic_model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">])</span>
 <span class="n">df</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">topics</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
     <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s1">'Prob_Topic_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
 
-<span class="n">topic_model</span><span class="o">.</span><span class="n">update_topics</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'preprocessed_text'</span><span class="p">],</span> <span class="n">vectorizer_model</span><span class="o">=</span><span class="n">vectorizer_model</span><span class="p">)</span>
+<span class="n">topic_model</span><span class="o">.</span><span class="n">update_topics</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">],</span> <span class="n">vectorizer_model</span><span class="o">=</span><span class="n">vectorizer_model</span><span class="p">)</span>
 
 <span class="n">topic_info</span> <span class="o">=</span> <span class="n">topic_model</span><span class="o">.</span><span class="n">get_topic_info</span><span class="p">()</span>
 
@@ -8113,7 +8106,7 @@ Swap:             0B          0B          0B
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2025-02-24 04:12:21,780 - BERTopic - Embedding - Transforming documents to embeddings.
+<pre>2025-03-06 21:33:26,671 - BERTopic - Embedding - Transforming documents to embeddings.
 </pre>
 </div>
 </div>
@@ -8126,13 +8119,13 @@ Swap:             0B          0B          0B
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2025-02-24 04:12:24,431 - BERTopic - Embedding - Completed ✓
-2025-02-24 04:12:24,431 - BERTopic - Dimensionality - Fitting the dimensionality reduction algorithm
-2025-02-24 04:12:39,986 - BERTopic - Dimensionality - Completed ✓
-2025-02-24 04:12:39,987 - BERTopic - Cluster - Start clustering the reduced embeddings
-2025-02-24 04:12:40,243 - BERTopic - Cluster - Completed ✓
-2025-02-24 04:12:40,247 - BERTopic - Representation - Extracting topics from clusters using representation models.
-2025-02-24 04:12:46,046 - BERTopic - Representation - Completed ✓
+<pre>2025-03-06 21:33:29,286 - BERTopic - Embedding - Completed ✓
+2025-03-06 21:33:29,286 - BERTopic - Dimensionality - Fitting the dimensionality reduction algorithm
+2025-03-06 21:33:44,633 - BERTopic - Dimensionality - Completed ✓
+2025-03-06 21:33:44,634 - BERTopic - Cluster - Start clustering the reduced embeddings
+2025-03-06 21:33:44,927 - BERTopic - Cluster - Completed ✓
+2025-03-06 21:33:44,931 - BERTopic - Representation - Extracting topics from clusters using representation models.
+2025-03-06 21:33:50,472 - BERTopic - Representation - Completed ✓
 </pre>
 </div>
 </div>
@@ -8143,7 +8136,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_gen</span> <span class="o">=</span> <span class="n">generate_topic_labels</span><span class="p">(</span><span class="n">topic_info</span><span class="p">,</span> <span class="n">topic_model</span><span class="p">)</span>
@@ -8159,23 +8152,23 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df_filtered</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">docs_filtered</span> <span class="o">=</span> <span class="n">df_filtered</span><span class="p">[</span><span class="s1">'preprocessed_text'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">docs_filtered</span> <span class="o">=</span> <span class="n">df_filtered</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
 <span class="n">umap_model_outliers</span> <span class="o">=</span> <span class="n">UMAP</span><span class="p">(</span>
-    <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">n_components</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
     <span class="n">metric</span><span class="o">=</span><span class="s1">'cosine'</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
 <span class="p">)</span>
 
 <span class="n">hdbscan_model_outliers</span> <span class="o">=</span> <span class="n">HDBSCAN</span><span class="p">(</span>
     <span class="n">min_cluster_size</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span>
-    <span class="n">min_samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">min_samples</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
     <span class="n">metric</span><span class="o">=</span><span class="s1">'euclidean'</span><span class="p">,</span>
     <span class="n">cluster_selection_method</span><span class="o">=</span><span class="s1">'eom'</span><span class="p">,</span>
     <span class="n">prediction_data</span><span class="o">=</span><span class="kc">True</span>
@@ -8202,7 +8195,7 @@ Swap:             0B          0B          0B
 <span class="n">new_topics</span><span class="p">,</span> <span class="n">new_probs</span> <span class="o">=</span> <span class="n">topic_model_outliers</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">docs_filtered</span><span class="p">)</span>
 <span class="n">df_filtered</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_topics</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">new_probs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-    <span class="n">df_filtered</span><span class="p">[</span><span class="sa">f</span><span class="s1">'Prob_New_Topic_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">df_filtered</span><span class="p">[</span><span class="sa">f</span><span class="s1">'Prob_New_Topic_Updated_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_probs</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
 
 <span class="n">topic_model_outliers</span><span class="o">.</span><span class="n">update_topics</span><span class="p">(</span><span class="n">docs_filtered</span><span class="p">,</span> <span class="n">vectorizer_model</span><span class="o">=</span><span class="n">vectorizer_model</span><span class="p">)</span>
 
@@ -8231,26 +8224,26 @@ Swap:             0B          0B          0B
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2025-02-24 04:13:17,899 - BERTopic - Embedding - Transforming documents to embeddings.
+<pre>2025-03-06 21:34:35,333 - BERTopic - Embedding - Transforming documents to embeddings.
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Batches:   0%|          | 0/24 [00:00&lt;?, ?it/s]</pre>
+<pre>Batches:   0%|          | 0/22 [00:00&lt;?, ?it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2025-02-24 04:13:18,534 - BERTopic - Embedding - Completed ✓
-2025-02-24 04:13:18,535 - BERTopic - Dimensionality - Fitting the dimensionality reduction algorithm
-2025-02-24 04:13:20,196 - BERTopic - Dimensionality - Completed ✓
-2025-02-24 04:13:20,197 - BERTopic - Cluster - Start clustering the reduced embeddings
-2025-02-24 04:13:20,242 - BERTopic - Cluster - Completed ✓
-2025-02-24 04:13:20,244 - BERTopic - Representation - Extracting topics from clusters using representation models.
-2025-02-24 04:13:21,610 - BERTopic - Representation - Completed ✓
+<pre>2025-03-06 21:34:35,891 - BERTopic - Embedding - Completed ✓
+2025-03-06 21:34:35,892 - BERTopic - Dimensionality - Fitting the dimensionality reduction algorithm
+2025-03-06 21:34:37,027 - BERTopic - Dimensionality - Completed ✓
+2025-03-06 21:34:37,028 - BERTopic - Cluster - Start clustering the reduced embeddings
+2025-03-06 21:34:37,064 - BERTopic - Cluster - Completed ✓
+2025-03-06 21:34:37,067 - BERTopic - Representation - Extracting topics from clusters using representation models.
+2025-03-06 21:34:38,011 - BERTopic - Representation - Completed ✓
 </pre>
 </div>
 </div>
@@ -8261,7 +8254,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_filtered_gen</span> <span class="o">=</span> <span class="n">generate_topic_labels</span><span class="p">(</span><span class="n">topic_info_filtered</span><span class="p">,</span> <span class="n">topic_model_outliers</span><span class="p">)</span>
@@ -8277,11 +8270,11 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df_filtered_updated</span> <span class="o">=</span> <span class="n">df_filtered</span><span class="p">[</span><span class="n">df_filtered</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">docs_filtered_updated</span> <span class="o">=</span> <span class="n">df_filtered_updated</span><span class="p">[</span><span class="s1">'preprocessed_text'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">docs_filtered_updated</span> <span class="o">=</span> <span class="n">df_filtered_updated</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
 <span class="n">umap_model_outliers_updated</span> <span class="o">=</span> <span class="n">UMAP</span><span class="p">(</span>
     <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
@@ -8349,26 +8342,26 @@ Swap:             0B          0B          0B
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2025-02-24 04:13:46,283 - BERTopic - Embedding - Transforming documents to embeddings.
+<pre>2025-03-06 21:34:56,795 - BERTopic - Embedding - Transforming documents to embeddings.
 </pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Batches:   0%|          | 0/7 [00:00&lt;?, ?it/s]</pre>
+<pre>Batches:   0%|          | 0/2 [00:00&lt;?, ?it/s]</pre>
 </div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>2025-02-24 04:13:46,473 - BERTopic - Embedding - Completed ✓
-2025-02-24 04:13:46,473 - BERTopic - Dimensionality - Fitting the dimensionality reduction algorithm
-2025-02-24 04:13:46,812 - BERTopic - Dimensionality - Completed ✓
-2025-02-24 04:13:46,813 - BERTopic - Cluster - Start clustering the reduced embeddings
-2025-02-24 04:13:46,827 - BERTopic - Cluster - Completed ✓
-2025-02-24 04:13:46,829 - BERTopic - Representation - Extracting topics from clusters using representation models.
-2025-02-24 04:13:47,287 - BERTopic - Representation - Completed ✓
+<pre>2025-03-06 21:34:56,849 - BERTopic - Embedding - Completed ✓
+2025-03-06 21:34:56,850 - BERTopic - Dimensionality - Fitting the dimensionality reduction algorithm
+2025-03-06 21:34:56,917 - BERTopic - Dimensionality - Completed ✓
+2025-03-06 21:34:56,917 - BERTopic - Cluster - Start clustering the reduced embeddings
+2025-03-06 21:34:56,924 - BERTopic - Cluster - Completed ✓
+2025-03-06 21:34:56,926 - BERTopic - Representation - Extracting topics from clusters using representation models.
+2025-03-06 21:34:57,074 - BERTopic - Representation - Completed ✓
 </pre>
 </div>
 </div>
@@ -8379,7 +8372,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_filtered_updated_gen</span> <span class="o">=</span> <span class="n">generate_topic_labels</span><span class="p">(</span><span class="n">topic_info_filtered_updated</span><span class="p">,</span> <span class="n">topic_model_outliers_updated</span><span class="p">)</span>
@@ -8395,7 +8388,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [17]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_no_rep_doc</span> <span class="o">=</span> <span class="n">topic_info</span><span class="p">[</span><span class="n">topic_info</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Representative_Docs'</span><span class="p">])</span>
@@ -8411,7 +8404,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [18]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_topic_info</span><span class="p">)</span>
@@ -8425,9 +8418,9 @@ Swap:             0B          0B          0B
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[21]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[18]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>2688</pre>
+<pre>2743</pre>
 </div>
 </div>
 </div>
@@ -8437,7 +8430,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_no_rep_doc_filtered</span> <span class="o">=</span> <span class="n">topic_info_filtered</span><span class="p">[</span><span class="n">topic_info_filtered</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Representative_Docs'</span><span class="p">])</span>
@@ -8453,7 +8446,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [20]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_topic_info_filtered</span><span class="p">)</span>
@@ -8467,9 +8460,9 @@ Swap:             0B          0B          0B
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>535</pre>
+<pre>644</pre>
 </div>
 </div>
 </div>
@@ -8479,7 +8472,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_no_rep_doc_filtered_updated</span> <span class="o">=</span> <span class="n">topic_info_filtered_updated</span><span class="p">[</span><span class="n">topic_info_filtered_updated</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'Representative_Docs'</span><span class="p">])</span>
@@ -8495,7 +8488,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [22]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">df_topic_info_filtered_updated</span><span class="p">)</span>
@@ -8509,9 +8502,9 @@ Swap:             0B          0B          0B
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[25]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain" tabindex="0">
-<pre>206</pre>
+<pre>42</pre>
 </div>
 </div>
 </div>
@@ -8521,7 +8514,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_combined_concat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">topic_info_no_rep_doc</span><span class="p">,</span> <span class="n">topic_info_no_rep_doc_filtered</span><span class="p">,</span> <span class="n">topic_info_no_rep_doc_filtered_updated</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -8536,10 +8529,10 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [38]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [24]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">topic_info_combined_concat_human_loop</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"files/topic_info_combined_concat_human_loop.csv"</span><span class="p">)</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">topic_info_combined_concat_human_loop</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">"files/topic_info_combined_concat_human_loop.xlsx"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8550,7 +8543,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [39]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_combined_concat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">topic_info_combined_concat</span><span class="p">,</span> <span class="n">topic_info_combined_concat_human_loop</span><span class="p">[[</span><span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'CustomLabel'</span><span class="p">]],</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"Name"</span><span class="p">)</span>
@@ -8574,7 +8567,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">topic_info_words_combined_concat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">topic_info_words_combined</span><span class="p">,</span> <span class="n">topic_info_filtered_words_combined</span><span class="p">,</span> <span class="n">topic_info_filtered_updated_words_combined</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -8601,7 +8594,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [41]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [27]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df_combined_concat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_topic_info</span><span class="p">,</span> <span class="n">df_topic_info_filtered</span><span class="p">,</span> <span class="n">df_topic_info_filtered_updated</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -8625,13 +8618,10 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [28]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">init_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">init_topic_info</span> <span class="o">=</span> <span class="n">topic_info</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-<span class="n">files</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"files/topic_model.pkl"</span><span class="p">:</span> <span class="n">topic_model</span><span class="p">,</span>
     <span class="s2">"files/topic_model_outliers.pkl"</span><span class="p">:</span> <span class="n">topic_model_outliers</span><span class="p">,</span>
     <span class="s2">"files/topic_model_outliers_updated.pkl"</span><span class="p">:</span> <span class="n">topic_model_outliers_updated</span><span class="p">,</span>
@@ -8648,29 +8638,24 @@ Swap:             0B          0B          0B
     <span class="s2">"files/df_combined_concat.pkl"</span><span class="p">:</span> <span class="n">df_combined_concat</span>
 <span class="p">}</span>
 
-<span class="n">topic_info</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"files/topic_info.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">topic_info_filtered</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"files/topic_info_filtered.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">topic_info_filtered_updated</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"files/topic_info_filtered_updated.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">topic_info_combined_concat</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"files/topic_info_combined_concat.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">topic_info_words_combined_concat</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"files/topic_info_words_combined_concat.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">df_combined_concat</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"files/df_combined_concat.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
 <span class="k">for</span> <span class="n">filename</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">continue</span>
+
     <span class="k">try</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Attempting to save </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">..."</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Data type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-          <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">'__len__'</span><span class="p">):</span>
-              <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Data length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-          <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-              <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-          <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Successfully saved </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: Data for </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> is None, skipping save"</span><span class="p">)</span>
-    <span class="k">except</span> <span class="n">PicklingError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-       <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error pickling </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"An unexpected error occurred while writing </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error saving pickle for </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">excel_filename</span> <span class="o">=</span> <span class="n">filename</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">".xlsx"</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">excel_filename</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">excel_filename</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error saving Excel for </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8681,53 +8666,57 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [32]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [29]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="c1"># loaded_data = {}</span>
+<div class="highlight hl-python"><pre><span></span><span class="c1"># def load_data_from_files(files_dict):</span>
+<span class="c1">#     loaded_data = {}</span>
+<span class="c1">#     for filename, var_name in files_dict.items():</span>
+<span class="c1">#         filepath = os.path.join('files', filename)</span>
+<span class="c1">#         if os.path.exists(filepath) and os.path.getsize(filepath) &gt; 0:</span>
+<span class="c1">#             try:</span>
+<span class="c1">#                 with open(filepath, "rb") as f:</span>
+<span class="c1">#                     loaded_data[var_name] = pickle.load(f)</span>
+<span class="c1">#             except Exception as e:</span>
+<span class="c1">#                 loaded_data[var_name] = None</span>
+<span class="c1">#                 print(f"Error loading {filepath}: {e}")</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             loaded_data[var_name] = None</span>
+<span class="c1">#     return loaded_data</span>
 
-<span class="c1"># for filename, data in files.items():</span>
-<span class="c1">#    if os.path.exists(filename):</span>
-<span class="c1">#      file_size = os.path.getsize(filename)</span>
-<span class="c1">#      if file_size &gt; 0:</span>
-<span class="c1">#          try:</span>
-<span class="c1">#              with open(filename, "rb") as f:</span>
-<span class="c1">#                  loaded_data[filename] = pickle.load(f)</span>
-<span class="c1">#              print(f"Successfully loaded {filename}")</span>
-<span class="c1">#          except EOFError as e:</span>
-<span class="c1">#              print(f"Error: Could not load {filename}. It might be empty or corrupted: {e}")</span>
-<span class="c1">#              loaded_data[filename] = None</span>
-<span class="c1">#          except Exception as e:</span>
-<span class="c1">#            print(f"An unexpected error occurred while loading {filename}: {e}")</span>
-<span class="c1">#            loaded_data[filename] = None</span>
-<span class="c1">#      else:</span>
-<span class="c1">#          print(f"Error: File is empty: {filename}")</span>
-<span class="c1">#          loaded_data[filename] = None</span>
-<span class="c1">#    else:</span>
-<span class="c1">#        print(f"Error: File not found: {filename}")</span>
-<span class="c1">#        loaded_data[filename] = None</span>
+<span class="c1"># files_to_load = {</span>
+<span class="c1">#     "topic_model.pkl": "topic_model",</span>
+<span class="c1">#     "topic_model_outliers.pkl": "topic_model_outliers",</span>
+<span class="c1">#     "topic_model_outliers_updated.pkl": "topic_model_outliers_updated",</span>
+<span class="c1">#     "publication_embeddings.pkl": "publication_embeddings",</span>
+<span class="c1">#     "reduced_embeddings.pkl": "reduced_embeddings",</span>
+<span class="c1">#     "topic_info.pkl": "topic_info",</span>
+<span class="c1">#     "topic_info_filtered.pkl": "topic_info_filtered",</span>
+<span class="c1">#     "topic_info_filtered_updated.pkl": "topic_info_filtered_updated",</span>
+<span class="c1">#     "topic_info_combined_concat.pkl": "topic_info_combined_concat",</span>
+<span class="c1">#     "topic_info_words_combined_concat.pkl": "topic_info_words_combined_concat",</span>
+<span class="c1">#     "df_topic_info.pkl": "df_topic_info",</span>
+<span class="c1">#     "df_topic_info_filtered.pkl": "df_topic_info_filtered",</span>
+<span class="c1">#     "df_topic_info_filtered_updated.pkl": "df_topic_info_filtered_updated",</span>
+<span class="c1">#     "df_combined_concat.pkl": "df_combined_concat"</span>
+<span class="c1"># }</span>
 
-<span class="c1"># topic_model = loaded_data.get("files/topic_model.pkl")</span>
-<span class="c1"># topic_model_outliers = loaded_data.get("files/topic_model_outliers.pkl")</span>
-<span class="c1"># topic_model_outliers_updated = loaded_data.get("files/topic_model_outliers_updated.pkl")</span>
-<span class="c1"># publication_embeddings = loaded_data.get("files/publication_embeddings.pkl")</span>
-<span class="c1"># reduced_embeddings = loaded_data.get("files/reduced_embeddings.pkl")</span>
-<span class="c1"># topic_info = loaded_data.get("files/topic_info.pkl")</span>
-<span class="c1"># topic_info_filtered = loaded_data.get("files/topic_info_filtered.pkl")</span>
-<span class="c1"># topic_info_filtered_updated = loaded_data.get("files/topic_info_filtered_updated.pkl")</span>
-<span class="c1"># topic_info_combined_concat = loaded_data.get("files/topic_info_combined_concat.pkl")</span>
-<span class="c1"># topic_info_words_combined_concat = loaded_data.get("files/topic_info_words_combined_concat.pkl")</span>
-<span class="c1"># df_topic_info = loaded_data.get("files/df_topic_info.pkl")</span>
-<span class="c1"># df_topic_info_filtered = loaded_data.get("files/df_topic_info_filtered.pkl")</span>
-<span class="c1"># df_topic_info_filtered_updated = loaded_data.get("files/df_topic_info_filtered_updated.pkl")</span>
-<span class="c1"># df_combined_concat = loaded_data.get("files/df_combined_concat.pkl")</span>
+<span class="c1"># loaded_data = load_data_from_files(files_to_load)</span>
 
-<span class="c1"># topic_info = pd.read_csv("files/topic_info.csv")</span>
-<span class="c1"># topic_info_filtered = pd.read_csv("files/topic_info_filtered.csv")</span>
-<span class="c1"># topic_info_filtered_updated = pd.read_csv("files/topic_info_filtered_updated.csv")</span>
-<span class="c1"># topic_info_combined_concat = pd.read_csv("files/topic_info_combined_concat.csv")</span>
-<span class="c1"># topic_info_words_combined_concat = pd.read_csv("files/topic_info_words_combined_concat.csv")</span>
-<span class="c1"># df_combined_concat = pd.read_csv("files/df_combined_concat.csv")</span>
+<span class="c1"># topic_model = loaded_data.get("topic_model")</span>
+<span class="c1"># topic_model_outliers = loaded_data.get("topic_model_outliers")</span>
+<span class="c1"># topic_model_outliers_updated = loaded_data.get("topic_model_outliers_updated")</span>
+<span class="c1"># publication_embeddings = loaded_data.get("publication_embeddings")</span>
+<span class="c1"># reduced_embeddings = loaded_data.get("reduced_embeddings")</span>
+<span class="c1"># topic_info = loaded_data.get("topic_info")</span>
+<span class="c1"># topic_info_filtered = loaded_data.get("topic_info_filtered")</span>
+<span class="c1"># topic_info_filtered_updated = loaded_data.get("topic_info_filtered_updated")</span>
+<span class="c1"># topic_info_combined_concat = loaded_data.get("topic_info_combined_concat")</span>
+<span class="c1"># topic_info_words_combined_concat = loaded_data.get("topic_info_words_combined_concat")</span>
+<span class="c1"># df_topic_info = loaded_data.get("df_topic_info")</span>
+<span class="c1"># df_topic_info_filtered = loaded_data.get("df_topic_info_filtered")</span>
+<span class="c1"># df_topic_info_filtered_updated = loaded_data.get("df_topic_info_filtered_updated")</span>
+<span class="c1"># df_combined_concat = loaded_data.get("df_combined_concat")</span>
 </pre></div>
 </div>
 </div>
@@ -8741,16 +8730,15 @@ Swap:             0B          0B          0B
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">topic_info_words_combined_concat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-<span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"augmentative alternative communication"</span><span class="p">:</span> <span class="s2">"AAC"</span><span class="p">,</span>
-    <span class="s2">"aac"</span><span class="p">:</span> <span class="s2">"AAC"</span><span class="p">,</span>
-    <span class="s2">"aba"</span><span class="p">:</span> <span class="s2">"ABA"</span><span class="p">,</span>
-    <span class="s2">"applied behavior analysis"</span><span class="p">:</span> <span class="s2">"ABA"</span><span class="p">,</span>
-    <span class="s2">"gbg"</span><span class="p">:</span> <span class="s2">"GBG"</span><span class="p">,</span>
-    <span class="s2">"good behavior game"</span><span class="p">:</span> <span class="s2">"GBG"</span>
-<span class="p">}</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">color_map</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"#AA0DFE"</span><span class="p">,</span> <span class="s2">"#3283FE"</span><span class="p">,</span> <span class="s2">"#85660D"</span><span class="p">,</span> <span class="s2">"#782AB6"</span><span class="p">,</span>
+    <span class="s2">"#1C8356"</span><span class="p">,</span> <span class="s2">"#16FF32"</span><span class="p">,</span> <span class="s2">"#00CC96"</span><span class="p">,</span> <span class="s2">"#636EFA"</span><span class="p">,</span>
+    <span class="s2">"#C4451C"</span><span class="p">,</span> <span class="s2">"#DEA0FD"</span><span class="p">,</span> <span class="s2">"#FE00FA"</span><span class="p">,</span> <span class="s2">"#325A9B"</span><span class="p">,</span>
+    <span class="s2">"#F8A19F"</span><span class="p">,</span> <span class="s2">"#90AD1C"</span><span class="p">,</span> <span class="s2">"#F6222E"</span><span class="p">,</span> <span class="s2">"#1CFFCE"</span><span class="p">,</span>
+    <span class="s2">"#B10DA1"</span><span class="p">,</span> <span class="s2">"#C075A6"</span><span class="p">,</span> <span class="s2">"#FC1CBF"</span><span class="p">,</span> <span class="s2">"#B00068"</span><span class="p">,</span>
+    <span class="s2">"#FA0087"</span><span class="p">,</span> <span class="s2">"#565656"</span><span class="p">,</span> <span class="s2">"#1CBE4F"</span><span class="p">,</span> <span class="s2">"#FEAF16"</span><span class="p">,</span>
+    <span class="s2">"#2ED9FF"</span><span class="p">,</span> <span class="s2">"#FBE426"</span><span class="p">,</span> <span class="s2">"#FA6E79"</span><span class="p">,</span> <span class="s2">"#C85A17"</span>
+<span class="p">]</span>
 
 <span class="k">def</span> <span class="nf">apply_replacements</span><span class="p">(</span><span class="n">label</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""Performs case-insensitive replacement for each key in replacements."""</span>
@@ -8760,9 +8748,21 @@ Swap:             0B          0B          0B
         <span class="n">label</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">label</span>
 
-<span class="n">custom_labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">,</span> <span class="s1">'CustomLabel'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())}</span>
+<span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"assistive technology"</span><span class="p">:</span> <span class="s2">"AT"</span><span class="p">,</span>
+    <span class="s2">"augmentative alternative communication"</span><span class="p">:</span> <span class="s2">"AAC"</span><span class="p">,</span>
+    <span class="s2">"aac"</span><span class="p">:</span> <span class="s2">"AAC"</span><span class="p">,</span>
+    <span class="s2">"aba"</span><span class="p">:</span> <span class="s2">"ABA"</span><span class="p">,</span>
+    <span class="s2">"applied behavior analysis"</span><span class="p">:</span> <span class="s2">"ABA"</span><span class="p">,</span>
+    <span class="s2">"gbg"</span><span class="p">:</span> <span class="s2">"GBG"</span><span class="p">,</span>
+    <span class="s2">"good behavior game"</span><span class="p">:</span> <span class="s2">"GBG"</span>
+<span class="p">}</span>
 
-<span class="n">topics</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="n">topic_word_data</span> <span class="o">=</span> <span class="n">topic_info_words_combined_concat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">custom_labels</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="p">:</span> <span class="n">topic_word_data</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">topic_word_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">,</span> <span class="s1">'CustomLabel'</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">topic_word_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())}</span>
+
+<span class="n">topics</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">topic_word_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 <span class="n">num_charts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">topics</span><span class="p">)</span>
 
 <span class="n">custom_labels_transformed</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="p">:</span> <span class="n">apply_replacements</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">custom_labels</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
@@ -8777,15 +8777,7 @@ Swap:             0B          0B          0B
 <span class="n">num_columns</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">num_rows</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_charts</span> <span class="o">+</span> <span class="n">num_columns</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="n">num_columns</span>
 
-<span class="n">color_map</span> <span class="o">=</span> <span class="p">[</span>
-  <span class="s1">'#AB63FA'</span><span class="p">,</span> <span class="s1">'#637939'</span><span class="p">,</span> <span class="s1">'#EF553B'</span><span class="p">,</span> <span class="s1">'#d62728'</span><span class="p">,</span> <span class="s1">'#FF97FF'</span><span class="p">,</span>
-  <span class="s1">'#17becf'</span><span class="p">,</span> <span class="s1">'#1f77b4'</span><span class="p">,</span> <span class="s1">'#e377c2'</span><span class="p">,</span> <span class="s1">'#9cf4f7'</span><span class="p">,</span> <span class="s1">'#BCBD22'</span><span class="p">,</span>
-  <span class="s1">'#7b4173'</span><span class="p">,</span> <span class="s1">'#a799e8'</span><span class="p">,</span> <span class="s1">'#8c564b'</span><span class="p">,</span> <span class="s1">'#00CC96'</span><span class="p">,</span> <span class="s1">'#393b79'</span><span class="p">,</span>
-  <span class="s1">'#5254a3'</span><span class="p">,</span> <span class="s1">'#FECB52'</span><span class="p">,</span> <span class="s1">'#2ca02c'</span><span class="p">,</span> <span class="s1">'#FFA15A'</span><span class="p">,</span> <span class="s1">'#9467bd'</span><span class="p">,</span>
-  <span class="s1">'#9cd4f7'</span><span class="p">,</span> <span class="s1">'#fb9a99'</span><span class="p">,</span> <span class="s1">'#8c6d31'</span><span class="p">,</span> <span class="s1">'#B6E880'</span><span class="p">,</span> <span class="s1">'#636EFA'</span><span class="p">,</span>
-  <span class="s1">'#843c39'</span><span class="p">,</span> <span class="s1">'#19D3F3'</span><span class="p">,</span> <span class="s1">'#bcbd22'</span><span class="p">,</span> <span class="s1">'#7CF3A0'</span><span class="p">,</span> <span class="s1">'#FF6692'</span><span class="p">,</span>
-  <span class="s1">'#7f7f7f'</span><span class="p">,</span> <span class="s1">'#ff7f0e'</span>
-<span class="p">]</span>
+
 
 <span class="n">topic_color_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span><span class="p">:</span> <span class="n">color_map</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_map</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">topics</span><span class="p">)}</span>
 
@@ -8797,7 +8789,7 @@ Swap:             0B          0B          0B
 <span class="p">)</span>
 
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">topics</span><span class="p">):</span>
-    <span class="n">df_topic</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df_topic</span> <span class="o">=</span> <span class="n">topic_word_data</span><span class="p">[</span><span class="n">topic_word_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">df_topic</span><span class="p">[</span><span class="s1">'Word'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_topic</span><span class="p">[</span><span class="s1">'Word'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">apply_replacements</span><span class="p">)</span>
     <span class="n">aggregated</span> <span class="o">=</span> <span class="n">df_topic</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Word'</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">'Score'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">aggregated</span> <span class="o">=</span> <span class="n">aggregated</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'Score'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -8821,14 +8813,13 @@ Swap:             0B          0B          0B
         <span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">trace</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="n">col</span><span class="p">)</span>
 
-<span class="c1"># Update the layout and axes.</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
     <span class="n">title_text</span><span class="o">=</span><span class="s2">"&lt;b&gt;Topic Word Scores&lt;/b&gt;"</span><span class="p">,</span>
     <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">title_font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="s2">"Helvetica Neue"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">),</span>
     <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">80</span><span class="p">),</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">1900</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">1900</span><span class="p">,</span>
     <span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s1">'rgba(0,0,0,0)'</span><span class="p">,</span>
     <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s1">'rgba(0,0,0,0)'</span>
@@ -8864,10 +8855,10 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [49]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [31]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">'results/topic_word_barchart.html'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">'results/topic_word_barchart.html'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1900</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8878,9 +8869,9 @@ Swap:             0B          0B          0B
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[49]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[31]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="1200" src="results/topic_word_barchart.html" width="2000"></iframe>
+<iframe allowfullscreen="" frameborder="0" height="1900" src="results/topic_word_barchart.html" width="1900"></iframe>
 </div>
 </div>
 </div>
@@ -8893,28 +8884,28 @@ Swap:             0B          0B          0B
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">plot_data</span> <span class="o">=</span> <span class="n">df_combined_concat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
-<span class="n">plot_data</span> <span class="o">=</span> <span class="n">plot_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">])</span>
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">docs_topics_data</span> <span class="o">=</span> <span class="n">df_combined_concat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'x'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'y'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
+<span class="n">docs_topics_data</span> <span class="o">=</span> <span class="n">docs_topics_data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'y'</span><span class="p">])</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
-<span class="n">ordered_topics</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">plot_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="n">ordered_topics</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
 <span class="n">ordered_legend</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Topic '</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ordered_topics</span><span class="p">]</span>
 
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Topic '</span> <span class="o">+</span> <span class="n">plot_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"category"</span><span class="p">)</span>
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">(</span><span class="n">ordered_legend</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Topic '</span> <span class="o">+</span> <span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">"category"</span><span class="p">)</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'legend_topic'</span><span class="p">]</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">set_categories</span><span class="p">(</span><span class="n">ordered_legend</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">plot_data</span><span class="p">[</span><span class="s1">'hover_text'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+<span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'hover_text'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">"Title: "</span> <span class="o">+</span>
-    <span class="n">plot_data</span><span class="p">[</span><span class="s1">'TI'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="s2">"&lt;br&gt;"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">)))</span> <span class="o">+</span>
-    <span class="s2">"&lt;br&gt;&lt;br&gt;Topic "</span> <span class="o">+</span> <span class="n">plot_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">": "</span> <span class="o">+</span> <span class="n">plot_data</span><span class="p">[</span><span class="s1">'CustomLabel'</span><span class="p">]</span>
+    <span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'TI'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="s2">"&lt;br&gt;"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">50</span><span class="p">)))</span> <span class="o">+</span>
+    <span class="s2">"&lt;br&gt;&lt;br&gt;Topic "</span> <span class="o">+</span> <span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">": "</span> <span class="o">+</span> <span class="n">docs_topics_data</span><span class="p">[</span><span class="s1">'CustomLabel'</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="n">fig_cluster</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
-    <span class="n">plot_data</span><span class="p">,</span>
+    <span class="n">docs_topics_data</span><span class="p">,</span>
     <span class="n">x</span><span class="o">=</span><span class="s1">'x'</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="s1">'y'</span><span class="p">,</span>
     <span class="n">color</span><span class="o">=</span><span class="s1">'legend_topic'</span><span class="p">,</span>
@@ -8939,7 +8930,7 @@ Swap:             0B          0B          0B
     <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span>
     <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
     <span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">legend_title_text</span><span class="o">=</span><span class="s2">"Topic"</span>
 <span class="p">)</span>
@@ -8956,10 +8947,10 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [57]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [33]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">'results/docs_topics.html'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">'results/docs_topics.html'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -8970,9 +8961,45 @@ Swap:             0B          0B          0B
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[57]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[33]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="600" src="results/docs_topics.html" width="1000"></iframe>
+<iframe allowfullscreen="" frameborder="0" height="800" src="results/docs_topics.html" width="800"></iframe>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h4 id="Ngrams">Ngrams<a class="anchor-link" href="#Ngrams">¶</a></h4>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [34]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-python"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df_combined_concat</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">vectorizer_model</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">extract_ngrams</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">all_ngrams</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">unigrams</span> <span class="o">=</span> <span class="p">[</span><span class="n">ng</span> <span class="k">for</span> <span class="n">ng</span> <span class="ow">in</span> <span class="n">all_ngrams</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ng</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">bigrams</span>  <span class="o">=</span> <span class="p">[</span><span class="n">ng</span> <span class="k">for</span> <span class="n">ng</span> <span class="ow">in</span> <span class="n">all_ngrams</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ng</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">trigrams</span> <span class="o">=</span> <span class="p">[</span><span class="n">ng</span> <span class="k">for</span> <span class="n">ng</span> <span class="ow">in</span> <span class="n">all_ngrams</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ng</span><span class="o">.</span><span class="n">split</span><span class="p">())</span> <span class="o">==</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">unigrams</span><span class="p">,</span> <span class="n">bigrams</span><span class="p">,</span> <span class="n">trigrams</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s1">'unigrams'</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">'bigrams'</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">'trigrams'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">df</span><span class="p">[</span><span class="s1">'lemmatized_text'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">extract_ngrams</span><span class="p">))</span>
+</pre></div>
 </div>
 </div>
 </div>
@@ -8982,7 +9009,41 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [60]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [35]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-python"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">"files/df.pkl"</span><span class="p">,</span> <span class="s2">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f_df</span><span class="p">:</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">f_df</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"files/df.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [36]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-python"><pre><span></span><span class="c1"># with open("files/df.pkl", "rb") as f_df:</span>
+<span class="c1">#     df = pickle.load(f_df)</span>
+
+<span class="c1"># df = pd.read_csv("files/df.csv")</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [40]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">nbconvert</span> <span class="kn">import</span> <span class="n">HTMLExporter</span>
@@ -9012,6 +9073,6 @@ Swap:             0B          0B          0B
 </main>
 </body>
 <script type="application/vnd.jupyter.widget-state+json">
-{"5889648b684440dcafadd04ded165c9f": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_b99d537fd1354fb79cb8da2f7cb3e956", "IPY_MODEL_e68bdd65be8648c1957a63e77ba301c9", "IPY_MODEL_dd2bcc38301640ea8523373a6e6b6bea"], "layout": "IPY_MODEL_ccc3898db9444a359511a5ebf43b18d2"}}, "b99d537fd1354fb79cb8da2f7cb3e956": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_cc1a22d4aea741ea9df1350a303766e5", "placeholder": "\u200b", "style": "IPY_MODEL_687c0adfaadb44ecb91ec94dc30a1493", "value": "Batches:\u2007100%"}}, "e68bdd65be8648c1957a63e77ba301c9": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_58d8664063c049d5a1a40b0bd80a7e79", "max": 108, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_7368167f86a945e1b581d8c066235f4d", "value": 108}}, "dd2bcc38301640ea8523373a6e6b6bea": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_307a4269872e421892e096c8fea0073f", "placeholder": "\u200b", "style": "IPY_MODEL_1007e89e4a4f481eb3d62a0e33eca3dc", "value": "\u2007108\/108\u2007[00:03&lt;00:00,\u200742.52it\/s]"}}, "ccc3898db9444a359511a5ebf43b18d2": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cc1a22d4aea741ea9df1350a303766e5": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "687c0adfaadb44ecb91ec94dc30a1493": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "58d8664063c049d5a1a40b0bd80a7e79": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "7368167f86a945e1b581d8c066235f4d": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "307a4269872e421892e096c8fea0073f": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1007e89e4a4f481eb3d62a0e33eca3dc": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "1744714d167f4d2998abdbbcc291271e": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_59ab4f44a46c40208b22b36b818774c2", "IPY_MODEL_759a57a5df8746f8bf1d1b8cb03e85e3", "IPY_MODEL_3eb25ad686e94e9baad900763c3f7ed6"], "layout": "IPY_MODEL_fe53b132106341bda21e6591ca341b50"}}, "59ab4f44a46c40208b22b36b818774c2": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_c8060d880ff04ace87e868959e1945b9", "placeholder": "\u200b", "style": "IPY_MODEL_3e3199707dec4db09cef22d78c1a8f08", "value": "Batches:\u2007100%"}}, "759a57a5df8746f8bf1d1b8cb03e85e3": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_7d2f4475a1d641f483de4078c315c09c", "max": 108, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_eef2f6990cba46bbace2299dd3dacaa6", "value": 108}}, "3eb25ad686e94e9baad900763c3f7ed6": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_47786108729544d08c8d8d1b827dea70", "placeholder": "\u200b", "style": "IPY_MODEL_42fff86dccce4845be1846c3220d7e95", "value": "\u2007108\/108\u2007[00:02&lt;00:00,\u200755.55it\/s]"}}, "fe53b132106341bda21e6591ca341b50": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c8060d880ff04ace87e868959e1945b9": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3e3199707dec4db09cef22d78c1a8f08": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "7d2f4475a1d641f483de4078c315c09c": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "eef2f6990cba46bbace2299dd3dacaa6": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "47786108729544d08c8d8d1b827dea70": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "42fff86dccce4845be1846c3220d7e95": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "0cc4d18ce61b4abe98e7a47060c99f4f": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_eb5e97c4b5074cb4bd21af0b1959215b", "IPY_MODEL_87ad363f371b4b6b9b14cd82706b2260", "IPY_MODEL_800768a6245f482699a9189e8eda3a22"], "layout": "IPY_MODEL_ef2eca0f5e2a45809aa9c493e49afabb"}}, "eb5e97c4b5074cb4bd21af0b1959215b": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_3a7fc7611e794743a346237818ad39a7", "placeholder": "\u200b", "style": "IPY_MODEL_e2f91253a604476693050e424e0aeafa", "value": "Batches:\u2007100%"}}, "87ad363f371b4b6b9b14cd82706b2260": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_44fa013d89ec4360a63930647bf3239b", "max": 24, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_f565ab927435442f8d2fb3caad7a8aa6", "value": 24}}, "800768a6245f482699a9189e8eda3a22": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_2c42cb32664a49feb0cc4a62dd8f220a", "placeholder": "\u200b", "style": "IPY_MODEL_b98a06d2eee4485e9638457337a4088e", "value": "\u200724\/24\u2007[00:00&lt;00:00,\u200741.39it\/s]"}}, "ef2eca0f5e2a45809aa9c493e49afabb": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "3a7fc7611e794743a346237818ad39a7": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e2f91253a604476693050e424e0aeafa": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "44fa013d89ec4360a63930647bf3239b": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f565ab927435442f8d2fb3caad7a8aa6": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "2c42cb32664a49feb0cc4a62dd8f220a": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b98a06d2eee4485e9638457337a4088e": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "25dc020c247e41c29e91f8b93a1c7bf3": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_c3cf2bbc227a496da88f2c485a7c19f9", "IPY_MODEL_9e4f9db8500d41888452cd580a7ea07b", "IPY_MODEL_a457f2c8394c4550997d0b075357f711"], "layout": "IPY_MODEL_e0af70353c88421fa6296c373a959311"}}, "c3cf2bbc227a496da88f2c485a7c19f9": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_a89c450e035d4878825502ebac76d1d4", "placeholder": "\u200b", "style": "IPY_MODEL_b9786425904c46dfb32c4dddbc48c40c", "value": "Batches:\u2007100%"}}, "9e4f9db8500d41888452cd580a7ea07b": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_a303bc0d7204423d97df7be1f27e7183", "max": 7, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_8f183cf1d743454f8fd9c309c8feda27", "value": 7}}, "a457f2c8394c4550997d0b075357f711": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_38e9287ab094459cba87ba08fd8f74b4", "placeholder": "\u200b", "style": "IPY_MODEL_b5ee68cc39664e68b143caaf613ce307", "value": "\u20077\/7\u2007[00:00&lt;00:00,\u200732.78it\/s]"}}, "e0af70353c88421fa6296c373a959311": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a89c450e035d4878825502ebac76d1d4": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b9786425904c46dfb32c4dddbc48c40c": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "a303bc0d7204423d97df7be1f27e7183": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8f183cf1d743454f8fd9c309c8feda27": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "38e9287ab094459cba87ba08fd8f74b4": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b5ee68cc39664e68b143caaf613ce307": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "state": {}}
+{"aa8215ebebdd41058e6e37c02e97f6bb": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_af2fd3b4ce034cf498354cb22b5c0696", "IPY_MODEL_9d3978c18faf4cd78265a30791fdc9d2", "IPY_MODEL_4acdfe96b00941b79e7552a863ed5db0"], "layout": "IPY_MODEL_fc3f4720dac24a8fb70cce9ece989023"}}, "af2fd3b4ce034cf498354cb22b5c0696": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_39e6c8e443004f1c8c249425021d9ce6", "placeholder": "\u200b", "style": "IPY_MODEL_22c9349a86d44d5681f2ec0dba9172f8", "value": "Batches:\u2007100%"}}, "9d3978c18faf4cd78265a30791fdc9d2": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_f702f4a62ea4480ba18f79702ca24ed6", "max": 108, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_182ebcae44d645efa4b86e9ec77fafd0", "value": 108}}, "4acdfe96b00941b79e7552a863ed5db0": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_3348d30d0447472fb0a5c66c87c4bd57", "placeholder": "\u200b", "style": "IPY_MODEL_e90f82f98c8749cdad914b4826c9cdd7", "value": "\u2007108\/108\u2007[00:03&lt;00:00,\u200749.17it\/s]"}}, "fc3f4720dac24a8fb70cce9ece989023": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "39e6c8e443004f1c8c249425021d9ce6": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "22c9349a86d44d5681f2ec0dba9172f8": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "f702f4a62ea4480ba18f79702ca24ed6": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "182ebcae44d645efa4b86e9ec77fafd0": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "3348d30d0447472fb0a5c66c87c4bd57": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e90f82f98c8749cdad914b4826c9cdd7": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "b3e178b3aa7b4f379f9967275c6dda16": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_ec252a101953445eb033272aca281726", "IPY_MODEL_c4095113b629472bab86efc1e347c73b", "IPY_MODEL_25bff17d7bce4830a23bc655b1af0831"], "layout": "IPY_MODEL_5f7cec7f97b74e5f983132be2defd198"}}, "ec252a101953445eb033272aca281726": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_2656546a165043778c1afff21e8e143c", "placeholder": "\u200b", "style": "IPY_MODEL_b68fad1d8bd64f2c94698e23a98ec8f1", "value": "Batches:\u2007100%"}}, "c4095113b629472bab86efc1e347c73b": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_77ab9adf132742a98c7788e560337c70", "max": 108, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_2064b2fd2e1d492aa5627040a8173be5", "value": 108}}, "25bff17d7bce4830a23bc655b1af0831": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_8e19db11a9d44127b9a5b9a0b16c38af", "placeholder": "\u200b", "style": "IPY_MODEL_8f2e3d79527442bc86f9af92b117420e", "value": "\u2007108\/108\u2007[00:02&lt;00:00,\u200757.20it\/s]"}}, "5f7cec7f97b74e5f983132be2defd198": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2656546a165043778c1afff21e8e143c": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b68fad1d8bd64f2c94698e23a98ec8f1": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "77ab9adf132742a98c7788e560337c70": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2064b2fd2e1d492aa5627040a8173be5": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "8e19db11a9d44127b9a5b9a0b16c38af": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8f2e3d79527442bc86f9af92b117420e": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "74bc8ba6dea64b8bb34b0a1863448b5e": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_dd4ff88804644ce7bdddcd45741fae92", "IPY_MODEL_a3e952885e274ffbbb154ac8e504b64b", "IPY_MODEL_0df1a8b82fe547dbb105fce647f00b6f"], "layout": "IPY_MODEL_99969a57fc44451b99c388d88244a5d4"}}, "dd4ff88804644ce7bdddcd45741fae92": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_ebb780c4cef941038db06aa17e1ce68a", "placeholder": "\u200b", "style": "IPY_MODEL_ab11fd6a980b4a83b0605f4540b4d41f", "value": "Batches:\u2007100%"}}, "a3e952885e274ffbbb154ac8e504b64b": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_689ace706bdd4a40aa5a9a3d8345b045", "max": 22, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_2ff11c814aee452cb0bc10f810c10cdd", "value": 22}}, "0df1a8b82fe547dbb105fce647f00b6f": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_2448dcb707dd4f0094c229d2aeec3f49", "placeholder": "\u200b", "style": "IPY_MODEL_8a07f5a4b0b44aa4934eb6ff2448e8a4", "value": "\u200722\/22\u2007[00:00&lt;00:00,\u200741.44it\/s]"}}, "99969a57fc44451b99c388d88244a5d4": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ebb780c4cef941038db06aa17e1ce68a": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ab11fd6a980b4a83b0605f4540b4d41f": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "689ace706bdd4a40aa5a9a3d8345b045": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "2ff11c814aee452cb0bc10f810c10cdd": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "2448dcb707dd4f0094c229d2aeec3f49": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8a07f5a4b0b44aa4934eb6ff2448e8a4": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "f1f2371a3a4242638ace44d6fd492cae": {"model_module": "@jupyter-widgets\/controls", "model_name": "HBoxModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_00982c3a93104d8fa009cbe9fea64850", "IPY_MODEL_a641fe8618e54d2db686f777d07f80f6", "IPY_MODEL_6d9b23710d6840f1a6ee7b29a5423055"], "layout": "IPY_MODEL_e961c018e3294361ba853ec29bc6e641"}}, "00982c3a93104d8fa009cbe9fea64850": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_5e889d003fc0411c8d7074eceabe7e32", "placeholder": "\u200b", "style": "IPY_MODEL_cce144a494c749ffbe2afc320d923756", "value": "Batches:\u2007100%"}}, "a641fe8618e54d2db686f777d07f80f6": {"model_module": "@jupyter-widgets\/controls", "model_name": "FloatProgressModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_52bc2dcd2fac4f65bc463ba017882209", "max": 2, "min": 0, "orientation": "horizontal", "style": "IPY_MODEL_066e36715f1a4bbd93d04c208ff678b3", "value": 2}}, "6d9b23710d6840f1a6ee7b29a5423055": {"model_module": "@jupyter-widgets\/controls", "model_name": "HTMLModel", "model_module_version": "1.5.0", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets\/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_8081c270f8ef474fa3c47a2e3ba49138", "placeholder": "\u200b", "style": "IPY_MODEL_6c0096ace3514c70883edcf57ea059ec", "value": "\u20072\/2\u2007[00:00&lt;00:00,\u200742.24it\/s]"}}, "e961c018e3294361ba853ec29bc6e641": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5e889d003fc0411c8d7074eceabe7e32": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cce144a494c749ffbe2afc320d923756": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "52bc2dcd2fac4f65bc463ba017882209": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "066e36715f1a4bbd93d04c208ff678b3": {"model_module": "@jupyter-widgets\/controls", "model_name": "ProgressStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "8081c270f8ef474fa3c47a2e3ba49138": {"model_module": "@jupyter-widgets\/base", "model_name": "LayoutModel", "model_module_version": "1.2.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6c0096ace3514c70883edcf57ea059ec": {"model_module": "@jupyter-widgets\/controls", "model_name": "DescriptionStyleModel", "model_module_version": "1.5.0", "state": {"_model_module": "@jupyter-widgets\/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "state": {}}
 </script>
 </html>
