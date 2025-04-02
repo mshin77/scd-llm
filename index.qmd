@@ -51,7 +51,7 @@ suppressPackageStartupMessages({
 ```
 
 ```{r}
-load("novelty/model_new_word.RData")
+load("evolution/model_new_word.RData")
 ```
 
 ### Import Wos Data
@@ -393,26 +393,27 @@ world_map
 
 # Topic Modeling
 
-### Stetps of Employing Large Language Models
-
 [Code](topic_modeling/index.html)
 
 [Figure 5](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
 
+[Figure 6](topic_modeling/fig_hierarchical.html) <iframe src="topic_modeling/fig_hierarchical.html" width="800" height="600"></iframe>
 
-# Word Networks
+[Figure 7](topic_modeling/fig_cosine_sim.html) <iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="600"></iframe>
 
-[Figure 6](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
+# Evolution of Research
 
-# Novelty 
+[Figure 8](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
 
-[Code](novelty/index.html)
+[Code](evolution/index.html)
 
 ```{r, eval=FALSE, echo=FALSE}
-new_word_count_df <- read_excel("novelty/new_word_count_df.xlsx")
+new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
 ```
 
-### Preprocess 
+### Two-Level Bayesian Modeling 
+
+#### Preprocess 
 
 ```{r, eval=FALSE}
 #| code-fold: false
@@ -429,10 +430,8 @@ compute_trends <- function(Year) {
 
 new_word_trend_vars <- compute_trends(new_word_count_df$Year)
 new_word_count_df <- cbind(new_word_count_df, new_word_trend_vars)
-# write.xlsx(new_word_count_df, "novelty/new_word_count_df_updated.xlsx", rowNames = FALSE)
+# write.xlsx(new_word_count_df, "evolution/new_word_count_df_updated.xlsx", rowNames = FALSE)
 ```
-
-### Visualize
 
 #### Changes in New Word Counts
 
@@ -466,21 +465,18 @@ new_word_plot <- plotly::ggplotly(new_word_gg, height = 800, width = 1400) %>%
 
 suppressWarnings(htmlwidgets::saveWidget(
   widget = new_word_plot, 
-  file = "novelty/new_word_plot.html",
+  file = "evolution/new_word_plot.html",
   selfcontained = TRUE))
 
-ggsave('novelty/new_word_gg.png',
+ggsave('evolution/new_word_gg.png',
        width = 14, height = 12, dpi = 300, plot = new_word_gg)
 ```
 
-[Figure 7](novelty/new_word_plot.html)
+[Figure 7](evolution/new_word_plot.html)
 
 ```{r, echo=FALSE}
 new_word_plot
 ```
-
-
-### Two-Level Bayesian Modeling 
 
 #### Summary Statistics
 
@@ -561,6 +557,6 @@ mcmc_plot(model_new_word, type = "trace")
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
-save(new_word_count_df, new_word_plot, model_new_word, file = "novelty/model_new_word.RData")
+save(new_word_count_df, new_word_plot, model_new_word, file = "evolution/model_new_word.RData")
 ```
 
