@@ -46,10 +46,12 @@ suppressPackageStartupMessages({
   library(ggrepel)
   library(ggiraph)
   library(stringi)
-  library(igraph)
-  library(networkD3)
-  library(visNetwork)
+  library(brms)
 })
+```
+
+```{r}
+load("novelty/model_new_word.RData")
 ```
 
 ### Import Wos Data
@@ -70,7 +72,7 @@ wos_5001_5500 <- convert2df("5001_5500.ciw", dbsource = "wos", format = "endnote
 wos_5501_5718 <- convert2df("5501_5718.ciw", dbsource = "wos", format = "endnote")
 ```
 
-### Bind Rows and Filter Publications 
+### Bind Rows and Filter Publications
 
 ```{r, eval=FALSE}
 #| code-fold: false
@@ -109,13 +111,13 @@ openxlsx::write.xlsx(wos_5707, "init_all_data.xlsx", rowNames = FALSE)
 data <- read.xlsx("../data/all_data.xlsx")
 
 data <- data %>% filter(data$filtered == "Yes")
-  
+
 data_descriptive <- data %>%
     mutate(Study = paste("study", row_number(), sep = "")) %>%
-    mutate(document = paste(Study, PY, sep = "_")) %>% 
+    mutate(document = paste(Study, PY, sep = "_")) %>%
     ungroup()
 
-data_descriptive <- data_descriptive %>% 
+data_descriptive <- data_descriptive %>%
     dplyr::select(document, everything())
 
 year_doc <- data_descriptive %>%
@@ -151,7 +153,7 @@ ggsave('files/year_citation_plot.png',
 year_source_type <- data_descriptive %>%
     mutate(study_number = row_number()) %>%
     group_by(SO) %>%
-    summarize(publication_number = nrow(data.frame(study_number))) %>% 
+    summarize(publication_number = nrow(data.frame(study_number))) %>%
     ungroup()
 
 year_doc_counts <- data_descriptive %>%
@@ -160,17 +162,17 @@ year_doc_counts <- data_descriptive %>%
     summarize(publication_number = n()) %>%
     ungroup()
 
-year_1990s <- data_descriptive %>% 
+year_1990s <- data_descriptive %>%
     filter(PY >=1990 & PY <= 1999) %>%
     summarize(publication_number = n()) %>%
     ungroup()
 
-year_2000s <- data_descriptive %>% 
+year_2000s <- data_descriptive %>%
     filter(PY>=2000 & PY <= 2009) %>%
     summarize(publication_number = n()) %>%
     ungroup()
 
-year_2010s_plus <- data_descriptive %>% 
+year_2010s_plus <- data_descriptive %>%
     filter(PY >=2010 & PY <= 2022) %>%
     summarize(publication_number = n()) %>%
     ungroup()
@@ -202,15 +204,15 @@ data_descriptive$DT <- case_when(
 
 source_hindex <- bibliometrix::Hindex(data_descriptive, years = Inf, field = "source")$H
 source_hindex$SO <- source_hindex$Element
-source_hindex$m_index <- round(source_hindex$m_index, 2) 
+source_hindex$m_index <- round(source_hindex$m_index, 2)
 
-source_TC <- data_descriptive %>% 
+source_TC <- data_descriptive %>%
     group_by(SO) %>%
     summarize(total_citation = sum(TC)) %>%
     mutate(total_citation_percent = round((total_citation / sum(total_citation) * 100),2)) %>%
     ungroup()
 
-source_TP <- data_descriptive %>% 
+source_TP <- data_descriptive %>%
     group_by(SO) %>%
     summarize(publication_number = n()) %>%
     mutate(publication_number_percent = round((publication_number / sum(publication_number) * 100),2)) %>%
@@ -218,7 +220,7 @@ source_TP <- data_descriptive %>%
 
 source_detail <- left_join(source_TC, source_TP, by = "SO")
 
-source_detail <- source_detail %>% 
+source_detail <- source_detail %>%
   group_by(SO) %>%
   mutate(citation_per_publication = round((total_citation / publication_number),0))
 
@@ -227,16 +229,16 @@ source_combined <- left_join(source_detail, source_hindex, by = "SO")
 source_combined <- source_combined %>%
   arrange(desc(total_citation), desc(publication_number)) %>%
   select(SO, PY_start, publication_number, publication_number_percent,
-         total_citation, total_citation_percent, 
-         citation_per_publication, 
+         total_citation, total_citation_percent,
+         citation_per_publication,
          h_index, g_index, m_index)
-  
+
 
 write.xlsx(source_combined, file = "files/source_combined.xlsx", colNames = TRUE)
 
 results <- biblioAnalysis(data_descriptive)
 descriptive_summary <- summary(results, k=71, pause=F, width=130)
-MainInformationDF <- descriptive_summary$MainInformationDF 
+MainInformationDF <- descriptive_summary$MainInformationDF
 
 write.xlsx(MainInformationDF, file = "files/MainInformationDF.xlsx", colNames = TRUE)
 
@@ -256,7 +258,7 @@ datatable(MainInformationDF, options = list(pageLength = 10))
 
 # World Map
 
-### Map Publications and Citations Across Countries 
+### Map Publications and Citations Across Countries
 
 ```{r, eval=FALSE}
 MostProdCountries <- MostProdCountries %>%
@@ -282,7 +284,7 @@ Countries_Prod_TC <- MostProdCountries %>%
 Countries_Prod_TC <- Countries_Prod_TC %>%
   mutate(Country = str_trim(Country, "both") %>% str_to_title())
 
-Countries_Prod_TC <- Countries_Prod_TC %>% 
+Countries_Prod_TC <- Countries_Prod_TC %>%
     mutate(Country = case_when(
       Country == "Usa" ~ "USA",
         Country == "Korea" ~ "South Korea",
@@ -297,7 +299,7 @@ sf::sf_use_s2(TRUE)
 
 world <- ne_countries(scale = "small", returnclass = "sf")
 
-world <- world %>% 
+world <- world %>%
   mutate(admin = case_when(
     admin == "United States of America" ~ "USA",
     admin == "United Arab Emirates" ~ "UAE",
@@ -329,8 +331,8 @@ b <- c(200, 2000, 5000, 10000, 20000, 40000, 60000, 70000)
 # Create the world map with centroids and labels
 world_map_init <- world_sf %>%
   ggplot() +
-  geom_sf_interactive(aes(fill = `Total Citations`, 
-                          tooltip = paste("TC: ", admin, `Total Citations`)), 
+  geom_sf_interactive(aes(fill = `Total Citations`,
+                          tooltip = paste("TC: ", admin, `Total Citations`)),
                       size = 0.25) +
   geom_label_repel(
     size = 3.3,
@@ -349,7 +351,7 @@ world_map_init <- world_sf %>%
     shape = 21,
     color = "#A84268",
     alpha = 0.6
-  ) + 
+  ) +
   theme_void() +
   theme(
     legend.position = "bottom",
@@ -372,7 +374,7 @@ world_map <- girafe(ggobj = world_map_init, width_svg = 10, height_svg = 5) %>%
   )
 
 htmlwidgets::saveWidget(
-  widget = world_map, 
+  widget = world_map,
   file = "world_map/index.html",
   selfcontained = TRUE)
 
@@ -395,11 +397,170 @@ world_map
 
 [Code](topic_modeling/index.html)
 
-[Figure 5](topic_modeling/topic_word_barchart.html) <iframe src="topic_modeling/topic_word_barchart.html" width="800" height="900"></iframe>
-
-[Figure 6](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
+[Figure 5](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
 
 
 # Word Networks
 
-[Figure 7](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
+[Figure 6](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
+
+# Novelty 
+
+[Code](novelty/index.html)
+
+```{r, eval=FALSE, echo=FALSE}
+new_word_count_df <- read_excel("novelty/new_word_count_df.xlsx")
+```
+
+### Preprocess 
+
+```{r, eval=FALSE}
+#| code-fold: false
+compute_trends <- function(Year) {
+  data.frame(
+    trend_1970 = ifelse(Year >= 1970, Year - 1970, 0),
+    trend_change_1980 = ifelse(Year >= 1980, Year - 1980, 0),
+    trend_change_1990 = ifelse(Year >= 1990, Year - 1990, 0),
+    trend_change_2000 = ifelse(Year >= 2000, Year - 2000, 0),
+    trend_change_2010 = ifelse(Year >= 2010, Year - 2010, 0),
+    trend_change_2020 = ifelse(Year >= 2020, Year - 2020, 0)
+  )
+}
+
+new_word_trend_vars <- compute_trends(new_word_count_df$Year)
+new_word_count_df <- cbind(new_word_count_df, new_word_trend_vars)
+# write.xlsx(new_word_count_df, "novelty/new_word_count_df_updated.xlsx", rowNames = FALSE)
+```
+
+### Visualize
+
+#### Changes in New Word Counts
+
+```{r, eval=FALSE, echo=FALSE, fig.width=14, fig.height=12} 
+new_word_gg <- new_word_count_df %>% ggplot() +
+  geom_line(aes(x = Year, y = new_word_count, group = Topic),
+            linewidth = 0.3, alpha = 0.3) +
+  geom_point(aes(x = Year, y = new_word_count), size = 0.5) +
+  labs(x = "Year", 
+       y = "New Word Count") +
+  facet_wrap(~ Topic, ncol = 4, scales = "free_y", 
+             labeller = labeller(Topic = function(x) paste("Topic", x))) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.title = element_text(size = 11),
+    legend.text = element_text(size = 11)
+  )
+
+new_word_plot <- plotly::ggplotly(new_word_gg, height = 800, width = 1400) %>% 
+ plotly::layout(
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.1
+    ),
+    margin = list(t = 40, b = 40)
+  )
+
+suppressWarnings(htmlwidgets::saveWidget(
+  widget = new_word_plot, 
+  file = "novelty/new_word_plot.html",
+  selfcontained = TRUE))
+
+ggsave('novelty/new_word_gg.png',
+       width = 14, height = 12, dpi = 300, plot = new_word_gg)
+```
+
+[Figure 7](novelty/new_word_plot.html)
+
+```{r, echo=FALSE}
+new_word_plot
+```
+
+
+### Two-Level Bayesian Modeling 
+
+#### Summary Statistics
+
+```{r}
+#| code-fold: false
+summary(new_word_count_df$new_word_count)
+```
+
+#### Dispersion Ratio
+
+```{r}
+#| code-fold: false
+mean_val <- mean(new_word_count_df$new_word_count)
+var_val  <- var(new_word_count_df$new_word_count)
+overdispersion_ratio <- var_val / mean_val
+print(overdispersion_ratio)
+```
+
+#### Estimate the Model
+
+```{r, eval=FALSE}
+#| code-fold: false
+formula_new_word <- bf(
+  new_word_count ~ 1 + 
+    trend_1970 + 
+    trend_change_1980 +
+    trend_change_1990 + 
+    trend_change_2000 +
+    trend_change_2010 +
+    trend_change_2020 +
+    (1 + 
+    trend_1970 + 
+    trend_change_1980 +
+    trend_change_1990 + 
+    trend_change_2000 +
+    trend_change_2010 +
+    trend_change_2020 | Topic)     
+)
+
+model_new_word <- brm(
+  formula = formula_new_word,
+  data = new_word_count_df,
+  family = negbinomial(link = "log"),
+  control = list(adapt_delta = 0.95, max_treedepth = 12),
+  iter = 2000,
+  warmup = 1000,
+  cores = 4, 
+  chains = 4,
+  seed = 2025
+)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+prior_summary(model_new_word)
+```
+
+```{r, eval=FALSE, echo=FALSE}
+summary(model_new_word)
+```
+
+```{r, echo=FALSE}
+fixef(model_new_word)
+```
+
+#### Posterior Predictive Checks
+
+```{r, echo=FALSE}
+pp_check(model_new_word)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+# Posterior Density Plots and Trace Plots
+plot(model_new_word)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+mcmc_plot(model_new_word, type = "trace")
+```
+
+```{r, echo=FALSE, eval=FALSE}
+save(new_word_count_df, new_word_plot, model_new_word, file = "novelty/model_new_word.RData")
+```
+
