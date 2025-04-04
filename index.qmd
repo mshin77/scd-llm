@@ -30,6 +30,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```{r}
 #| code-fold: false
 suppressPackageStartupMessages({
+  library(tidyverse)
   library(knitr)
   library(readxl)
   library(data.table)
@@ -435,25 +436,28 @@ new_word_count_df <- cbind(new_word_count_df, new_word_trend_vars)
 
 #### Changes in New Word Counts
 
-```{r, eval=FALSE, echo=FALSE, fig.width=14, fig.height=12} 
+```{r, eval=FALSE, echo=FALSE, fig.width=14, fig.height=14} 
 new_word_gg <- new_word_count_df %>% ggplot() +
   geom_line(aes(x = Year, y = new_word_count, group = Topic),
             linewidth = 0.3, alpha = 0.3) +
   geom_point(aes(x = Year, y = new_word_count), size = 0.5) +
   labs(x = "Year", 
        y = "New Word Count") +
-  facet_wrap(~ Topic, ncol = 4, scales = "free_y", 
+  facet_wrap(~ Topic, ncol = 3, scales = "free_y", 
              labeller = labeller(Topic = function(x) paste("Topic", x))) +
-  theme_minimal(base_size = 12) +
+  theme_minimal(base_size = 10) +
   theme(
-    legend.position = "bottom",
-    legend.direction = "horizontal",
-    legend.title = element_text(size = 11),
-    legend.text = element_text(size = 11)
-  )
+    strip.text = element_text(size = 10, margin = margin(0, 0, 0, 0)),
+    axis.text.x = element_text(size = 10),
+    axis.text.y = element_text(size = 10),
+    axis.title = element_text(size = 10),
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 10),
+    legend.title.align = 0.5,
+    legend.position = "bottom")  
 
-new_word_plot <- plotly::ggplotly(new_word_gg, height = 800, width = 1400) %>% 
- plotly::layout(
+new_word_plot <- plotly::ggplotly(new_word_gg, height = 850, width = 770) %>% 
+  plotly::layout(
     legend = list(
       orientation = "h",
       x = 0.5,
@@ -556,7 +560,7 @@ plot(model_new_word)
 mcmc_plot(model_new_word, type = "trace")
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval = FALSE, echo=FALSE}
 save(new_word_count_df, new_word_plot, model_new_word, file = "evolution/model_new_word.RData")
 ```
 
