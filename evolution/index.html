@@ -7517,7 +7517,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Novelty-Analysis">Novelty Analysis<a class="anchor-link" href="#Novelty-Analysis">¶</a></h2>
+<h2 id="Evolution-Analysis">Evolution Analysis<a class="anchor-link" href="#Evolution-Analysis">¶</a></h2>
 </div>
 </div>
 </div>
@@ -7545,7 +7545,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>March 31, 2025
+<pre>April 04, 2025
 </pre>
 </div>
 </div>
@@ -7566,7 +7566,7 @@ a.anchor-link {
 <span class="n">userdata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'HF_TOKEN'</span><span class="p">)</span>
 
 <span class="c1"># Set up the current working directory within the Google Drive</span>
-<span class="o">%</span><span class="n">cd</span> <span class="o">/</span><span class="n">content</span><span class="o">/</span><span class="n">drive</span><span class="o">/</span><span class="n">My</span>\ <span class="n">Drive</span><span class="o">/</span><span class="n">Colab</span>\ <span class="n">Notebooks</span><span class="o">/</span><span class="n">LLM</span><span class="o">/</span><span class="n">sped_biblio</span><span class="o">/</span><span class="n">novelty</span>
+<span class="o">%</span><span class="n">cd</span> <span class="o">/</span><span class="n">content</span><span class="o">/</span><span class="n">drive</span><span class="o">/</span><span class="n">My</span>\ <span class="n">Drive</span><span class="o">/</span><span class="n">Colab</span>\ <span class="n">Notebooks</span><span class="o">/</span><span class="n">LLM</span><span class="o">/</span><span class="n">sped_biblio</span><span class="o">/</span><span class="n">evolution</span>
 </pre></div>
 </div>
 </div>
@@ -7580,7 +7580,7 @@ a.anchor-link {
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>Mounted at /content/drive
-/content/drive/My Drive/Colab Notebooks/LLM/sped_biblio/novelty
+/content/drive/My Drive/Colab Notebooks/LLM/sped_biblio/evolution
 </pre>
 </div>
 </div>
@@ -7591,7 +7591,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="c1"># !pip install dill qgrid</span>
@@ -7610,7 +7610,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
@@ -7668,7 +7668,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">"files/df.xlsx"</span><span class="p">)</span>
@@ -7682,7 +7682,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">clean_literal</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
@@ -7712,7 +7712,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">'unigrams'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'unigrams'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">safe_eval_if_str</span><span class="p">)</span>
@@ -7728,7 +7728,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">df_unigrams</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">'UT'</span><span class="p">,</span> <span class="s1">'Year'</span><span class="p">,</span> <span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'unigrams'</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -7757,7 +7757,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">ngrams_concat</span><span class="o">.</span><span class="n">to_pickle</span><span class="p">(</span><span class="s2">"results/ngrams_concat.pkl"</span><span class="p">)</span>
@@ -7771,7 +7771,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">unigrams_df</span> <span class="o">=</span> <span class="n">ngrams_concat</span><span class="p">[</span><span class="n">ngrams_concat</span><span class="p">[</span><span class="s1">'ngram_type'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'unigrams'</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -7809,9 +7809,10 @@ a.anchor-link {
     <span class="p">}])</span>
 
 <span class="n">unigrams_group_df</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="p">(</span><span class="n">topic</span><span class="p">,</span> <span class="n">decade</span><span class="p">),</span> <span class="n">sub_df</span> <span class="ow">in</span> <span class="n">unigrams_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'Decade'</span><span class="p">]):</span>
+<span class="c1"># for (topic, decade), sub_df in unigrams_df.groupby(['Topic', 'Decade']):</span>
+<span class="k">for</span> <span class="n">decade</span><span class="p">,</span> <span class="n">sub_df</span> <span class="ow">in</span> <span class="n">unigrams_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Decade'</span><span class="p">):</span>
     <span class="n">token_stats</span> <span class="o">=</span> <span class="n">process_tokens</span><span class="p">(</span><span class="n">sub_df</span><span class="p">[</span><span class="s1">'ngram'</span><span class="p">])</span>
-    <span class="n">token_stats</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">]</span> <span class="o">=</span> <span class="n">topic</span>
+    <span class="c1"># token_stats['Topic'] = topic</span>
     <span class="n">token_stats</span><span class="p">[</span><span class="s1">'Decade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">decade</span>
     <span class="n">unigrams_group_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token_stats</span><span class="p">)</span>
 
@@ -7836,20 +7837,6 @@ a.anchor-link {
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">count_df</span><span class="p">)</span>
 
 <span class="n">new_word_count_df</span> <span class="o">=</span> <span class="n">calculate_new_word_count</span><span class="p">(</span><span class="n">unigrams_df</span><span class="p">)</span>
-<span class="n">new_word_count_df</span><span class="p">[</span><span class="s1">'Decade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_word_count_df</span><span class="p">[</span><span class="s1">'Year'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">//</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
-<span class="n">new_word_count_decade</span> <span class="o">=</span> <span class="n">new_word_count_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'Decade'</span><span class="p">])[</span><span class="s1">'new_word_count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="n">new_word_count_decade</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'new_word_count'</span><span class="p">:</span> <span class="s1">'New Word Count'</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">descriptive_merged_df</span> <span class="o">=</span> <span class="n">unigrams_concat</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">new_word_count_decade</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'Decade'</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
-
-<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'Decade'</span><span class="p">,</span> <span class="s1">'All Tokens'</span><span class="p">,</span> <span class="s1">'Distinct Token Count'</span><span class="p">,</span>
-                <span class="s1">'Tokens Appearing Once'</span><span class="p">,</span> <span class="s1">'Count (Once)'</span><span class="p">,</span> <span class="s1">'Tokens Appearing &gt;1 Time'</span><span class="p">,</span>
-                <span class="s1">'Count (&gt;1 Time)'</span><span class="p">,</span> <span class="s1">'Total Token Count'</span><span class="p">,</span> <span class="s1">'Verification (Once + Multi)'</span><span class="p">,</span>
-                <span class="s1">'Min Frequency'</span><span class="p">,</span> <span class="s1">'25</span><span class="si">% F</span><span class="s1">requency'</span><span class="p">,</span> <span class="s1">'Median Frequency'</span><span class="p">,</span> <span class="s1">'75</span><span class="si">% F</span><span class="s1">requency'</span><span class="p">,</span>
-                <span class="s1">'Max Frequency'</span><span class="p">,</span> <span class="s1">'Mean Frequency'</span><span class="p">,</span> <span class="s1">'Std Frequency'</span><span class="p">,</span> <span class="s1">'Skew Frequency'</span><span class="p">,</span>
-                <span class="s1">'Kurt Frequency'</span><span class="p">,</span> <span class="s1">'New Word Count'</span><span class="p">]</span>
-
-<span class="n">descriptive_df</span> <span class="o">=</span> <span class="n">descriptive_merged_df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -7860,11 +7847,11 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">new_word_count_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">"results/new_word_count_df.xlsx"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">descriptive_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">"results/descriptive_df.xlsx"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">unigrams_concat</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">"results/unigrams_concat.xlsx"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">new_word_count_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">"results/new_word_count_df.xlsx"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7875,156 +7862,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">new_word_count_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">"results/new_word_count_df.xlsx"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="Thematic-Novelty">Thematic Novelty<a class="anchor-link" href="#Thematic-Novelty">¶</a></h4>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">publication_embeddings_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">"files/publication_embeddings_df.xlsx"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="k">def</span> <span class="nf">calculate_thematic_novelty</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">"Year"</span><span class="p">)</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">prior_embeddings</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">embedding_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
-
-    <span class="k">for</span> <span class="n">Year</span> <span class="ow">in</span> <span class="n">df_sorted</span><span class="p">[</span><span class="s2">"Year"</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
-        <span class="n">Year_df</span> <span class="o">=</span> <span class="n">df_sorted</span><span class="p">[</span><span class="n">df_sorted</span><span class="p">[</span><span class="s2">"Year"</span><span class="p">]</span> <span class="o">==</span> <span class="n">Year</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">prior_embeddings</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">Year_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                    <span class="s2">"UT"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"UT"</span><span class="p">],</span>
-                    <span class="s2">"PY"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"PY"</span><span class="p">],</span>
-                    <span class="s2">"average_similarity"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-                    <span class="s2">"thematic_novelty"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-                <span class="p">})</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">col</span> <span class="ow">in</span> <span class="n">Year_df</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">embedding_cols</span><span class="p">):</span>
-                <span class="n">prior_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prior_embeddings</span><span class="p">)</span>
-                <span class="n">current_embeddings</span> <span class="o">=</span> <span class="n">Year_df</span><span class="p">[</span><span class="n">embedding_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
-                <span class="k">if</span> <span class="n">current_embeddings</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">prior_matrix</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="n">similarities</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">current_embeddings</span><span class="p">,</span> <span class="n">prior_matrix</span><span class="p">)</span>
-                    <span class="n">average_similarity</span> <span class="o">=</span> <span class="n">similarities</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Year_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()):</span>
-                        <span class="n">novelty</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">average_similarity</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-                        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                            <span class="s2">"UT"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"UT"</span><span class="p">],</span>
-                            <span class="s2">"PY"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"PY"</span><span class="p">],</span>
-                            <span class="s2">"average_similarity"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">average_similarity</span><span class="p">[</span><span class="n">i</span><span class="p">]),</span>
-                            <span class="s2">"thematic_novelty"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">novelty</span><span class="p">)</span>
-                        <span class="p">})</span>
-
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">Year_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">prior_embeddings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">embedding_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">pub_embeddings_merged</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">publication_embeddings_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'UT'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">,</span> <span class="n">suffixes</span><span class="o">=</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="s1">'_publication'</span><span class="p">))</span>
-
-<span class="n">thematic_novelty_df</span> <span class="o">=</span> <span class="n">calculate_thematic_novelty</span><span class="p">(</span><span class="n">pub_embeddings_merged</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">thematic_novelty_dff</span> <span class="o">=</span> <span class="n">thematic_novelty_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">'UT'</span><span class="p">,</span> <span class="s1">'Topic'</span><span class="p">]],</span> <span class="n">on</span><span class="o">=</span><span class="s1">'UT'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">thematic_novelty_dff</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">"results/thematic_novelty_df.xlsx"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">thematic_novelty_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">"results/thematic_novelty_df.xlsx"</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">nbconvert</span> <span class="kn">import</span> <span class="n">HTMLExporter</span>

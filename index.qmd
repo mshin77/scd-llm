@@ -436,7 +436,7 @@ new_word_count_df <- cbind(new_word_count_df, new_word_trend_vars)
 
 #### Changes in New Word Counts
 
-```{r, eval=FALSE, echo=FALSE, fig.width=14, fig.height=14} 
+```{r, echo=FALSE, fig.width=14, fig.height=14} 
 new_word_gg <- new_word_count_df %>% ggplot() +
   geom_line(aes(x = Year, y = new_word_count, group = Topic),
             linewidth = 0.3, alpha = 0.3) +
@@ -537,7 +537,7 @@ model_new_word <- brm(
 prior_summary(model_new_word)
 ```
 
-```{r, eval=FALSE, echo=FALSE}
+```{r, echo=FALSE}
 summary(model_new_word)
 ```
 
@@ -560,7 +560,7 @@ plot(model_new_word)
 mcmc_plot(model_new_word, type = "trace")
 ```
 
-```{r, eval = FALSE, echo=FALSE}
+```{r, echo=FALSE}
 save(new_word_count_df, new_word_plot, model_new_word, file = "evolution/model_new_word.RData")
 ```
 
