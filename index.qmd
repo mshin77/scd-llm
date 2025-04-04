@@ -471,9 +471,6 @@ suppressWarnings(htmlwidgets::saveWidget(
   widget = new_word_plot, 
   file = "evolution/new_word_plot.html",
   selfcontained = TRUE))
-
-ggsave('evolution/new_word_gg.png',
-       width = 14, height = 12, dpi = 300, plot = new_word_gg)
 ```
 
 [Figure 7](evolution/new_word_plot.html)
