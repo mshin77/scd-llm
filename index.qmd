@@ -25,6 +25,10 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 # Screening 
 
+**Figure 1. Semi-Automated AI-Driven Publication Screening**
+
+![](files/screening_procedure.png)
+
 ### Extract Web of Science (WoS) Data
 
 ```{r}
@@ -49,9 +53,7 @@ suppressPackageStartupMessages({
   library(stringi)
   library(brms)
 })
-```
 
-```{r}
 load("evolution/model_new_word.RData")
 ```
 
@@ -86,27 +88,27 @@ wos_5707 <- wos_5718 %>% filter(PY <= 2024)
 openxlsx::write.xlsx(wos_5707, "init_all_data.xlsx", rowNames = FALSE)
 ```
 
-### Text Classification and Prediction
+### Fine-Tuning for Publication Classification Tasks 
 
-#### **`Step 1. Text classifition for using single case design`** [Code](single_case/index.html)
+#### **`Step 1. Text classification for using single case design`** [Code](single_case/index.html)
 
-**Figure 1. Single Case Design Classification**
+**Figure 2 (A). Single Case Design Classification**
 
 ![](files/single-case-results.png)
 
 #### **`Step 2. Text classification for using technology`** [Code](technology_use/index.html)
 
-**Figure 2. Technology Use Classification**
+**Figure 2 (B). Technology Use Classification**
 
 ![](files/technology-use-results.png)
 
 #### **`Step 3. Filtering studies including methodology content`** [Code](methodology/index.html)
 
--   Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
+- Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
 
 # Bibliometrics
 
-### Total Publications and Citations
+### Main Findings
 
 ```{r, eval=FALSE}
 data <- read.xlsx("../data/all_data.xlsx")
@@ -121,71 +123,6 @@ data_descriptive <- data %>%
 data_descriptive <- data_descriptive %>%
     dplyr::select(document, everything())
 
-year_doc <- data_descriptive %>%
-  group_by(PY) %>%
-  summarize(publication_number = n()) %>%
-  ungroup()
-
-year_TC <- data_descriptive %>%
-    group_by(PY) %>%
-    summarize(total_citation = sum(TC)) %>%
-    ungroup()
-
-year_doc_counts_all <-  left_join(year_doc, year_TC, by = "PY")
-
-year_citation_plot <- year_doc_counts_all %>%
-    ggplot() +
-    geom_col(aes(PY, publication_number*10), fill = "#B3B3B3") +
-    geom_line(aes(PY, total_citation), linewidth = 0.5, color="#4C4E52") +
-    geom_point(aes(PY, total_citation), size = 1.5, color = "#4C4E52") +
-    scale_y_continuous(sec.axis = sec_axis(~./10, name = "Number of total publications")) +
-    labs(x = "Year", y = "Number of total citations", fill = "") +
-    theme_classic(base_size = 12) +
-        theme(
-        axis.line = element_line(color = "#404040", linewidth = 0.2),
-        axis.title = element_text(size = 11, color = "#404040"),
-        axis.text.y.left = element_text(margin = margin(l = 7)),
-        axis.text.y.right = element_text(margin = margin(r = 10))
-)
-
-ggsave('files/year_citation_plot.png',
-       width = 6, height = 3.5, dpi = 300, plot = year_citation_plot)
-
-year_source_type <- data_descriptive %>%
-    mutate(study_number = row_number()) %>%
-    group_by(SO) %>%
-    summarize(publication_number = nrow(data.frame(study_number))) %>%
-    ungroup()
-
-year_doc_counts <- data_descriptive %>%
-    mutate(study_number = row_number()) %>%
-    group_by(PY) %>%
-    summarize(publication_number = n()) %>%
-    ungroup()
-
-year_1990s <- data_descriptive %>%
-    filter(PY >=1990 & PY <= 1999) %>%
-    summarize(publication_number = n()) %>%
-    ungroup()
-
-year_2000s <- data_descriptive %>%
-    filter(PY>=2000 & PY <= 2009) %>%
-    summarize(publication_number = n()) %>%
-    ungroup()
-
-year_2010s_plus <- data_descriptive %>%
-    filter(PY >=2010 & PY <= 2022) %>%
-    summarize(publication_number = n()) %>%
-    ungroup()
-```
-
-**Figure 3**
-
-![](files/year_citation_plot.png)
-
-### Main Findings
-
-```{r,eval=FALSE}
 data_descriptive$DT <- case_when(
    data_descriptive$DT == "ARTICLE" ~ "Article",
     data_descriptive$DT == "BOOK CHAPTER" ~ "Book Chapter",
@@ -385,7 +322,8 @@ ggsave('files/world_map.png',
 save(world_map, file = "files/world_map.RData")
 ```
 
-[Figure 4](world_map/index.html)
+
+[Figure 3](world_map/index.html) 
 
 ```{r, echo=FALSE}
 load("files/world_map.Rdata")
@@ -396,20 +334,18 @@ world_map
 
 [Code](topic_modeling/index.html)
 
-[Figure 5](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
+[Figure 4](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
 
-[Figure 6](topic_modeling/fig_hierarchical.html) <iframe src="topic_modeling/fig_hierarchical.html" width="800" height="600"></iframe>
-
-[Figure 7](topic_modeling/fig_cosine_sim.html) <iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="600"></iframe>
+[Figure 5](topic_modeling/fig_cosine_sim.html) <iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="600"></iframe>
 
 # Evolution of Research
 
-[Figure 8](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
+[Figures S1 to S6](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
 
 [Code](evolution/index.html)
 
-```{r, eval=FALSE, echo=FALSE}
-new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
+```{r, echo=FALSE}
+# new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
 ```
 
 ### Two-Level Bayesian Modeling 
@@ -436,11 +372,11 @@ new_word_count_df <- cbind(new_word_count_df, new_word_trend_vars)
 
 #### Changes in New Word Counts
 
-```{r, echo=FALSE, fig.width=14, fig.height=14} 
+```{r, echo=FALSE, fig.width=14, fig.height=14, eval=FALSE}
 new_word_gg <- new_word_count_df %>% ggplot() +
-  geom_line(aes(x = Year, y = new_word_count, group = Topic),
+  geom_line(aes(x = Year, y = Count, group = Topic),
             linewidth = 0.3, alpha = 0.3) +
-  geom_point(aes(x = Year, y = new_word_count), size = 0.5) +
+  geom_point(aes(x = Year, y = Count), size = 0.5) +
   labs(x = "Year", 
        y = "New Word Count") +
   facet_wrap(~ Topic, ncol = 3, scales = "free_y", 
@@ -473,7 +409,7 @@ suppressWarnings(htmlwidgets::saveWidget(
   selfcontained = TRUE))
 ```
 
-[Figure 7](evolution/new_word_plot.html)
+[Figure 6](evolution/new_word_plot.html)
 
 ```{r, echo=FALSE}
 new_word_plot
@@ -483,17 +419,17 @@ new_word_plot
 
 ```{r}
 #| code-fold: false
-summary(new_word_count_df$new_word_count)
+summary(new_word_count_df$Count)
 ```
 
 #### Dispersion Ratio
 
 ```{r}
 #| code-fold: false
-mean_val <- mean(new_word_count_df$new_word_count)
-var_val  <- var(new_word_count_df$new_word_count)
+mean_val <- mean(new_word_count_df$Count)
+var_val  <- var(new_word_count_df$Count)
 overdispersion_ratio <- var_val / mean_val
-print(overdispersion_ratio)
+overdispersion_ratio
 ```
 
 #### Estimate the Model
@@ -501,7 +437,7 @@ print(overdispersion_ratio)
 ```{r, eval=FALSE}
 #| code-fold: false
 formula_new_word <- bf(
-  new_word_count ~ 1 + 
+  Count ~ 1 + 
     trend_1970 + 
     trend_change_1980 +
     trend_change_1990 + 
@@ -530,11 +466,11 @@ model_new_word <- brm(
 )
 ```
 
-```{r, eval=FALSE, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 prior_summary(model_new_word)
 ```
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 summary(model_new_word)
 ```
 
@@ -550,14 +486,14 @@ pp_check(model_new_word)
 
 ```{r, echo=FALSE, eval=FALSE}
 # Posterior Density Plots and Trace Plots
-plot(model_new_word)
+# plot(model_new_word)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
-mcmc_plot(model_new_word, type = "trace")
+# mcmc_plot(model_new_word, type = "trace")
 ```
 
-```{r, echo=FALSE}
-save(new_word_count_df, new_word_plot, model_new_word, file = "evolution/model_new_word.RData")
+```{r, echo=FALSE, eval=FALSE}
+save(new_word_count_df, overdispersion_ratio, new_word_plot, model_new_word, file = "evolution/model_new_word.RData")
 ```
 

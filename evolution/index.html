@@ -7545,7 +7545,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>April 04, 2025
+<pre>April 05, 2025
 </pre>
 </div>
 </div>
@@ -7693,14 +7693,17 @@ a.anchor-link {
         <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s1">']'</span>
     <span class="k">return</span> <span class="n">s</span>
 
-<span class="k">def</span> <span class="nf">safe_eval_if_str</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">safe_eval_if_str</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">exclude_numbers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">cleaned</span> <span class="o">=</span> <span class="n">clean_literal</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cleaned</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">cleaned</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"[]"</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">" '"</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)]</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">" '"</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">exclude_numbers</span><span class="p">:</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">token</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">token</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">tokens</span>
     <span class="k">return</span> <span class="n">val</span>
 </pre></div>
 </div>
@@ -7771,17 +7774,21 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [23]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">unigrams_df</span> <span class="o">=</span> <span class="n">ngrams_concat</span><span class="p">[</span><span class="n">ngrams_concat</span><span class="p">[</span><span class="s1">'ngram_type'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">'unigrams'</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 <span class="n">unigrams_df</span><span class="p">[</span><span class="s1">'Decade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">unigrams_df</span><span class="p">[</span><span class="s1">'Year'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">//</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
 
+<span class="n">first_year</span> <span class="o">=</span> <span class="n">unigrams_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'ngram'</span><span class="p">)[</span><span class="s1">'Year'</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">first_year</span><span class="p">[</span><span class="s1">'FirstDecade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_year</span><span class="p">[</span><span class="s1">'Year'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">//</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
+<span class="n">unigrams_df</span> <span class="o">=</span> <span class="n">unigrams_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">first_year</span><span class="p">[[</span><span class="s1">'ngram'</span><span class="p">,</span> <span class="s1">'FirstDecade'</span><span class="p">]],</span> <span class="n">on</span><span class="o">=</span><span class="s1">'ngram'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
 <span class="k">def</span> <span class="nf">process_tokens</span><span class="p">(</span><span class="n">tokens</span><span class="p">):</span>
     <span class="n">cnt</span> <span class="o">=</span> <span class="n">tokens</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
     <span class="n">once</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">[</span><span class="n">cnt</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="n">multi</span> <span class="o">=</span> <span class="n">cnt</span><span class="p">[</span><span class="n">cnt</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">all_tok</span> <span class="o">=</span> <span class="n">cnt</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">all_distinct</span> <span class="o">=</span> <span class="n">cnt</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
 
     <span class="n">freq_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'frequency'</span><span class="p">:</span> <span class="n">cnt</span><span class="p">})</span>
     <span class="n">desc_stats</span> <span class="o">=</span> <span class="n">freq_df</span><span class="p">[</span><span class="s1">'frequency'</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
@@ -7789,36 +7796,51 @@ a.anchor-link {
     <span class="n">kurt_val</span> <span class="o">=</span> <span class="n">freq_df</span><span class="p">[</span><span class="s1">'frequency'</span><span class="p">]</span><span class="o">.</span><span class="n">kurt</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([{</span>
-        <span class="s1">'All Tokens'</span><span class="p">:</span> <span class="n">all_tok</span><span class="p">,</span>
-        <span class="s1">'Distinct Token Count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_tok</span><span class="p">),</span>
-        <span class="s1">'Tokens Appearing Once'</span><span class="p">:</span> <span class="n">once</span><span class="p">,</span>
+        <span class="s1">'Total Word Count'</span><span class="p">:</span> <span class="n">cnt</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+        <span class="s1">'Min'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'min'</span><span class="p">],</span>
+        <span class="s1">'25%'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'25%'</span><span class="p">],</span>
+        <span class="s1">'50%'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'50%'</span><span class="p">],</span>
+        <span class="s1">'75%'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'75%'</span><span class="p">],</span>
+        <span class="s1">'Max'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'max'</span><span class="p">],</span>
+        <span class="s1">'Mean'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'mean'</span><span class="p">],</span>
+        <span class="s1">'Std'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'std'</span><span class="p">],</span>
+        <span class="s1">'Skew'</span><span class="p">:</span> <span class="n">skew_val</span><span class="p">,</span>
+        <span class="s1">'Kurt'</span><span class="p">:</span> <span class="n">kurt_val</span><span class="p">,</span>
+        <span class="s1">'Distinct Word Count'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_distinct</span><span class="p">),</span>
+        <span class="c1">#'Distinct Words': all_distinct,</span>
         <span class="s1">'Count (Once)'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">once</span><span class="p">),</span>
-        <span class="s1">'Tokens Appearing &gt;1 Time'</span><span class="p">:</span> <span class="n">multi</span><span class="p">,</span>
+        <span class="c1">#'Words Appearing Once': once,</span>
         <span class="s1">'Count (&gt;1 Time)'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi</span><span class="p">),</span>
-        <span class="s1">'Total Token Count'</span><span class="p">:</span> <span class="n">cnt</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
-        <span class="s1">'Verification (Once + Multi)'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">once</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">multi</span><span class="p">),</span>
-        <span class="s1">'Min Frequency'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'min'</span><span class="p">],</span>
-        <span class="s1">'25</span><span class="si">% F</span><span class="s1">requency'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'25%'</span><span class="p">],</span>
-        <span class="s1">'Median Frequency'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'50%'</span><span class="p">],</span>
-        <span class="s1">'75</span><span class="si">% F</span><span class="s1">requency'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'75%'</span><span class="p">],</span>
-        <span class="s1">'Max Frequency'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'max'</span><span class="p">],</span>
-        <span class="s1">'Mean Frequency'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'mean'</span><span class="p">],</span>
-        <span class="s1">'Std Frequency'</span><span class="p">:</span> <span class="n">desc_stats</span><span class="p">[</span><span class="s1">'std'</span><span class="p">],</span>
-        <span class="s1">'Skew Frequency'</span><span class="p">:</span> <span class="n">skew_val</span><span class="p">,</span>
-        <span class="s1">'Kurt Frequency'</span><span class="p">:</span> <span class="n">kurt_val</span><span class="p">,</span>
+        <span class="c1">#'Words Appearing &gt;1 Time': multi,</span>
     <span class="p">}])</span>
 
 <span class="n">unigrams_group_df</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="c1"># for (topic, decade), sub_df in unigrams_df.groupby(['Topic', 'Decade']):</span>
 <span class="k">for</span> <span class="n">decade</span><span class="p">,</span> <span class="n">sub_df</span> <span class="ow">in</span> <span class="n">unigrams_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Decade'</span><span class="p">):</span>
     <span class="n">token_stats</span> <span class="o">=</span> <span class="n">process_tokens</span><span class="p">(</span><span class="n">sub_df</span><span class="p">[</span><span class="s1">'ngram'</span><span class="p">])</span>
-    <span class="c1"># token_stats['Topic'] = topic</span>
+    <span class="n">current_decade_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">decade</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">reused_tokens_df</span> <span class="o">=</span> <span class="n">sub_df</span><span class="p">[</span><span class="n">sub_df</span><span class="p">[</span><span class="s1">'FirstDecade'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">fd</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">fd</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">current_decade_val</span><span class="p">)]</span>
+    <span class="n">token_stats</span><span class="p">[</span><span class="s1">'Reused Word Count'</span><span class="p">]</span> <span class="o">=</span> <span class="n">reused_tokens_df</span><span class="p">[</span><span class="s1">'ngram'</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="n">reused_counts</span> <span class="o">=</span> <span class="n">reused_tokens_df</span><span class="p">[</span><span class="s1">'ngram'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="n">top_10_reused_tokens</span> <span class="o">=</span> <span class="n">reused_counts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">token_stats</span><span class="p">[</span><span class="s1">'Top 10 Reused Words'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">top_10_reused_tokens</span><span class="p">)</span>
+
+    <span class="n">new_tokens_df</span> <span class="o">=</span> <span class="n">sub_df</span><span class="p">[</span><span class="n">sub_df</span><span class="p">[</span><span class="s1">'FirstDecade'</span><span class="p">]</span> <span class="o">==</span> <span class="n">decade</span><span class="p">]</span>
+    <span class="n">token_stats</span><span class="p">[</span><span class="s1">'New Word Count Per Decade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_tokens_df</span><span class="p">[</span><span class="s1">'ngram'</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="n">new_counts</span> <span class="o">=</span> <span class="n">new_tokens_df</span><span class="p">[</span><span class="s1">'ngram'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+
+    <span class="n">filtered_new_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">tok</span> <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">new_counts</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">tok</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+    <span class="n">top_10_new_tokens</span> <span class="o">=</span> <span class="n">filtered_new_tokens</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">token_stats</span><span class="p">[</span><span class="s1">'Top 10 New Words'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">top_10_new_tokens</span><span class="p">)</span>
+
     <span class="n">token_stats</span><span class="p">[</span><span class="s1">'Decade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">decade</span>
     <span class="n">unigrams_group_df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token_stats</span><span class="p">)</span>
 
 <span class="n">unigrams_concat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">unigrams_group_df</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">unigrams_concat</span> <span class="o">=</span> <span class="n">unigrams_concat</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'Decade'</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">unigrams_concat</span> <span class="o">=</span> <span class="n">unigrams_concat</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'index'</span><span class="p">:</span> <span class="s1">'Metric'</span><span class="p">})</span>
 
-<span class="k">def</span> <span class="nf">calculate_new_word_count</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">count_new_word_topic_year</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="n">grouped</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">'Topic'</span><span class="p">,</span> <span class="s1">'Year'</span><span class="p">])[</span><span class="s1">'ngram'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
     <span class="n">count_df</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">topic</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">grouped</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Topic'</span><span class="p">):</span>
@@ -7827,17 +7849,508 @@ a.anchor-link {
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
             <span class="n">current_tokens</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'ngram'</span><span class="p">]</span>
             <span class="n">new_tokens</span> <span class="o">=</span> <span class="n">current_tokens</span> <span class="o">-</span> <span class="n">previous_tokens</span>
-            <span class="n">new_word_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_tokens</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_tokens</span><span class="p">)</span>
             <span class="n">count_df</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
                 <span class="s1">'Topic'</span><span class="p">:</span> <span class="n">topic</span><span class="p">,</span>
                 <span class="s1">'Year'</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">'Year'</span><span class="p">],</span>
-                <span class="s1">'new_word_count'</span><span class="p">:</span> <span class="n">new_word_count</span>
+                <span class="s1">'Count'</span><span class="p">:</span> <span class="n">count</span>
             <span class="p">})</span>
             <span class="n">previous_tokens</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">current_tokens</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">count_df</span><span class="p">)</span>
 
-<span class="n">new_word_count_df</span> <span class="o">=</span> <span class="n">calculate_new_word_count</span><span class="p">(</span><span class="n">unigrams_df</span><span class="p">)</span>
+<span class="n">new_word_count_df</span> <span class="o">=</span> <span class="n">count_new_word_topic_year</span><span class="p">(</span><span class="n">unigrams_df</span><span class="p">)</span>
+<span class="n">new_word_count_df</span><span class="p">[</span><span class="s1">'Decade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_word_count_df</span><span class="p">[</span><span class="s1">'Year'</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">//</span><span class="mi">10</span><span class="o">*</span><span class="mi">10</span><span class="si">}</span><span class="s2">s"</span><span class="p">)</span>
+<span class="n">new_word_topic_decade_count</span> <span class="o">=</span> <span class="n">new_word_count_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'Decade'</span><span class="p">)[</span><span class="s1">'Count'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="n">unigrams_concat</span> <span class="o">=</span> <span class="n">unigrams_concat</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'Metric'</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">new_word_topic_decade_count</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">decade</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'Decade'</span><span class="p">]</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">'Count'</span><span class="p">]</span>
+    <span class="n">unigrams_concat</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'New Word Per Topic Per Decade Count'</span><span class="p">,</span> <span class="n">decade</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+<span class="n">unigrams_concat</span> <span class="o">=</span> <span class="n">unigrams_concat</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [26]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-python"><pre><span></span><span class="n">unigrams_concat</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[26]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<div class="colab-df-container" id="df-37bcd323-d880-4c89-9da1-30b4b916d8c3">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th>Decade</th>
+<th>Metric</th>
+<th>1970s</th>
+<th>1980s</th>
+<th>1990s</th>
+<th>2000s</th>
+<th>2010s</th>
+<th>2020s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>Total Word Count</td>
+<td>2149</td>
+<td>4542</td>
+<td>21306</td>
+<td>41419</td>
+<td>150661</td>
+<td>203870</td>
+</tr>
+<tr>
+<th>1</th>
+<td>Min</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>2</th>
+<td>25%</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<th>3</th>
+<td>50%</td>
+<td>1.0</td>
+<td>1.0</td>
+<td>2.0</td>
+<td>2.0</td>
+<td>3.0</td>
+<td>3.0</td>
+</tr>
+<tr>
+<th>4</th>
+<td>75%</td>
+<td>2.0</td>
+<td>3.0</td>
+<td>5.0</td>
+<td>6.0</td>
+<td>9.0</td>
+<td>9.0</td>
+</tr>
+<tr>
+<th>5</th>
+<td>Max</td>
+<td>40.0</td>
+<td>50.0</td>
+<td>207.0</td>
+<td>433.0</td>
+<td>1511.0</td>
+<td>2214.0</td>
+</tr>
+<tr>
+<th>6</th>
+<td>Mean</td>
+<td>2.276483</td>
+<td>2.970569</td>
+<td>5.37623</td>
+<td>7.82672</td>
+<td>15.749634</td>
+<td>17.626664</td>
+</tr>
+<tr>
+<th>7</th>
+<td>Std</td>
+<td>2.864719</td>
+<td>4.800447</td>
+<td>12.038136</td>
+<td>21.632775</td>
+<td>61.837315</td>
+<td>73.992773</td>
+</tr>
+<tr>
+<th>8</th>
+<td>Skew</td>
+<td>5.348193</td>
+<td>5.500339</td>
+<td>7.599484</td>
+<td>9.220326</td>
+<td>12.514249</td>
+<td>13.974692</td>
+</tr>
+<tr>
+<th>9</th>
+<td>Kurt</td>
+<td>46.173211</td>
+<td>37.998524</td>
+<td>79.045771</td>
+<td>115.108478</td>
+<td>207.453334</td>
+<td>273.743316</td>
+</tr>
+<tr>
+<th>10</th>
+<td>Distinct Word Count</td>
+<td>944</td>
+<td>1529</td>
+<td>3963</td>
+<td>5292</td>
+<td>9566</td>
+<td>11566</td>
+</tr>
+<tr>
+<th>11</th>
+<td>Count (Once)</td>
+<td>573</td>
+<td>801</td>
+<td>1617</td>
+<td>1988</td>
+<td>3219</td>
+<td>4054</td>
+</tr>
+<tr>
+<th>12</th>
+<td>Count (&gt;1 Time)</td>
+<td>371</td>
+<td>728</td>
+<td>2346</td>
+<td>3304</td>
+<td>6347</td>
+<td>7512</td>
+</tr>
+<tr>
+<th>13</th>
+<td>Reused Word Count</td>
+<td>0</td>
+<td>497</td>
+<td>1305</td>
+<td>2858</td>
+<td>4816</td>
+<td>7002</td>
+</tr>
+<tr>
+<th>14</th>
+<td>Top 10 Reused Words</td>
+<td></td>
+<td>behavior, subjects, children, training, design...</td>
+<td>behavior, study, treatment, design, results, c...</td>
+<td>children, study, design, behavior, treatment, ...</td>
+<td>intervention, study, design, children, partici...</td>
+<td>intervention, study, design, participants, chi...</td>
+</tr>
+<tr>
+<th>15</th>
+<td>New Word Count Per Decade</td>
+<td>944</td>
+<td>1032</td>
+<td>2658</td>
+<td>2434</td>
+<td>4750</td>
+<td>4564</td>
+</tr>
+<tr>
+<th>16</th>
+<td>Top 10 New Words</td>
+<td>behavior, self, children, training, ss, treatm...</td>
+<td>performance, community, treatments, restraint,...</td>
+<td>autism, matching, delay, developmental, object...</td>
+<td>symbol, pecs, stories, asd, protocol, spectrum...</td>
+<td>ipad, gbg, fidelity, app, scribe, id, tau, tec...</td>
+<td>covid, pandemic, nick, hallucinations, asynchr...</td>
+</tr>
+<tr>
+<th>17</th>
+<td>New Word Per Topic Per Decade Count</td>
+<td>1328</td>
+<td>2210</td>
+<td>7981</td>
+<td>10152</td>
+<td>22695</td>
+<td>20397</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="colab-df-buttons">
+<div class="colab-df-container">
+<button class="colab-df-convert" onclick="convertToInteractive('df-37bcd323-d880-4c89-9da1-30b4b916d8c3')" style="display:none;" title="Convert this dataframe to an interactive table.">
+<svg height="24px" viewbox="0 -960 960 960" xmlns="http://www.w3.org/2000/svg">
+<path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"></path>
+</svg>
+</button>
+<style>
+    .colab-df-container {
+      display:flex;
+      gap: 12px;
+    }
+
+    .colab-df-convert {
+      background-color: #E8F0FE;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      fill: #1967D2;
+      height: 32px;
+      padding: 0 0 0 0;
+      width: 32px;
+    }
+
+    .colab-df-convert:hover {
+      background-color: #E2EBFA;
+      box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+      fill: #174EA6;
+    }
+
+    .colab-df-buttons div {
+      margin-bottom: 4px;
+    }
+
+    [theme=dark] .colab-df-convert {
+      background-color: #3B4455;
+      fill: #D2E3FC;
+    }
+
+    [theme=dark] .colab-df-convert:hover {
+      background-color: #434B5C;
+      box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+      filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+      fill: #FFFFFF;
+    }
+  </style>
+<script>
+      const buttonEl =
+        document.querySelector('#df-37bcd323-d880-4c89-9da1-30b4b916d8c3 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-37bcd323-d880-4c89-9da1-30b4b916d8c3');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+</div>
+<div id="df-8b0c06d1-cee5-449c-a57b-ca8bdc78dda8">
+<button class="colab-df-quickchart" onclick="quickchart('df-8b0c06d1-cee5-449c-a57b-ca8bdc78dda8')" style="display:none;" title="Suggest charts">
+<svg height="24px" viewbox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
+<g>
+<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
+</g>
+</svg>
+</button>
+<style>
+  .colab-df-quickchart {
+      --bg-color: #E8F0FE;
+      --fill-color: #1967D2;
+      --hover-bg-color: #E2EBFA;
+      --hover-fill-color: #174EA6;
+      --disabled-fill-color: #AAA;
+      --disabled-bg-color: #DDD;
+  }
+
+  [theme=dark] .colab-df-quickchart {
+      --bg-color: #3B4455;
+      --fill-color: #D2E3FC;
+      --hover-bg-color: #434B5C;
+      --hover-fill-color: #FFFFFF;
+      --disabled-bg-color: #3B4455;
+      --disabled-fill-color: #666;
+  }
+
+  .colab-df-quickchart {
+    background-color: var(--bg-color);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    fill: var(--fill-color);
+    height: 32px;
+    padding: 0;
+    width: 32px;
+  }
+
+  .colab-df-quickchart:hover {
+    background-color: var(--hover-bg-color);
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    fill: var(--button-hover-fill-color);
+  }
+
+  .colab-df-quickchart-complete:disabled,
+  .colab-df-quickchart-complete:disabled:hover {
+    background-color: var(--disabled-bg-color);
+    fill: var(--disabled-fill-color);
+    box-shadow: none;
+  }
+
+  .colab-df-spinner {
+    border: 2px solid var(--fill-color);
+    border-color: transparent;
+    border-bottom-color: var(--fill-color);
+    animation:
+      spin 1s steps(1) infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+      border-left-color: var(--fill-color);
+    }
+    20% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    30% {
+      border-color: transparent;
+      border-left-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+      border-right-color: var(--fill-color);
+    }
+    40% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-top-color: var(--fill-color);
+    }
+    60% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+    }
+    80% {
+      border-color: transparent;
+      border-right-color: var(--fill-color);
+      border-bottom-color: var(--fill-color);
+    }
+    90% {
+      border-color: transparent;
+      border-bottom-color: var(--fill-color);
+    }
+  }
+</style>
+<script>
+    async function quickchart(key) {
+      const quickchartButtonEl =
+        document.querySelector('#' + key + ' button');
+      quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+      quickchartButtonEl.classList.add('colab-df-spinner');
+      try {
+        const charts = await google.colab.kernel.invokeFunction(
+            'suggestCharts', [key], {});
+      } catch (error) {
+        console.error('Error during call to suggestCharts:', error);
+      }
+      quickchartButtonEl.classList.remove('colab-df-spinner');
+      quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+    }
+    (() => {
+      let quickchartButtonEl =
+        document.querySelector('#df-8b0c06d1-cee5-449c-a57b-ca8bdc78dda8 button');
+      quickchartButtonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+    })();
+  </script>
+</div>
+<div id="id_f0ad0adb-4a66-4174-820a-c8d0b43aa95a">
+<style>
+      .colab-df-generate {
+        background-color: #E8F0FE;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none;
+        fill: #1967D2;
+        height: 32px;
+        padding: 0 0 0 0;
+        width: 32px;
+      }
+
+      .colab-df-generate:hover {
+        background-color: #E2EBFA;
+        box-shadow: 0px 1px 2px rgba(60, 64, 67, 0.3), 0px 1px 3px 1px rgba(60, 64, 67, 0.15);
+        fill: #174EA6;
+      }
+
+      [theme=dark] .colab-df-generate {
+        background-color: #3B4455;
+        fill: #D2E3FC;
+      }
+
+      [theme=dark] .colab-df-generate:hover {
+        background-color: #434B5C;
+        box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+        filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.3));
+        fill: #FFFFFF;
+      }
+    </style>
+<button class="colab-df-generate" onclick="generateWithVariable('unigrams_concat')" style="display:none;" title="Generate code using this dataframe.">
+<svg height="24px" viewbox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"></path>
+</svg>
+</button>
+<script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_f0ad0adb-4a66-4174-820a-c8d0b43aa95a button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('unigrams_concat');
+      }
+      })();
+    </script>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -7847,7 +8360,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [25]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">unigrams_concat</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">"results/unigrams_concat.xlsx"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -7862,7 +8375,7 @@ a.anchor-link {
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="kn">from</span> <span class="nn">nbconvert</span> <span class="kn">import</span> <span class="n">HTMLExporter</span>
