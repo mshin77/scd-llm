@@ -345,30 +345,10 @@ world_map
 [Code](evolution/index.html)
 
 ```{r, echo=FALSE}
-# new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
+new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
 ```
 
-### Two-Level Bayesian Modeling 
-
-#### Preprocess 
-
-```{r, eval=FALSE}
-#| code-fold: false
-compute_trends <- function(Year) {
-  data.frame(
-    trend_1970 = ifelse(Year >= 1970, Year - 1970, 0),
-    trend_change_1980 = ifelse(Year >= 1980, Year - 1980, 0),
-    trend_change_1990 = ifelse(Year >= 1990, Year - 1990, 0),
-    trend_change_2000 = ifelse(Year >= 2000, Year - 2000, 0),
-    trend_change_2010 = ifelse(Year >= 2010, Year - 2010, 0),
-    trend_change_2020 = ifelse(Year >= 2020, Year - 2020, 0)
-  )
-}
-
-new_word_trend_vars <- compute_trends(new_word_count_df$Year)
-new_word_count_df <- cbind(new_word_count_df, new_word_trend_vars)
-# write.xlsx(new_word_count_df, "evolution/new_word_count_df_updated.xlsx", rowNames = FALSE)
-```
+### Bayesian Negative Binomial Piecewise Regression 
 
 #### Changes in New Word Counts
 
@@ -379,7 +359,7 @@ new_word_gg <- new_word_count_df %>% ggplot() +
   geom_point(aes(x = Year, y = Count), size = 0.5) +
   labs(x = "Year", 
        y = "New Word Count") +
-  facet_wrap(~ Topic, ncol = 3, scales = "free_y", 
+  facet_wrap(~ Topic, ncol = 4, scales = "free_y", 
              labeller = labeller(Topic = function(x) paste("Topic", x))) +
   theme_minimal(base_size = 10) +
   theme(
@@ -392,7 +372,7 @@ new_word_gg <- new_word_count_df %>% ggplot() +
     legend.title.align = 0.5,
     legend.position = "bottom")  
 
-new_word_plot <- plotly::ggplotly(new_word_gg, height = 850, width = 770) %>% 
+new_word_plot <- plotly::ggplotly(new_word_gg, height = 700, width = 1100) %>% 
   plotly::layout(
     legend = list(
       orientation = "h",
@@ -432,65 +412,93 @@ overdispersion_ratio <- var_val / mean_val
 overdispersion_ratio
 ```
 
+#### Preprocess 
+
+```{r}
+#| code-fold: false
+new_word_count_data <- new_word_count_df %>%
+  group_by(Topic) %>%
+  dplyr::mutate(
+    init_year = min(Year, na.rm = TRUE)) %>%
+  ungroup()
+```
+
+```{r, eval=FALSE}
+#| code-fold: false
+new_word_count_data <- new_word_count_data %>%
+  group_by(Topic) %>%
+  dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
+  dplyr::mutate(jump_2010 = as.integer(I(Year >= 2010))) %>%
+  dplyr::mutate(slope_2010 = (Year - 2010)*jump_2010) %>%
+  select(-init_year)
+```
+
 #### Estimate the Model
 
 ```{r, eval=FALSE}
 #| code-fold: false
+
+new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
+new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
+
 formula_new_word <- bf(
-  Count ~ 1 + 
-    trend_1970 + 
-    trend_change_1980 +
-    trend_change_1990 + 
-    trend_change_2000 +
-    trend_change_2010 +
-    trend_change_2020 +
-    (1 + 
-    trend_1970 + 
-    trend_change_1980 +
-    trend_change_1990 + 
-    trend_change_2000 +
-    trend_change_2010 +
-    trend_change_2020 | Topic)     
+  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
+          Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
 )
 
 model_new_word <- brm(
   formula = formula_new_word,
-  data = new_word_count_df,
+  data = new_word_count_data,
   family = negbinomial(link = "log"),
   control = list(adapt_delta = 0.95, max_treedepth = 12),
   iter = 2000,
   warmup = 1000,
   cores = 4, 
-  chains = 4,
+  chains = 1,
   seed = 2025
 )
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
+#| code-fold: false
 prior_summary(model_new_word)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
+#| code-fold: false
 summary(model_new_word)
 ```
 
+#### Fixed Effects (Log Coefficients)
+
 ```{r, echo=FALSE}
-fixef(model_new_word)
+#| code-fold: false
+round(fixef(model_new_word), 2)
+```
+
+#### Fixed Effects (Incidence Rate Ratios)
+
+```{r, eval=FALSE}
+#| code-fold: false
+round(exp(fixef(model_new_word)[, -2]), 2)
 ```
 
 #### Posterior Predictive Checks
 
 ```{r, echo=FALSE}
+#| code-fold: false
 pp_check(model_new_word)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
+#| code-fold: false
 # Posterior Density Plots and Trace Plots
-# plot(model_new_word)
+plot(model_new_word)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
-# mcmc_plot(model_new_word, type = "trace")
+#| code-fold: false
+mcmc_plot(model_new_word, type = "trace")
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
