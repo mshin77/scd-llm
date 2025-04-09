@@ -54,7 +54,7 @@ suppressPackageStartupMessages({
   library(brms)
 })
 
-load("evolution/model_new_word.RData")
+load("evolution/bayes_model.RData")
 ```
 
 ### Import Wos Data
@@ -352,14 +352,15 @@ new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
 
 #### Changes in New Word Counts
 
-```{r, echo=FALSE, fig.width=14, fig.height=14, eval=FALSE}
+```{r, echo=FALSE, fig.width=15, fig.height=10, eval=FALSE}
 new_word_gg <- new_word_count_df %>% ggplot() +
   geom_line(aes(x = Year, y = Count, group = Topic),
             linewidth = 0.3, alpha = 0.3) +
   geom_point(aes(x = Year, y = Count), size = 0.5) +
   labs(x = "Year", 
        y = "New Word Count") +
-  facet_wrap(~ Topic, ncol = 4, scales = "free_y", 
+  facet_wrap(~ Topic, ncol = 3, 
+             scales = "free_y",
              labeller = labeller(Topic = function(x) paste("Topic", x))) +
   theme_minimal(base_size = 10) +
   theme(
@@ -372,7 +373,7 @@ new_word_gg <- new_word_count_df %>% ggplot() +
     legend.title.align = 0.5,
     legend.position = "bottom")  
 
-new_word_plot <- plotly::ggplotly(new_word_gg, height = 700, width = 1100) %>% 
+new_word_plot <- plotly::ggplotly(new_word_gg, height = 600, width = 800) %>% 
   plotly::layout(
     legend = list(
       orientation = "h",
@@ -469,18 +470,40 @@ prior_summary(model_new_word)
 summary(model_new_word)
 ```
 
-#### Fixed Effects (Log Coefficients)
+```{r, eval=FALSE, echo=FALSE}
+coefs <- fixef(model_new_word)
+coefs_df <- data.frame(
+  Variable = rownames(coefs),
+  Estimate = coefs[,"Estimate"], 
+  Est.Error  = coefs[, "Est.Error"], 
+  Q2.5 = coefs[,"Q2.5"], 
+  Q97.5 = coefs[,"Q97.5"],
+  stringsAsFactors = FALSE
+)
 
-```{r, echo=FALSE}
-#| code-fold: false
-round(fixef(model_new_word), 2)
+irr_df <- data.frame(
+  Variable   = rownames(coefs),
+  IRR     = exp(coefs[,"Estimate"]),  
+  Q2.5 = exp(coefs[,"Q2.5"]), 
+  Q97.5 = exp(coefs[,"Q97.5"]), 
+  stringsAsFactors = FALSE
+)
+
+model_new_word_results <- merge(coefs_df, irr_df, by = "Variable") %>% 
+  mutate_if(is.numeric, ~ round(., 2))
+
+names(model_new_word_results) <- c("Variable",
+                                   "Estimate",
+                                   "Est.Error",
+                                   "Q2.5",
+                                   "Q97.5",
+                                   "IRR",
+                                   "Q2.5",
+                                   "Q97.5")
 ```
 
-#### Fixed Effects (Incidence Rate Ratios)
-
-```{r, eval=FALSE}
-#| code-fold: false
-round(exp(fixef(model_new_word)[, -2]), 2)
+```{r}
+knitr::kable(model_new_word_results, row.names = FALSE)
 ```
 
 #### Posterior Predictive Checks
@@ -502,6 +525,6 @@ mcmc_plot(model_new_word, type = "trace")
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
-save(new_word_count_df, overdispersion_ratio, new_word_plot, model_new_word, file = "evolution/model_new_word.RData")
+save(new_word_count_df, new_word_plot, model_new_word, model_new_word_results, file = "evolution/bayes_model.RData")
 ```
 
