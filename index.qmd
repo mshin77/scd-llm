@@ -336,11 +336,11 @@ world_map
 
 [Figure 4](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="800"></iframe>
 
-[Figure 5](topic_modeling/fig_cosine_sim.html) <iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="600"></iframe>
+[Figure 5](topic_modeling/fig_cosine_sim.html) <iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="800"></iframe>
 
 # Evolution of Research
 
-[Networks](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="600"></iframe>
+[Networks](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="800"></iframe>
 
 [Code](evolution/index.html)
 
@@ -373,7 +373,7 @@ new_word_gg <- new_word_count_df %>% ggplot() +
     legend.title.align = 0.5,
     legend.position = "bottom")  
 
-new_word_plot <- plotly::ggplotly(new_word_gg, height = 600, width = 800) %>% 
+new_word_plot <- plotly::ggplotly(new_word_gg, height = 800, width = 800) %>% 
   plotly::layout(
     legend = list(
       orientation = "h",
