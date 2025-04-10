@@ -334,13 +334,13 @@ world_map
 
 [Code](topic_modeling/index.html)
 
-[Figure 4](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
+[Figure 4](topic_modeling/docs_topics.html) <iframe src="topic_modeling/docs_topics.html" width="800" height="800"></iframe>
 
 [Figure 5](topic_modeling/fig_cosine_sim.html) <iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="600"></iframe>
 
 # Evolution of Research
 
-[Figures S1 to S6](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="1000"></iframe>
+[Networks](https://scd-network.dev)<iframe src="https://scd-network.dev" width="800" height="600"></iframe>
 
 [Code](evolution/index.html)
 
@@ -490,7 +490,7 @@ irr_df <- data.frame(
 )
 
 model_new_word_results <- merge(coefs_df, irr_df, by = "Variable") %>% 
-  mutate_if(is.numeric, ~ round(., 2))
+  mutate_if(is.numeric, ~ round(., 3))
 
 names(model_new_word_results) <- c("Variable",
                                    "Estimate",
