@@ -35,7 +35,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 # Screening
 
-Figure 1. Semi-Automated AI-Driven Publication Screening
+**Figure 1. Semi-Automated AI-Driven Publication Screening**
 
 ![](files/screening_procedure.png)
 
@@ -100,23 +100,21 @@ openxlsx::write.xlsx(wos_5707, "init_all_data.xlsx", rowNames = FALSE)
 
 ### Fine-Tuning for Publication Classification Tasks
 
-#### `Step 1. Text classification for using single case design`
+#### **`Step 1. Text classification for using single case design`** [Code](single_case/index.html)
 
-[<i class="fas fa-code"></i> Code](single_case/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | Figure 2 (A). Single Case Design Classification 
+**Figure 2 (A). Single Case Design Classification**
 
 ![](files/single-case-results.png)
 
-#### `Step 2. Text classification for using technology`
+#### **`Step 2. Text classification for using technology`** [Code](technology_use/index.html)
 
-[<i class="fas fa-code"></i> Code](technology_use/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | Figure 2 (B). Technology Use Classification 
+**Figure 2 (B). Technology Use Classification**
 
 ![](files/technology-use-results.png)
 
-#### `Step 3. Filtering studies including methodology content` 
+#### **`Step 3. Filtering studies including methodology content`** [Code](methodology/index.html)
 
-[<i class="fas fa-code"></i> Code](methodology/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
-
-Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
+-   Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
 
 # Bibliometrics
 
@@ -342,12 +340,12 @@ world_map
 # Topic Modeling
 
 [<i class="fas fa-code"></i> Code](topic_modeling/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
-[Figure 4](topic_modeling/docs_topics.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
-[Figure 5](topic_modeling/fig_cosine_sim.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
+[<i class="fas fa-object-group"></i> Figure 4](topic_modeling/docs_topics.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
+[<i class="fas fa-chart-scatter"></i> Figure 5](topic_modeling/fig_cosine_sim.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
 
-<iframe src="topic_modeling/docs_topics.html" width="800" height="600"></iframe>
+<iframe src="topic_modeling/docs_topics.html" width="800" height="800"></iframe>
 
-<iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="600"></iframe>
+<iframe src="topic_modeling/fig_cosine_sim.html" width="800" height="800"></iframe>
 
 # Evolution of Research
 
@@ -355,6 +353,7 @@ world_map
 
 [<i class="fas fa-project-diagram"></i> Web APP](https://scd-network.dev){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
 [<i class="fas fa-play-circle"></i> Video](https://go.screenpal.com/watch/cTfX6GnjqoM){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
+[<i class="fas fa-code"></i> Code](evolution/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
 
 <iframe src="https://go.screenpal.com/watch/cTfX6GnjqoM" width="800" height="600" frameborder="0" allowfullscreen></iframe>
 
@@ -364,8 +363,8 @@ new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
 
 ### Bayesian Negative Binomial Piecewise Regression
 
-[<i class="fas fa-code"></i> Code](evolution/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
-[Figure 6](evolution/new_word_plot.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
+[<i class="fas fa-chart-line"></i> Figure 6](evolution/new_word_plot.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
+[<i class="fas fa-code"></i> Code](evolution/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} 
 
 #### Changes in New Word Counts
 
@@ -407,7 +406,6 @@ suppressWarnings(htmlwidgets::saveWidget(
   selfcontained = TRUE))
 ```
 
-
 ```{r, echo=FALSE}
 new_word_plot
 ```
@@ -421,125 +419,4 @@ summary(new_word_count_df$Count)
 
 #### Dispersion Ratio
 
-```{r}
-#| code-fold: false
-mean_val <- mean(new_word_count_df$Count)
-var_val  <- var(new_word_count_df$Count)
-overdispersion_ratio <- var_val / mean_val
-overdispersion_ratio
-```
-
-#### Preprocess
-
-```{r}
-#| code-fold: false
-new_word_count_data <- new_word_count_df %>%
-  group_by(Topic) %>%
-  dplyr::mutate(
-    init_year = min(Year, na.rm = TRUE)) %>%
-  ungroup()
-```
-
-```{r, eval=FALSE}
-#| code-fold: false
-new_word_count_data <- new_word_count_data %>%
-  group_by(Topic) %>%
-  dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
-  dplyr::mutate(jump_2010 = as.integer(I(Year >= 2010))) %>%
-  dplyr::mutate(slope_2010 = (Year - 2010)*jump_2010) %>%
-  select(-init_year)
-```
-
-#### Estimate the Model
-
-```{r, eval=FALSE}
-#| code-fold: false
-
-new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
-new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
-
-formula_new_word <- bf(
-  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
-          Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
-)
-
-model_new_word <- brm(
-  formula = formula_new_word,
-  data = new_word_count_data,
-  family = negbinomial(link = "log"),
-  control = list(adapt_delta = 0.95, max_treedepth = 12),
-  iter = 2000,
-  warmup = 1000,
-  cores = 4, 
-  chains = 1,
-  seed = 2025
-)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-#| code-fold: false
-prior_summary(model_new_word)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-#| code-fold: false
-summary(model_new_word)
-```
-
-```{r, eval=FALSE, echo=FALSE}
-coefs <- fixef(model_new_word)
-coefs_df <- data.frame(
-  Variable = rownames(coefs),
-  Estimate = coefs[,"Estimate"], 
-  Est.Error  = coefs[, "Est.Error"], 
-  Q2.5 = coefs[,"Q2.5"], 
-  Q97.5 = coefs[,"Q97.5"],
-  stringsAsFactors = FALSE
-)
-
-irr_df <- data.frame(
-  Variable   = rownames(coefs),
-  IRR     = exp(coefs[,"Estimate"]),  
-  Q2.5 = exp(coefs[,"Q2.5"]), 
-  Q97.5 = exp(coefs[,"Q97.5"]), 
-  stringsAsFactors = FALSE
-)
-
-model_new_word_results <- merge(coefs_df, irr_df, by = "Variable") %>% 
-  mutate_if(is.numeric, ~ round(., 3))
-
-names(model_new_word_results) <- c("Variable",
-                                   "Estimate",
-                                   "Est.Error",
-                                   "Q2.5",
-                                   "Q97.5",
-                                   "IRR",
-                                   "Q2.5",
-                                   "Q97.5")
-```
-
-```{r}
-knitr::kable(model_new_word_results, row.names = FALSE)
-```
-
-#### Posterior Predictive Checks
-
-```{r, echo=FALSE}
-#| code-fold: false
-pp_check(model_new_word)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-#| code-fold: false
-# Posterior Density Plots and Trace Plots
-plot(model_new_word)
-```
-
-```{r, echo=FALSE, eval=FALSE}
-#| code-fold: false
-mcmc_plot(model_new_word, type = "trace")
-```
-
-```{r, echo=FALSE, eval=FALSE}
-save(new_word_count_df, new_word_plot, model_new_word, model_new_word_results, file = "evolution/bayes_model.RData")
 ```
