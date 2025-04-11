@@ -1,5 +1,5 @@
 ---
-title: 'Exploring the research landscape on single-case design methodology using technology through text mining and large language models'
+title: 'Exploring the Research Landscape on Single-Case Design Methodology Using Technology Through Text Mining and Large Language Models'
 # logo: ''
 date: "`r Sys.Date()`"
 code-annotations: hover
