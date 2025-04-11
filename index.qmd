@@ -1,5 +1,5 @@
 ---
-title: 'Exploring the Research Landscape on Single-Case Design Methodology Using Technology Through Text Mining and Large Language Models'
+title: 'Exploring the research landscape on single-case design methodology using technology through text mining and large language models'
 # logo: ''
 date: "`r Sys.Date()`"
 code-annotations: hover
@@ -322,11 +322,8 @@ ggsave('files/world_map.png',
 save(world_map, file = "files/world_map.RData")
 ```
 
-
-[Figure 3](world_map/index.html) 
-
 ```{r, echo=FALSE}
-load("files/world_map.Rdata")
+load("files/world_map.RData")
 world_map
 ```
 
