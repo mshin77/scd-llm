@@ -496,14 +496,12 @@ new_word_plot
 #### Summary Statistics
 
 ```{r}
-#| code-fold: false
 summary(new_word_count_df$Count)
 ```
 
 #### Dispersion Ratio
 
 ```{r}
-#| code-fold: false
 mean_val <- mean(new_word_count_df$Count)
 var_val  <- var(new_word_count_df$Count)
 overdispersion_ratio <- var_val / mean_val
@@ -512,17 +510,14 @@ overdispersion_ratio
 
 #### Preprocess
 
-```{r}
+```{r, eval=FALSE}
 #| code-fold: false
 new_word_count_data <- new_word_count_df %>%
   group_by(Topic) %>%
   dplyr::mutate(
     init_year = min(Year, na.rm = TRUE)) %>%
   ungroup()
-```
 
-```{r, eval=FALSE}
-#| code-fold: false
 new_word_count_data <- new_word_count_data %>%
   group_by(Topic) %>%
   dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
@@ -599,8 +594,10 @@ names(model_new_word_results) <- c("Variable",
                                    "Q97.5")
 ```
 
-```{r}
-knitr::kable(model_new_word_results, row.names = FALSE)
+```{r, echo=FALSE}
+# knitr::kable(model_new_word_results, row.names = FALSE)
+
+datatable(model_new_word_results, options = list(pageLength = 10), class = "responsive-table")
 ```
 
 #### Posterior Predictive Checks
