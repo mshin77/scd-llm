@@ -258,7 +258,19 @@ write.xlsx(TCperCountries, file = "files/TCperCountries.xlsx", colNames = TRUE)
 
 ```{r, echo=FALSE}
 MainInformationDF <- read_excel("files/MainInformationDF.xlsx")
-datatable(MainInformationDF, options = list(pageLength = 10), class = "responsive-table")
+
+DT::datatable(
+  MainInformationDF,
+  options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+) 
 ```
 
 # World Map
@@ -606,7 +618,18 @@ names(model_new_word_results) <- c("Variable",
 ```{r, echo=FALSE}
 # knitr::kable(model_new_word_results, row.names = FALSE)
 
-datatable(model_new_word_results, options = list(pageLength = 10), class = "responsive-table")
+DT::datatable(
+  model_new_word_results,
+  options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+) 
 ```
 
 #### Posterior Predictive Checks
