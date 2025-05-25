@@ -583,7 +583,7 @@ prior_summary(model_new_word)
 summary(model_new_word)
 ```
 
-```{r, eval=FALSE, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 coefs <- fixef(model_new_word)
 coefs_df <- data.frame(
   Variable = rownames(coefs),
