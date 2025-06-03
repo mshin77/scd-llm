@@ -46,9 +46,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 .iframe-container {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%; 
     height: 0;
-  overflow: hidden;
 }
 
 .iframe-container iframe {
@@ -60,12 +59,28 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
   border: 0;
 }
 
+.iframe-container.scrollable {
+    padding-bottom: 0 !important;
+    height: auto !important;
+    max-height: 70vh !important;
+    overflow-y: auto !important;
+    position: relative !important;
+}
+
+.iframe-container.scrollable iframe {
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 400px !important;
+}
+
 @media (max-width: 768px) {
-  .responsive-iframe {
-    min-height: 300px;
+  .iframe-container.scrollable {
+    max-height: 50vh !important;
+    overflow-y: auto !important;
   }
   .iframe-container {
-    padding-bottom: 75%; /* 4:3 Aspect Ratio for smaller screens */
+    padding-bottom: 75%; 
   }
 }
 
@@ -74,7 +89,11 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
     min-height: 200px;
   }
   .iframe-container {
-    padding-bottom: 100%; /* 1:1 Aspect Ratio for mobile */
+    padding-bottom: 100%;
+  }
+  .iframe-container.scrollable {
+    max-height: 40vh !important;
+    overflow-y: auto !important;
   }
 }
 </style>
@@ -109,6 +128,10 @@ suppressPackageStartupMessages({
   library(ggiraph)
   library(stringi)
   library(brms)
+  library(performance)
+  library(visNetwork)
+  library(htmltools)
+  library(RColorBrewer)
 })
 
 load("evolution/bayes_model.RData")
@@ -423,101 +446,51 @@ world_map
 # Evolution of Research
   
 ### Word Co-Occurrence Network Analysis 
-  
+
 [<i class="fas fa-project-diagram"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){style="color: #6D6D6D; text-decoration: none;" .hover-effect}  
   
 <div class="iframe-container" style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;">
 <iframe src="https://mkshin.shinyapps.io/scd_network/" style="width: 100%; height: 100%; border: none;"></iframe>
 </div>
-  
+
+
 ```{r, echo=FALSE}
 new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
 ```
 
 ### Bayesian Negative Binomial Piecewise Regression
 
-[<i class="fas fa-code"></i> Code](evolution/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
-  [Figure 6](evolution/new_word_plot.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
+#### Word Usage Summary
 
-#### Changes in New Word Counts
+[<i class="fas fa-code"></i> Code](evolution/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} 
 
-```{r, echo=FALSE, eval=FALSE}
-new_word_gg <- new_word_count_df %>% 
-  ggplot(aes(x = Year, y = Count, group = Topic)) +
-  geom_line(linewidth = 0.3, alpha = 0.3) +
-  geom_point(size = 0.7, alpha = 0.7) +
-  labs(x = "Year", y = "New Word Count") +
-  facet_wrap(~ Topic, ncol = 3, scales = "free_y",
-             labeller = labeller(Topic = function(x) paste("Topic", x))) +
-  scale_x_continuous(
-      breaks = seq(1970, 2020, by = 20),
-      limits = c(1970, 2025),
-      expand = expansion(0, 0)
-  ) +
-  theme_minimal(base_size = 12) +
-  theme(
-    panel.grid.minor   = element_blank(),
-    panel.grid.major.x = element_line(color = "gray90"),
-    panel.grid.major.y = element_line(color = "gray90"),
-    strip.text         = element_text(size = 12),
-    axis.line.x        = element_line(color = "gray90"),
-    axis.line.y        = element_line(color = "gray90"),
-    axis.ticks.length  = unit(0.2, "cm"),
-     axis.text.x        = element_text(size = 12),
-    axis.text.y        = element_text(size = 12),
-    axis.title.x       = element_text(
-                           size   = 12, 
-                           margin = margin(t = 5)   
-                         ),
-    axis.title.y       = element_text(
-                           size   = 12, 
-                           margin = margin(r = 12),  
-                           angle  = 90, 
-                           vjust  = 0.5
-                         ),
-
-    legend.title       = element_text(size = 12, hjust = 0.5),
-    legend.text        = element_text(size = 12),
-    legend.position    = "bottom",
-
-    plot.margin        = margin(t = 10, r = 10, b = 40, l = 40)
-  )
-
-new_word_plot <- plotly::ggplotly(new_word_gg, width = 800, height = 800) %>% 
-  plotly::layout(
-    margin = list(t = 40, b = 80, l = 80, r = 20),   
-    legend = list(
-      orientation = "h",
-      x           = 0.5,
-      xanchor     = "center",
-      y           = -0.1
-    )
-  )
-
-suppressWarnings(htmlwidgets::saveWidget(
-  widget = new_word_plot %>% 
-    plotly::layout(
-      autosize = TRUE,
-      margin = list(t = 40, b = 80, l = 80, r = 20),
-      legend = list(
-        orientation = "h",
-        x = 0.5,
-        xanchor = "center",
-        y = -0.1
-      )
-    ), 
-  file = "evolution/new_word_plot.html",
-  selfcontained = TRUE))
+```{r, eval=FALSE, echo=FALSE}
+unigrams_concat <- read_excel("evolution/unigrams_concat.xlsx")
 ```
 
-<div class="iframe-container" style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;">
-<iframe src="evolution/new_word_plot.html" style="width: 100%; height: 100%; border: none;"></iframe>
-</div>
+```{r, echo=FALSE}
+num_cols <- setdiff(names(unigrams_concat), "Metric")
 
-#### Summary Statistics
+for(col in num_cols) {
+  x   <- unigrams_concat[[col]][8]
+  val <- suppressWarnings(as.numeric(x))
+  if (!is.na(val)) {
+    unigrams_concat[[col]][8] <- round(val, 3)
+  }
+}
 
-```{r}
-summary(new_word_count_df$Count)
+DT::datatable(
+  unigrams_concat,
+  options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+)
 ```
 
 #### Dispersion Ratio
@@ -568,23 +541,332 @@ model_new_word <- brm(
   iter = 2000,
   warmup = 1000,
   cores = 4, 
-  chains = 1,
+  chains = 4,
   seed = 2025
 )
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-#| code-fold: false
-prior_summary(model_new_word)
-```
+#### Changes in New Word Counts
 
 ```{r, echo=FALSE, eval=FALSE}
-#| code-fold: false
-summary(model_new_word)
+predData <- expand.grid(
+  Year = seq(min(new_word_count_df$Year), max(new_word_count_df$Year), by = 1),
+  Topic = unique(new_word_count_df$Topic)
+)
+
+predData <- predData %>%
+  group_by(Topic) %>%
+  dplyr::mutate(
+    year_init_c = Year - first(na.omit(Year)),
+    jump_2010 = as.integer(I(Year >= 2010)),
+    slope_2010 = (Year - 2010)*jump_2010
+  ) %>%
+  ungroup()
+
+pred <- predict(model_new_word, newdata = predData, probs = c(0.025, 0.975))
+predData$pred <- pred[, "Estimate"]
+predData$lower <- pred[, "Q2.5"]
+predData$upper <- pred[, "Q97.5"]
+
+new_word_gg <- ggplot() +
+  geom_point(data = new_word_count_df, 
+             aes(x = Year, y = Count, group = Topic),
+             size = 1, alpha = 0.4) +
+  geom_line(data = predData,
+            aes(x = Year, y = pred, group = Topic),
+            color = "blue", linewidth = 0.5, alpha = 0.7) +
+  geom_ribbon(data = predData,
+              aes(x = Year, ymin = lower, ymax = upper, group = Topic),
+              fill = "blue", alpha = 0.1) +
+  labs(
+    x = "Year", 
+    y = "New Word Count"
+  ) +
+  facet_wrap(~ Topic, ncol = 3, scales = "free_y",
+             labeller = labeller(Topic = function(x) paste("Topic", x))) +
+  scale_x_continuous(
+    breaks = seq(1970, 2020, by = 20),
+    limits = c(1970, 2025),
+    expand = expansion(0, 0)
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.x = element_line(color = "gray90"),
+    panel.grid.major.y = element_line(color = "gray90"),
+    strip.text         = element_text(size = 12),
+    axis.line.x        = element_line(color = "gray90"),
+    axis.line.y        = element_line(color = "gray90"),
+    axis.ticks.length  = unit(0.2, "cm"),
+    axis.text.x        = element_text(size = 12),
+    axis.text.y        = element_text(size = 12),
+    axis.title.x       = element_text(
+      size   = 12, 
+      margin = margin(t = 5)   
+    ),
+    axis.title.y       = element_text(
+      size   = 12, 
+      margin = margin(r = 12),  
+      angle  = 90, 
+      vjust  = 0.5
+    ),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5, color = "gray40"),
+    plot.caption = element_text(size = 10, color = "gray40"),
+    legend.position = "bottom"
+  )
+
+new_word_plot <- plotly::ggplotly(new_word_gg, width = 800, height = 800) %>% 
+  plotly::layout(
+    margin = list(t = 40, b = 80, l = 80, r = 20),   
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = -0.1
+    )
+  )
+
+suppressWarnings(htmlwidgets::saveWidget(
+  widget = new_word_plot %>% 
+    plotly::layout(
+      autosize = TRUE,
+      margin = list(t = 40, b = 80, l = 80, r = 20),
+      legend = list(
+        orientation = "h",
+        x = 0.5,
+        xanchor = "center",
+        y = -0.1
+      )
+    ), 
+  file = "evolution/new_word_plot.html",
+  selfcontained = TRUE))
 ```
+
+<div class="iframe-container" style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;">
+<iframe src="evolution/new_word_plot.html" style="width: 100%; height: 100%; border: none;"></iframe>
+</div>
+
+#### Calculate Overall Means 
 
 ```{r, echo=FALSE, eval=FALSE}
 coefs <- fixef(model_new_word)
+new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
+new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
+topics <- paste0("Topic", 1:15) 
+ref    <- "Topic2"       
+
+overall_means <- tibble(
+  Effect = c("Intercept", "year_init_c", "jump_2010", "slope_2010"),
+  Estimate = c(
+    coefs["Intercept", "Estimate"],
+    coefs["year_init_c", "Estimate"],
+    coefs["jump_2010", "Estimate"],
+    coefs["slope_2010", "Estimate"]
+  ),
+  Est.Error = c(
+    coefs["Intercept", "Est.Error"],
+    coefs["year_init_c", "Est.Error"],
+    coefs["jump_2010", "Est.Error"],
+    coefs["slope_2010", "Est.Error"]
+  ),
+  Q2.5 = c(
+    coefs["Intercept", "Q2.5"],
+    coefs["year_init_c", "Q2.5"],
+    coefs["jump_2010", "Q2.5"],
+    coefs["slope_2010", "Q2.5"]
+  ),
+  Q97.5 = c(
+    coefs["Intercept", "Q97.5"],
+    coefs["year_init_c", "Q97.5"],
+    coefs["jump_2010", "Q97.5"],
+    coefs["slope_2010", "Q97.5"]
+  ),
+  IRR = c(
+    exp(coefs["Intercept", "Estimate"]),
+    exp(coefs["year_init_c", "Estimate"]),
+    exp(coefs["jump_2010", "Estimate"]),
+    exp(coefs["slope_2010", "Estimate"])
+  ),
+  IRR_Q2.5 = c(
+    exp(coefs["Intercept", "Q2.5"]),
+    exp(coefs["year_init_c", "Q2.5"]),
+    exp(coefs["jump_2010", "Q2.5"]),
+    exp(coefs["slope_2010", "Q2.5"])
+  ),
+  IRR_Q97.5 = c(
+    exp(coefs["Intercept", "Q97.5"]),
+    exp(coefs["year_init_c", "Q97.5"]),
+    exp(coefs["jump_2010", "Q97.5"]),
+    exp(coefs["slope_2010", "Q97.5"])
+  )
+)
+
+overall_means <- overall_means %>%
+  mutate_if(is.numeric, ~ round(., 3))
+```
+
+
+```{r, echo=FALSE}
+DT::datatable(
+  overall_means,
+    options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+)
+
+```
+
+#### Calculate Topic-Specific Means
+
+```{r, echo=FALSE, eval=FALSE}
+topic_means <- purrr::map_dfr(topics, function(t) {
+  if (t == ref) {
+    tibble(
+      Topic = t,
+      Effect = c("Intercept", "year_init_c", "jump_2010", "slope_2010"),
+      Estimate = c(
+        coefs["Intercept", "Estimate"],
+        coefs["year_init_c", "Estimate"],
+        coefs["jump_2010", "Estimate"],
+        coefs["slope_2010", "Estimate"]
+      ),
+      Est.Error = c(
+        coefs["Intercept", "Est.Error"],
+        coefs["year_init_c", "Est.Error"],
+        coefs["jump_2010", "Est.Error"],
+        coefs["slope_2010", "Est.Error"]
+      ),
+      Q2.5 = c(
+        coefs["Intercept", "Q2.5"],
+        coefs["year_init_c", "Q2.5"],
+        coefs["jump_2010", "Q2.5"],
+        coefs["slope_2010", "Q2.5"]
+      ),
+      Q97.5 = c(
+        coefs["Intercept", "Q97.5"],
+        coefs["year_init_c", "Q97.5"],
+        coefs["jump_2010", "Q97.5"],
+        coefs["slope_2010", "Q97.5"]
+      ),
+      IRR = c(
+        exp(coefs["Intercept", "Estimate"]),
+        exp(coefs["year_init_c", "Estimate"]),
+        exp(coefs["jump_2010", "Estimate"]),
+        exp(coefs["slope_2010", "Estimate"])
+      ),
+      IRR_Q2.5 = c(
+        exp(coefs["Intercept", "Q2.5"]),
+        exp(coefs["year_init_c", "Q2.5"]),
+        exp(coefs["jump_2010", "Q2.5"]),
+        exp(coefs["slope_2010", "Q2.5"])
+      ),
+      IRR_Q97.5 = c(
+        exp(coefs["Intercept", "Q97.5"]),
+        exp(coefs["year_init_c", "Q97.5"]),
+        exp(coefs["jump_2010", "Q97.5"]),
+        exp(coefs["slope_2010", "Q97.5"])
+      )
+    )
+  } else {
+    adj_intercept <- coefs[paste0("Topic", gsub("Topic", "", t)), "Estimate"]
+    adj_year <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Estimate"]
+    adj_jump <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Estimate"]
+    adj_slope <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Estimate"]
+    
+    adj_intercept_se <- coefs[paste0("Topic", gsub("Topic", "", t)), "Est.Error"]
+    adj_year_se <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Est.Error"]
+    adj_jump_se <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Est.Error"]
+    adj_slope_se <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Est.Error"]
+    
+    adj_intercept_lower <- coefs[paste0("Topic", gsub("Topic", "", t)), "Q2.5"]
+    adj_year_lower <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Q2.5"]
+    adj_jump_lower <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Q2.5"]
+    adj_slope_lower <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Q2.5"]
+    
+    adj_intercept_upper <- coefs[paste0("Topic", gsub("Topic", "", t)), "Q97.5"]
+    adj_year_upper <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Q97.5"]
+    adj_jump_upper <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Q97.5"]
+    adj_slope_upper <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Q97.5"]
+
+    intercept_mean <- coefs["Intercept", "Estimate"] + adj_intercept
+    year_mean <- coefs["year_init_c", "Estimate"] + adj_year
+    jump_mean <- coefs["jump_2010", "Estimate"] + adj_jump
+    slope_mean <- coefs["slope_2010", "Estimate"] + adj_slope
+
+    intercept_se <- sqrt(coefs["Intercept", "Est.Error"]^2 + adj_intercept_se^2)
+    year_se <- sqrt(coefs["year_init_c", "Est.Error"]^2 + adj_year_se^2)
+    jump_se <- sqrt(coefs["jump_2010", "Est.Error"]^2 + adj_jump_se^2)
+    slope_se <- sqrt(coefs["slope_2010", "Est.Error"]^2 + adj_slope_se^2)
+
+    tibble(
+      Topic = t,
+      Effect = c("Intercept", "year_init_c", "jump_2010", "slope_2010"),
+      Estimate = c(intercept_mean, year_mean, jump_mean, slope_mean),
+      Est.Error = c(intercept_se, year_se, jump_se, slope_se),
+      Q2.5 = c(
+        coefs["Intercept", "Q2.5"] + adj_intercept_lower,
+        coefs["year_init_c", "Q2.5"] + adj_year_lower,
+        coefs["jump_2010", "Q2.5"] + adj_jump_lower,
+        coefs["slope_2010", "Q2.5"] + adj_slope_lower
+      ),
+      Q97.5 = c(
+        coefs["Intercept", "Q97.5"] + adj_intercept_upper,
+        coefs["year_init_c", "Q97.5"] + adj_year_upper,
+        coefs["jump_2010", "Q97.5"] + adj_jump_upper,
+        coefs["slope_2010", "Q97.5"] + adj_slope_upper
+      ),
+      IRR = c(
+        exp(intercept_mean),
+        exp(year_mean),
+        exp(jump_mean),
+        exp(slope_mean)
+      ),
+      IRR_Q2.5 = c(
+        exp(coefs["Intercept", "Q2.5"] + adj_intercept_lower),
+        exp(coefs["year_init_c", "Q2.5"] + adj_year_lower),
+        exp(coefs["jump_2010", "Q2.5"] + adj_jump_lower),
+        exp(coefs["slope_2010", "Q2.5"] + adj_slope_lower)
+      ),
+      IRR_Q97.5 = c(
+        exp(coefs["Intercept", "Q97.5"] + adj_intercept_upper),
+        exp(coefs["year_init_c", "Q97.5"] + adj_year_upper),
+        exp(coefs["jump_2010", "Q97.5"] + adj_jump_upper),
+        exp(coefs["slope_2010", "Q97.5"] + adj_slope_upper)
+      )
+    )
+  }
+})
+
+topic_means <- topic_means %>%
+   mutate_if(is.numeric, ~ round(., 3))
+```
+
+
+```{r, echo=FALSE}
+DT::datatable(
+  topic_means,
+  options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+)
+```
+
+#### Calculate Moderation Effects (Reference: Topic 2)
+
+```{r, echo=FALSE, eval=FALSE}
 coefs_df <- data.frame(
   Variable = rownames(coefs),
   Estimate = coefs[,"Estimate"], 
@@ -597,13 +879,35 @@ coefs_df <- data.frame(
 irr_df <- data.frame(
   Variable   = rownames(coefs),
   IRR     = exp(coefs[,"Estimate"]),  
-  Q2.5 = exp(coefs[,"Q2.5"]), 
-  Q97.5 = exp(coefs[,"Q97.5"]), 
+  IRR_Q2.5 = exp(coefs[,"Q2.5"]), 
+  IRR_Q97.5 = exp(coefs[,"Q97.5"]), 
   stringsAsFactors = FALSE
 )
 
 model_new_word_results <- merge(coefs_df, irr_df, by = "Variable") %>% 
   mutate_if(is.numeric, ~ round(., 3))
+
+model_new_word_results <- model_new_word_results %>%
+  mutate(
+    is_interaction = str_detect(Variable, ":"),
+    main_effect = if_else(is_interaction, str_remove(Variable, ":.*$"), Variable),
+    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
+    
+    order_group = case_when(
+      Variable == "Intercept"                ~ 1,
+      str_detect(Variable, "^Topic\\d+$")    ~ 2,
+      main_effect == "year_init_c" & !is_interaction ~ 3,
+      main_effect == "year_init_c" & is_interaction  ~ 4,
+      main_effect == "jump_2010" & !is_interaction   ~ 5,
+      main_effect == "jump_2010" & is_interaction    ~ 6,
+      main_effect == "slope_2010" & !is_interaction  ~ 7,
+      main_effect == "slope_2010" & is_interaction   ~ 8,
+      TRUE                                    ~ 9
+    ),
+    order_within_group = if_else(is.na(topic_num), 0L, topic_num)
+  ) %>%
+  arrange(order_group, order_within_group) %>%
+  select(-is_interaction, -main_effect, -topic_num, -order_group, -order_within_group)
 
 names(model_new_word_results) <- c("Variable",
                                    "Estimate",
@@ -611,8 +915,8 @@ names(model_new_word_results) <- c("Variable",
                                    "Q2.5",
                                    "Q97.5",
                                    "IRR",
-                                   "Q2.5",
-                                   "Q97.5")
+                                   "IRR_Q2.5",
+                                   "IRR_Q97.5")
 ```
 
 ```{r, echo=FALSE}
@@ -632,6 +936,16 @@ DT::datatable(
 ) 
 ```
 
+```{r, echo=FALSE, eval=FALSE}
+#| code-fold: false
+prior_summary(model_new_word)
+```
+
+```{r, echo=FALSE, eval=FALSE}
+#| code-fold: false
+summary(model_new_word)
+```
+
 #### Posterior Predictive Checks
 
 ```{r, echo=FALSE}
@@ -640,7 +954,6 @@ pp_check(model_new_word)
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
-#| code-fold: false
 # Posterior Density Plots and Trace Plots
 plot(model_new_word)
 ```
@@ -651,5 +964,6 @@ mcmc_plot(model_new_word, type = "trace")
 ```
 
 ```{r, echo=FALSE, eval=FALSE}
-save(new_word_count_df, new_word_plot, model_new_word, model_new_word_results, file = "evolution/bayes_model.RData")
+save(new_word_count_df, new_word_plot, unigrams_concat, model_new_word, model_new_word_results, overall_means, topic_means, file = "evolution/bayes_model.RData")
 ```
+
