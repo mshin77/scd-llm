@@ -116,7 +116,6 @@ suppressPackageStartupMessages({
   library(data.table)
   library(DT)
   library(bibliometrix)
-  library(plyr)
   library(dplyr)
   library(tidyr)
   library(ggplot2)
@@ -134,7 +133,7 @@ suppressPackageStartupMessages({
   library(RColorBrewer)
 })
 
-load("evolution/bayes_model.RData")
+load("files/bayes_model.RData")
 ```
 
 ### Import Wos Data
@@ -455,7 +454,7 @@ world_map
 
 
 ```{r, echo=FALSE}
-new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
+# new_word_count_df <- read_excel("../word_network/new_word_count_df.xlsx")
 ```
 
 ### Bayesian Negative Binomial Piecewise Regression
@@ -464,23 +463,256 @@ new_word_count_df <- read_excel("evolution/new_word_count_df.xlsx")
 
 [<i class="fas fa-code"></i> Code](evolution/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} 
 
-```{r, eval=FALSE, echo=FALSE}
-unigrams_concat <- read_excel("evolution/unigrams_concat.xlsx")
+
+```{r, eval=FALSE}
+message("\nGenerating word usage summary...")
+
+df_summary <- read_excel("../data/df.xlsx", col_types = "text") %>%
+  mutate(
+    Year = as.numeric(Year),
+    across(c(Topic, CustomLabel, unigrams, bigrams, trigrams), as.character)
+  )
+
+extract_ngrams <- function(data, type) {
+  data %>%
+    select(UT, WC, Year, Topic, tokens = all_of(type)) %>%
+    filter(!is.na(tokens), !tokens %in% c("", "[]", "['']", '[""]')) %>%
+    mutate(
+      tokens = str_replace_all(tokens, "^\\[|\\]$", ""),  
+      tokens = str_replace_all(tokens, "^'|'$", ""),      
+      tokens = str_replace_all(tokens, '^"|"$', ""),      
+      tokens = str_replace_all(tokens, "\\'", ""),       
+      tokens = str_replace_all(tokens, '\\"', ""),         
+      tokens = str_split(tokens, ",\\s*")
+    ) %>%
+    unnest(tokens) %>%
+    filter(tokens != "", !is.na(tokens)) %>%
+    mutate(
+      tokens = str_trim(tokens),
+      tokens = str_replace_all(tokens, "^'|'$", ""),
+      tokens = str_replace_all(tokens, '^"|"$', ""),
+      tokens = str_replace_all(tokens, "\\'", ""),
+      tokens = str_replace_all(tokens, '\\"', "")
+    ) %>%
+    filter(tokens != "", !is.na(tokens)) %>%
+    rename(ngram = tokens) %>%
+    mutate(
+      ngram_type = type,
+      ngram = str_trim(ngram)
+    )
+}
+
+ngram_types    <- c("unigrams", "bigrams", "trigrams")
+available      <- intersect(ngram_types, names(df_summary))
+ngrams_concat  <- map_dfr(available, ~ extract_ngrams(df_summary, .x))
+
+unigrams_df <- ngrams_concat %>%
+  filter(ngram_type == "unigrams") %>%
+  mutate(
+    Decade = paste0(floor(Year/10)*10, "s")
+  )
+
+first_year <- unigrams_df %>%
+  group_by(ngram) %>%
+  summarize(Year0 = min(Year, na.rm = TRUE), .groups = "drop") %>%
+  mutate(FirstDecade = paste0(floor(Year0/10)*10, "s"))
+
+unigrams_df <- unigrams_df %>%
+  left_join(first_year %>% select(ngram, FirstDecade), by = "ngram")
+
+write.xlsx(unigrams_df, "evolution/unigrams_df.xlsx", rowNames = FALSE)
+
+process_tokens <- function(tokens) {
+  tokens_clean <- tokens[!is.na(tokens)]
+  tokens_clean <- str_trim(tokens_clean)
+  tokens_clean <- tokens_clean[tokens_clean != ""]
+  
+  if (length(tokens_clean) == 0) {
+    return(tibble::tibble(
+      Total_Word_Count      = 0L,
+      Min                   = NA_integer_,
+      Q1                    = NA_real_,
+      Median                = NA_real_,
+      Mean                  = NA_real_,
+      Q3                    = NA_real_,
+      Max                   = NA_integer_,
+      Skew                  = NA_real_,
+      Kurt                  = NA_real_,
+      Distinct_Word_Count   = 0L,
+      Count_Once            = 0L,
+      Count_More_Than_Once  = 0L
+    ))
+  }
+  
+  freq <- as.integer(table(tokens_clean))
+  
+  skew_val <- if (length(freq) > 1 && var(freq) > 0) round(moments::skewness(freq), 2) else NA_real_
+  kurt_val <- if (length(freq) > 1 && var(freq) > 0) round(moments::kurtosis(freq), 2) else NA_real_
+  
+  tibble::tibble(
+    Total_Word_Count      = sum(freq),
+    Min                   = min(freq),
+    Q1                    = as.numeric(quantile(freq, 0.25)),
+    Median                = median(freq),
+    Mean                  = round(mean(freq), 2),
+    Q3                    = as.numeric(quantile(freq, 0.75)),
+    Max                   = max(freq),
+    Skew                  = skew_val,
+    Kurt                  = kurt_val
+    # Distinct_Word_Count   = length(freq),
+    # Count_Once            = sum(freq == 1L),
+    # Count_More_Than_Once  = sum(freq > 1L)
+  )
+}
+
+decades <- unigrams_df %>%
+  pull(Decade) %>%
+  unique() %>%
+  na.omit() %>%
+  sort()
+
+decade_stats <- purrr::map_dfr(decades, function(d) {
+  sub <- dplyr::filter(unigrams_df, Decade == d)
+  stats <- process_tokens(sub$ngram)
+  
+  topic_stats <- sub %>%
+    group_by(Topic) %>%
+    summarise(
+      topic_word_count = n(),
+      topic_new_words = sum(FirstDecade == d),
+      topic_reused_words = sum(FirstDecade < d),
+      .groups = "drop"
+    )
+  
+  reused <- sub %>%
+    filter(!is.na(FirstDecade) & FirstDecade < d) %>%
+    pull(ngram)
+  reused_tab <- sort(table(reused), decreasing = TRUE)
+  
+  new <- sub %>%
+    filter(FirstDecade == d) %>%
+    pull(ngram)
+  new_tab <- sort(table(new), decreasing = TRUE)
+  
+  stats %>%
+    mutate(
+      Decade = d,
+      All_Count = Total_Word_Count,
+      Reused_Count = sum(reused_tab),
+      New_Count = sum(new_tab),
+      Topic_Count = nrow(topic_stats),
+      Top_10_Reused_Words = if (length(reused_tab)) 
+        paste(names(head(reused_tab, 10)), collapse = ", ")
+      else 
+        NA_character_,
+      Top_10_New_Words = if (length(new_tab)) 
+        paste(names(head(new_tab, 10)), collapse = ", ")
+      else 
+        NA_character_
+    ) %>%
+    select(
+      Decade,
+      All_Count,
+      Reused_Count,
+      New_Count,
+      Topic_Count,
+      #Top_10_Reused_Words,
+      #Top_10_New_Words,
+      Min,
+      Q1,
+      Median,
+      Mean,
+      Q3,
+      Max,
+      Skew,
+      Kurt
+      # Distinct_Word_Count,
+      # Count_Once,
+      # Count_More_Than_Once
+    )
+})
+
+topic_decade_stats <- unigrams_df %>%
+  group_by(Topic, Decade) %>%
+  summarise(
+    Word_Count = n(),
+    New_Words = sum(FirstDecade == Decade),
+    Reused_Words = sum(FirstDecade < Decade),
+    .groups = "drop"
+  ) %>%
+  arrange(Topic, Decade)
+
+word_usage_df <- decade_stats %>%
+  mutate(across(-Decade, as.character)) %>%         
+  tidyr::pivot_longer(
+    cols = -Decade,
+    names_to = "Metric",
+    values_to = "Value"
+  ) %>%
+  tidyr::pivot_wider(
+    names_from = Decade,
+    values_from = Value
+  )
+
+openxlsx::write.xlsx(
+  list(
+    "Decade_Summary" = word_usage_df,
+    "Topic_Decade_Summary" = topic_decade_stats
+  ),
+  "evolution/word_usage_summary.xlsx"
+)
+
+word_usage_table <- DT::datatable(
+  word_usage_df,
+  options = list(
+    pageLength = 25, 
+    scrollX = TRUE,
+    dom = 'Bfrtip', 
+    buttons = c('copy','csv','excel')
+  ),
+  rownames = FALSE
+)
+
+htmlwidgets::saveWidget(word_usage_table, "evolution/word_usage_table.html")
+
+message("Word usage summary complete!") 
+
+count_new_word_topic_year <- function(df) {
+  df %>%
+    group_by(Topic, Year) %>%
+    summarise(ngram = list(unique(ngram)), .groups = "drop") %>%
+    arrange(Topic, Year) %>%
+    group_by(Topic) %>%
+    mutate(
+      cum_union       = purrr::accumulate(ngram, union),
+      previous_words = dplyr::lag(cum_union, default = list(character(0))),
+      new_words      = purrr::map2(ngram, previous_words, setdiff),
+      Count           = purrr::map_int(new_words, length)
+    ) %>%
+    select(Topic, Year, Count)
+}
+
+new_word_count_df <- count_new_word_topic_year(unigrams_df)
+new_word_count_df$Decade <- paste0(floor(new_word_count_df$Year/10)*10, "s")
+
+write.xlsx(new_word_count_df, file = "evolution/new_word_count_df.xlsx", colNames = TRUE)
 ```
 
 ```{r, echo=FALSE}
-num_cols <- setdiff(names(unigrams_concat), "Metric")
+word_usage_summary <- read_excel("evolution/word_usage_summary.xlsx")
+
+num_cols <- setdiff(names(word_usage_summary), "Metric")
 
 for(col in num_cols) {
-  x   <- unigrams_concat[[col]][8]
+  x   <- word_usage_summary[[col]][8]
   val <- suppressWarnings(as.numeric(x))
   if (!is.na(val)) {
-    unigrams_concat[[col]][8] <- round(val, 3)
+    word_usage_summary[[col]][8] <- round(val, 3)
   }
 }
 
 DT::datatable(
-  unigrams_concat,
+  word_usage_summary,
   options = list(
     dom = 'Bfrtip',
     buttons = c('copy', 'csv', 'excel', 'pdf'),
@@ -493,62 +725,9 @@ DT::datatable(
 )
 ```
 
-#### Dispersion Ratio
-
-```{r}
-mean_val <- mean(new_word_count_df$Count)
-var_val  <- var(new_word_count_df$Count)
-overdispersion_ratio <- var_val / mean_val
-overdispersion_ratio
-```
-
-#### Preprocess
-
-```{r, eval=FALSE}
-#| code-fold: false
-new_word_count_data <- new_word_count_df %>%
-  group_by(Topic) %>%
-  dplyr::mutate(
-    init_year = min(Year, na.rm = TRUE)) %>%
-  ungroup()
-
-new_word_count_data <- new_word_count_data %>%
-  group_by(Topic) %>%
-  dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
-  dplyr::mutate(jump_2010 = as.integer(I(Year >= 2010))) %>%
-  dplyr::mutate(slope_2010 = (Year - 2010)*jump_2010) %>%
-  select(-init_year)
-```
-
-#### Estimate the Model
-
-```{r, eval=FALSE}
-#| code-fold: false
-
-new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
-new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
-
-formula_new_word <- bf(
-  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
-    Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
-)
-
-model_new_word <- brm(
-  formula = formula_new_word,
-  data = new_word_count_data,
-  family = negbinomial(link = "log"),
-  control = list(adapt_delta = 0.95, max_treedepth = 12),
-  iter = 2000,
-  warmup = 1000,
-  cores = 4, 
-  chains = 4,
-  seed = 2025
-)
-```
-
 #### Changes in New Word Counts
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=FALSE}
 predData <- expand.grid(
   Year = seq(min(new_word_count_df$Year), max(new_word_count_df$Year), by = 1),
   Topic = unique(new_word_count_df$Topic)
@@ -647,9 +826,62 @@ suppressWarnings(htmlwidgets::saveWidget(
 <iframe src="evolution/new_word_plot.html" style="width: 100%; height: 100%; border: none;"></iframe>
 </div>
 
+#### Dispersion Ratio
+
+```{r, eval=FALSE}
+mean_val <- mean(new_word_count_df$Count)
+var_val  <- var(new_word_count_df$Count)
+overdispersion_ratio <- var_val / mean_val
+overdispersion_ratio
+```
+
+#### Preprocess
+
+```{r, eval=FALSE}
+#| code-fold: false
+new_word_count_data <- new_word_count_df %>%
+  group_by(Topic) %>%
+  dplyr::mutate(
+    init_year = min(Year, na.rm = TRUE)) %>%
+  ungroup()
+
+new_word_count_data <- new_word_count_data %>%
+  group_by(Topic) %>%
+  dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
+  dplyr::mutate(jump_2010 = as.integer(I(Year >= 2010))) %>%
+  dplyr::mutate(slope_2010 = (Year - 2010)*jump_2010) %>%
+  select(-init_year) 
+```
+
+#### Estimate the Model
+
+```{r, eval=FALSE}
+#| code-fold: false
+
+new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
+new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
+
+formula_new_word <- bf(
+  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
+    Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
+)
+
+model_new_word <- brm(
+  formula = formula_new_word,
+  data = new_word_count_data,
+  family = negbinomial(link = "log"),
+  control = list(adapt_delta = 0.95, max_treedepth = 12),
+  iter = 2000,
+  warmup = 1000,
+  cores = 4, 
+  chains = 4,
+  seed = 2025
+)
+```
+
 #### Calculate Overall Means 
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 coefs <- fixef(model_new_word)
 new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
 new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
@@ -725,7 +957,7 @@ DT::datatable(
 
 #### Calculate Topic-Specific Means
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 topic_means <- purrr::map_dfr(topics, function(t) {
   if (t == ref) {
     tibble(
@@ -866,7 +1098,7 @@ DT::datatable(
 
 #### Calculate Moderation Effects (Reference: Topic 2)
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 coefs_df <- data.frame(
   Variable = rownames(coefs),
   Estimate = coefs[,"Estimate"], 
@@ -936,12 +1168,12 @@ DT::datatable(
 ) 
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 prior_summary(model_new_word)
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 summary(model_new_word)
 ```
@@ -953,17 +1185,16 @@ summary(model_new_word)
 pp_check(model_new_word)
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-# Posterior Density Plots and Trace Plots
+```{r, eval=FALSE, echo=FALSE}
 plot(model_new_word)
 ```
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 mcmc_plot(model_new_word, type = "trace")
 ```
 
-```{r, echo=FALSE, eval=FALSE}
-save(new_word_count_df, new_word_plot, unigrams_concat, model_new_word, model_new_word_results, overall_means, topic_means, file = "evolution/bayes_model.RData")
+```{r, echo=FALSE}
+save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results, overall_means, topic_means, file = "evolution/bayes_model.RData")
 ```
 
