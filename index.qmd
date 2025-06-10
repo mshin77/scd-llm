@@ -532,15 +532,16 @@ process_tokens <- function(tokens) {
   kurt_val <- if (length(freq) > 1 && var(freq) > 0) round(moments::kurtosis(freq), 2) else NA_real_
   
   tibble::tibble(
-    Total_Word_Count      = sum(freq),
-    Min                   = min(freq),
-    Q1                    = as.numeric(quantile(freq, 0.25)),
-    Median                = median(freq),
-    Mean                  = round(mean(freq), 2),
-    Q3                    = as.numeric(quantile(freq, 0.75)),
-    Max                   = max(freq),
-    Skew                  = skew_val,
-    Kurt                  = kurt_val
+    Total_Word_Count        = sum(freq),
+    Mean                    = round(mean(freq), 2),
+    SD                      = round(sd(freq), 2),
+    Min                     = min(freq),
+    `25th pct`  = as.numeric(quantile(freq, .25)),
+    `50th pct`      = median(freq),
+    `75th pct`  = as.numeric(quantile(freq, .75)),
+    Max                     = max(freq),
+    Skew                    = skew_val,
+    Kurt                    = kurt_val
     # Distinct_Word_Count   = length(freq),
     # Count_Once            = sum(freq == 1L),
     # Count_More_Than_Once  = sum(freq > 1L)
@@ -579,32 +580,33 @@ decade_stats <- purrr::map_dfr(decades, function(d) {
   stats %>%
     mutate(
       Decade = d,
-      All_Count = Total_Word_Count,
-      Reused_Count = sum(reused_tab),
-      New_Count = sum(new_tab),
-      Topic_Count = nrow(topic_stats),
-      Top_10_Reused_Words = if (length(reused_tab)) 
+      `All words` = Total_Word_Count,
+      `Reused words` = sum(reused_tab),
+      `New words` = sum(new_tab),
+      Topic = nrow(topic_stats),
+      `Top 10 reused words` = if (length(reused_tab)) 
         paste(names(head(reused_tab, 10)), collapse = ", ")
       else 
         NA_character_,
-      Top_10_New_Words = if (length(new_tab)) 
+      `Top 10 new words` = if (length(new_tab)) 
         paste(names(head(new_tab, 10)), collapse = ", ")
       else 
         NA_character_
     ) %>%
     select(
       Decade,
-      All_Count,
-      Reused_Count,
-      New_Count,
-      Topic_Count,
-      #Top_10_Reused_Words,
-      #Top_10_New_Words,
-      Min,
-      Q1,
-      Median,
+      `All words`,
+      `Reused words`,
+      `New words`,
+      Topic,
+      `Top 10 reused words`,
+      `Top 10 new words`,
       Mean,
-      Q3,
+      SD,
+      Min,
+      `25th pct`,
+      `50th pct`,
+      `75th pct`,
       Max,
       Skew,
       Kurt
