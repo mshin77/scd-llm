@@ -1155,29 +1155,29 @@ DT::datatable(
 ) 
 ```
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 prior_summary(model_new_word)
 ```
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 summary(model_new_word)
 ```
 
 #### Posterior Predictive Checks
 
-```{r, eval=FALSE}
+```{r}
 #| code-fold: false
 pp_check(model_new_word)
 ```
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 plot(model_new_word)
 ```
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 mcmc_plot(model_new_word, type = "trace")
 ```
