@@ -133,7 +133,7 @@ suppressPackageStartupMessages({
   library(RColorBrewer)
 })
 
-load("files/bayes_model.RData")
+load("evolution/bayes_model.RData")
 ```
 
 ### Import Wos Data
@@ -717,12 +717,6 @@ DT::datatable(
 <iframe src="https://mkshin.shinyapps.io/word_network/" style="width: 100%; height: 100%; border: none;"></iframe>
 </div>
 
-```{r, echo=FALSE}
-save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
-     new_word_gg, overall_means, topic_means, file = "files/bayes_model.RData")
-```
-
-
 ### Changes in New Word Counts
 
 ```{r, eval=FALSE}
@@ -856,11 +850,9 @@ new_word_count_data <- new_word_count_data %>%
   select(-init_year) 
 ```
 
-#### Estimate the Model
+#### Estimate the Model (Reference: Topic 2)
 
 ```{r, eval=FALSE}
-#| code-fold: false
-
 new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
 new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
 
@@ -880,228 +872,7 @@ model_new_word <- brm(
   chains = 4,
   seed = 2025
 )
-```
 
-#### Calculate Overall Means 
-
-```{r, eval=FALSE}
-coefs <- fixef(model_new_word)
-new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
-new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
-topics <- paste0("Topic", 1:15) 
-ref    <- "Topic2"       
-
-overall_means <- tibble(
-  Effect = c("Intercept", "year_init_c", "jump_2010", "slope_2010"),
-  Estimate = c(
-    coefs["Intercept", "Estimate"],
-    coefs["year_init_c", "Estimate"],
-    coefs["jump_2010", "Estimate"],
-    coefs["slope_2010", "Estimate"]
-  ),
-  Est.Error = c(
-    coefs["Intercept", "Est.Error"],
-    coefs["year_init_c", "Est.Error"],
-    coefs["jump_2010", "Est.Error"],
-    coefs["slope_2010", "Est.Error"]
-  ),
-  Q2.5 = c(
-    coefs["Intercept", "Q2.5"],
-    coefs["year_init_c", "Q2.5"],
-    coefs["jump_2010", "Q2.5"],
-    coefs["slope_2010", "Q2.5"]
-  ),
-  Q97.5 = c(
-    coefs["Intercept", "Q97.5"],
-    coefs["year_init_c", "Q97.5"],
-    coefs["jump_2010", "Q97.5"],
-    coefs["slope_2010", "Q97.5"]
-  ),
-  IRR = c(
-    exp(coefs["Intercept", "Estimate"]),
-    exp(coefs["year_init_c", "Estimate"]),
-    exp(coefs["jump_2010", "Estimate"]),
-    exp(coefs["slope_2010", "Estimate"])
-  ),
-  IRR_Q2.5 = c(
-    exp(coefs["Intercept", "Q2.5"]),
-    exp(coefs["year_init_c", "Q2.5"]),
-    exp(coefs["jump_2010", "Q2.5"]),
-    exp(coefs["slope_2010", "Q2.5"])
-  ),
-  IRR_Q97.5 = c(
-    exp(coefs["Intercept", "Q97.5"]),
-    exp(coefs["year_init_c", "Q97.5"]),
-    exp(coefs["jump_2010", "Q97.5"]),
-    exp(coefs["slope_2010", "Q97.5"])
-  )
-)
-
-overall_means <- overall_means %>%
-  mutate_if(is.numeric, ~ round(., 3))
-```
-
-
-```{r, echo=FALSE}
-DT::datatable(
-  overall_means,
-    options = list(
-    dom = 'Bfrtip',
-    buttons = c('copy', 'csv', 'excel', 'pdf'),
-    pageLength = 10,
-    scrollX = TRUE
-  ),
-  extensions = 'Buttons',
-  class = "cell-border stripe",
-  rownames = FALSE
-)
-
-```
-
-#### Calculate Topic-Specific Means
-
-```{r, eval=FALSE}
-topic_means <- purrr::map_dfr(topics, function(t) {
-  if (t == ref) {
-    tibble(
-      Topic = t,
-      Effect = c("Intercept", "year_init_c", "jump_2010", "slope_2010"),
-      Estimate = c(
-        coefs["Intercept", "Estimate"],
-        coefs["year_init_c", "Estimate"],
-        coefs["jump_2010", "Estimate"],
-        coefs["slope_2010", "Estimate"]
-      ),
-      Est.Error = c(
-        coefs["Intercept", "Est.Error"],
-        coefs["year_init_c", "Est.Error"],
-        coefs["jump_2010", "Est.Error"],
-        coefs["slope_2010", "Est.Error"]
-      ),
-      Q2.5 = c(
-        coefs["Intercept", "Q2.5"],
-        coefs["year_init_c", "Q2.5"],
-        coefs["jump_2010", "Q2.5"],
-        coefs["slope_2010", "Q2.5"]
-      ),
-      Q97.5 = c(
-        coefs["Intercept", "Q97.5"],
-        coefs["year_init_c", "Q97.5"],
-        coefs["jump_2010", "Q97.5"],
-        coefs["slope_2010", "Q97.5"]
-      ),
-      IRR = c(
-        exp(coefs["Intercept", "Estimate"]),
-        exp(coefs["year_init_c", "Estimate"]),
-        exp(coefs["jump_2010", "Estimate"]),
-        exp(coefs["slope_2010", "Estimate"])
-      ),
-      IRR_Q2.5 = c(
-        exp(coefs["Intercept", "Q2.5"]),
-        exp(coefs["year_init_c", "Q2.5"]),
-        exp(coefs["jump_2010", "Q2.5"]),
-        exp(coefs["slope_2010", "Q2.5"])
-      ),
-      IRR_Q97.5 = c(
-        exp(coefs["Intercept", "Q97.5"]),
-        exp(coefs["year_init_c", "Q97.5"]),
-        exp(coefs["jump_2010", "Q97.5"]),
-        exp(coefs["slope_2010", "Q97.5"])
-      )
-    )
-  } else {
-    adj_intercept <- coefs[paste0("Topic", gsub("Topic", "", t)), "Estimate"]
-    adj_year <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Estimate"]
-    adj_jump <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Estimate"]
-    adj_slope <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Estimate"]
-    
-    adj_intercept_se <- coefs[paste0("Topic", gsub("Topic", "", t)), "Est.Error"]
-    adj_year_se <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Est.Error"]
-    adj_jump_se <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Est.Error"]
-    adj_slope_se <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Est.Error"]
-    
-    adj_intercept_lower <- coefs[paste0("Topic", gsub("Topic", "", t)), "Q2.5"]
-    adj_year_lower <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Q2.5"]
-    adj_jump_lower <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Q2.5"]
-    adj_slope_lower <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Q2.5"]
-    
-    adj_intercept_upper <- coefs[paste0("Topic", gsub("Topic", "", t)), "Q97.5"]
-    adj_year_upper <- coefs[paste0("year_init_c:Topic", gsub("Topic", "", t)), "Q97.5"]
-    adj_jump_upper <- coefs[paste0("jump_2010:Topic", gsub("Topic", "", t)), "Q97.5"]
-    adj_slope_upper <- coefs[paste0("slope_2010:Topic", gsub("Topic", "", t)), "Q97.5"]
-
-    intercept_mean <- coefs["Intercept", "Estimate"] + adj_intercept
-    year_mean <- coefs["year_init_c", "Estimate"] + adj_year
-    jump_mean <- coefs["jump_2010", "Estimate"] + adj_jump
-    slope_mean <- coefs["slope_2010", "Estimate"] + adj_slope
-
-    intercept_se <- sqrt(coefs["Intercept", "Est.Error"]^2 + adj_intercept_se^2)
-    year_se <- sqrt(coefs["year_init_c", "Est.Error"]^2 + adj_year_se^2)
-    jump_se <- sqrt(coefs["jump_2010", "Est.Error"]^2 + adj_jump_se^2)
-    slope_se <- sqrt(coefs["slope_2010", "Est.Error"]^2 + adj_slope_se^2)
-
-    tibble(
-      Topic = t,
-      Effect = c("Intercept", "year_init_c", "jump_2010", "slope_2010"),
-      Estimate = c(intercept_mean, year_mean, jump_mean, slope_mean),
-      Est.Error = c(intercept_se, year_se, jump_se, slope_se),
-      Q2.5 = c(
-        coefs["Intercept", "Q2.5"] + adj_intercept_lower,
-        coefs["year_init_c", "Q2.5"] + adj_year_lower,
-        coefs["jump_2010", "Q2.5"] + adj_jump_lower,
-        coefs["slope_2010", "Q2.5"] + adj_slope_lower
-      ),
-      Q97.5 = c(
-        coefs["Intercept", "Q97.5"] + adj_intercept_upper,
-        coefs["year_init_c", "Q97.5"] + adj_year_upper,
-        coefs["jump_2010", "Q97.5"] + adj_jump_upper,
-        coefs["slope_2010", "Q97.5"] + adj_slope_upper
-      ),
-      IRR = c(
-        exp(intercept_mean),
-        exp(year_mean),
-        exp(jump_mean),
-        exp(slope_mean)
-      ),
-      IRR_Q2.5 = c(
-        exp(coefs["Intercept", "Q2.5"] + adj_intercept_lower),
-        exp(coefs["year_init_c", "Q2.5"] + adj_year_lower),
-        exp(coefs["jump_2010", "Q2.5"] + adj_jump_lower),
-        exp(coefs["slope_2010", "Q2.5"] + adj_slope_lower)
-      ),
-      IRR_Q97.5 = c(
-        exp(coefs["Intercept", "Q97.5"] + adj_intercept_upper),
-        exp(coefs["year_init_c", "Q97.5"] + adj_year_upper),
-        exp(coefs["jump_2010", "Q97.5"] + adj_jump_upper),
-        exp(coefs["slope_2010", "Q97.5"] + adj_slope_upper)
-      )
-    )
-  }
-})
-
-topic_means <- topic_means %>%
-   mutate_if(is.numeric, ~ round(., 3))
-```
-
-
-```{r, echo=FALSE}
-DT::datatable(
-  topic_means,
-  options = list(
-    dom = 'Bfrtip',
-    buttons = c('copy', 'csv', 'excel', 'pdf'),
-    pageLength = 10,
-    scrollX = TRUE
-  ),
-  extensions = 'Buttons',
-  class = "cell-border stripe",
-  rownames = FALSE
-)
-```
-
-#### Calculate Moderation Effects (Reference: Topic 2)
-
-```{r, eval=FALSE}
 coefs_df <- data.frame(
   Variable = rownames(coefs),
   Estimate = coefs[,"Estimate"], 
@@ -1196,5 +967,10 @@ plot(model_new_word)
 ```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
 mcmc_plot(model_new_word, type = "trace")
+```
+
+```{r, echo=FALSE}
+save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
+     new_word_gg, file = "evolution/bayes_model.RData")
 ```
 
