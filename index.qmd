@@ -11,7 +11,7 @@ format:
     code-tools: true
     highlight: tango
 ---
-  
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
@@ -99,6 +99,37 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 </style>
 ```
 
+# Search Strategy
+
+**Web of Science (All Fields):** Single-case design AND technology terms
+
+**Single-case design (18 terms):**
+```
+("alternat* treatment* design" OR "applied behavior* analys*" OR 
+"chang* criteri* design" OR "combin* design" OR "multielement design" OR 
+"multiple* baseline* design" OR "multiple* probe* design" OR 
+"revers* design" OR "single* case* data" OR "single* case* design" OR 
+"single* case* experimental design" OR "single* case* research" OR 
+"single* subject* data" OR "single* subject* design" OR 
+"single* subject* experimental design" OR "single* subject* research" OR 
+"withdraw* design")
+```
+
+**Technology (49 terms):**
+```
+("3D" OR "anchored*" OR "animat*" OR "artificial* intelligen*" OR 
+"augment*" OR "automat*" OR "blended*" OR "chatbot" OR "computer*" OR 
+"computing" OR "cyber*" OR "deep learn*" OR "device*" OR "digital*" OR 
+"Excel" OR "eye* track" OR "game*" OR "gamificat*" OR "gaming*" OR 
+"immersive" OR "internet" OR "iPad*" OR "machine*" OR "mechanic*" OR 
+"metaverse" OR "mixed real*" OR "mobile*" OR "online" OR "programming" OR 
+"python" OR "R program*" OR "real* time*" OR "robot" OR "shiny" OR 
+"smart*" OR "software*" OR "speech generat*" OR "speech recogn*" OR 
+"speech*to*text" OR "synchronous*" OR "tablet*" OR "technolog*" OR 
+"tele*" OR "text*to*speech" OR "three* dimension*" OR "video*" OR 
+"virtual*" OR "web*" OR "wireless")
+```
+
 # Screening
 
 Figure 1. Semi-Automated AI-Driven Publication Screening
@@ -179,19 +210,19 @@ write.csv(wos, "init_all_data.csv", row.names = FALSE)
 
 #### `Step 1. Text classification for using single case design`
 
-[<i class="fas fa-code"></i> Code](single_case/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | Figure 2 (A). Single Case Design Classification 
+[<i class="fas fa-code"></i> Code](single_case/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| Figure 2 (A). Single Case Design Classification
 
 ![](files/single-case-results.png)
 
 #### `Step 2. Text classification for using technology`
 
-[<i class="fas fa-code"></i> Code](technology_use/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | Figure 2 (B). Technology Use Classification 
+[<i class="fas fa-code"></i> Code](technology_use/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| Figure 2 (B). Technology Use Classification
 
 ![](files/technology-use-results.png)
 
-#### `Step 3. Filtering studies including methodology content` 
+#### `Step 3. Filtering studies including methodology content`
 
-[<i class="fas fa-code"></i> Code](methodology/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
+[<i class="fas fa-code"></i> Code](methodology/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
 Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
 
@@ -429,20 +460,22 @@ world_map
 
 # Topic Modeling
 
-[<i class="fas fa-code"></i> Code](topic_modeling/index.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
-  [Figure 4](topic_modeling/docs_topics.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect} | 
-  [Figure 5](topic_modeling/fig_cosine_sim.html){style="color: #6D6D6D; text-decoration: none;" .hover-effect}
+[<i class="fas fa-code"></i> Code](topic_modeling/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 4](topic_modeling/docs_topics.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 5](topic_modeling/fig_cosine_sim.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
-<div class="iframe-container" style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;">
-<iframe src="topic_modeling/docs_topics.html" style="width: 100%; height: 100%; border: none;"></iframe>
-</div>
+::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
+<iframe src="topic_modeling/docs_topics.html" style="width: 100%; height: 100%; border: none;">
 
-<div class="iframe-container" style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;">
-<iframe src="topic_modeling/fig_cosine_sim.html" style="width: 100%; height: 100%; border: none;"></iframe>
-</div>
-  
+</iframe>
+:::
+
+::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
+<iframe src="topic_modeling/fig_cosine_sim.html" style="width: 100%; height: 100%; border: none;">
+
+</iframe>
+:::
+
 # Evolution of Research
-  
+
 ### Word Usage Summary
 
 ```{r, eval=FALSE}
@@ -708,13 +741,15 @@ DT::datatable(
 )
 ```
 
-### Word Co-Occurrence Network Analysis 
+### Word Co-Occurrence Network Analysis
 
-[<i class="fas fa-external-link-alt"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){style="color: #6D6D6D; text-decoration: none;" .hover-effect}  
-  
-<div class="iframe-container" style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;">
-<iframe src="https://mkshin.shinyapps.io/scd_network/" style="width: 100%; height: 100%; border: none;"></iframe>
-</div>
+[<i class="fas fa-external-link-alt"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
+
+::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
+<iframe src="https://mkshin.shinyapps.io/scd_network/" style="width: 100%; height: 100%; border: none;">
+
+</iframe>
+:::
 
 ### Changes in New Word Counts
 
@@ -815,10 +850,11 @@ suppressWarnings(htmlwidgets::saveWidget(
   selfcontained = TRUE))
 ```
 
+::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
+<iframe src="evolution/new_word_plot.html" style="width: 100%; height: 100%; border: none;">
 
-<div class="iframe-container" style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;">
-<iframe src="evolution/new_word_plot.html" style="width: 100%; height: 100%; border: none;"></iframe>
-</div>
+</iframe>
+:::
 
 ### Bayesian Negative Binomial Piecewise Regression
 
@@ -972,4 +1008,3 @@ mcmc_plot(model_new_word, type = "trace")
 save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
      new_word_gg, file = "evolution/bayes_model.RData")
 ```
-
