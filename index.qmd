@@ -7,6 +7,7 @@ sidebar: false
 toc: true
 format: 
   html:
+    theme: lumen
     code-fold: true
     code-tools: true
     highlight: tango
@@ -99,44 +100,22 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 </style>
 ```
 
-# Search Strategy
 
-**Web of Science (All Fields):** Single-case design AND technology terms
-
-**Single-case design (18 terms):**
-```
-("alternat* treatment* design" OR "applied behavior* analys*" OR 
-"chang* criteri* design" OR "combin* design" OR "multielement design" OR 
-"multiple* baseline* design" OR "multiple* probe* design" OR 
-"revers* design" OR "single* case* data" OR "single* case* design" OR 
-"single* case* experimental design" OR "single* case* research" OR 
-"single* subject* data" OR "single* subject* design" OR 
-"single* subject* experimental design" OR "single* subject* research" OR 
-"withdraw* design")
-```
-
-**Technology (49 terms):**
-```
-("3D" OR "anchored*" OR "animat*" OR "artificial* intelligen*" OR 
-"augment*" OR "automat*" OR "blended*" OR "chatbot" OR "computer*" OR 
-"computing" OR "cyber*" OR "deep learn*" OR "device*" OR "digital*" OR 
-"Excel" OR "eye* track" OR "game*" OR "gamificat*" OR "gaming*" OR 
-"immersive" OR "internet" OR "iPad*" OR "machine*" OR "mechanic*" OR 
-"metaverse" OR "mixed real*" OR "mobile*" OR "online" OR "programming" OR 
-"python" OR "R program*" OR "real* time*" OR "robot" OR "shiny" OR 
-"smart*" OR "software*" OR "speech generat*" OR "speech recogn*" OR 
-"speech*to*text" OR "synchronous*" OR "tablet*" OR "technolog*" OR 
-"tele*" OR "text*to*speech" OR "three* dimension*" OR "video*" OR 
-"virtual*" OR "web*" OR "wireless")
-```
-
-# Screening
+# Pipeline
 
 Figure 1. Semi-Automated AI-Driven Publication Screening
 
 ![](files/screening_procedure.png)
 
-### Extract Web of Science (WoS) Data
+# Screening
+
+### Search Strategy
+
+[View search terms](search_terms/index.html)
+
+[Web of Science (All Fields): **Single-case design** (18 terms) AND **technology terms** (49 terms)]{style="background-color: #EBECF0; padding: 5px; border-left: 3px solid #949494; display: inline-block; margin: 10px 0;"}
+
+### Setup Environment
 
 ```{r}
 #| code-fold: false
@@ -145,6 +124,8 @@ suppressPackageStartupMessages({
   library(knitr)
   library(readxl)
   library(data.table)
+  library(purrr)
+  library(broom.mixed)
   library(DT)
   library(bibliometrix)
   library(dplyr)
@@ -167,9 +148,10 @@ suppressPackageStartupMessages({
 load("evolution/bayes_model.RData")
 ```
 
-### Import Wos Data
+### Extract Web of Science (WoS) Data
 
 ```{r, eval=FALSE}
+#| code-fold: false
 wos_1_500 <- convert2df("1_500.ciw", dbsource = "wos", format = "endnote")
 wos_501_1000 <- convert2df("501_1000.ciw", dbsource = "wos", format = "endnote")
 wos_1001_1500 <- convert2df("1001_1500.ciw", dbsource = "wos", format = "endnote")
@@ -183,8 +165,6 @@ wos_4501_5000 <- convert2df("4501_5000.ciw", dbsource = "wos", format = "endnote
 wos_5001_5500 <- convert2df("5001_5500.ciw", dbsource = "wos", format = "endnote")
 wos_5501_5935 <- convert2df("5501_5935.ciw", dbsource = "wos", format = "endnote")
 ```
-
-### Bind Rows and Filter Publications
 
 ```{r, eval=FALSE}
 wos_5935 <- rbind.fill(wos_1_500,
@@ -206,7 +186,7 @@ wos <- wos_5935 %>%
 write.csv(wos, "init_all_data.csv", row.names = FALSE)
 ```
 
-### Fine-Tuning for Publication Classification Tasks
+### Model Training and Validation for Document Classification Tasks
 
 #### `Step 1. Text classification for using single case design`
 
@@ -224,7 +204,8 @@ write.csv(wos, "init_all_data.csv", row.names = FALSE)
 
 [<i class="fas fa-code"></i> Code](methodology/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
-Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
+-   Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
+-   See Code to get the full list of methodology-related terms.
 
 # Bibliometrics
 
@@ -326,7 +307,6 @@ DT::datatable(
 ) 
 ```
 
-# World Map
 
 ### Map Publications and Citations Across Countries
 
@@ -460,10 +440,10 @@ world_map
 
 # Topic Modeling
 
-[<i class="fas fa-code"></i> Code](topic_modeling/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 4](topic_modeling/docs_topics.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 5](topic_modeling/fig_cosine_sim.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
+[<i class="fas fa-code"></i> Code](topic_modeling/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 4](topic_modeling/fig_cluster.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 5](topic_modeling/fig_cosine_sim.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
 ::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
-<iframe src="topic_modeling/docs_topics.html" style="width: 100%; height: 100%; border: none;">
+<iframe src="topic_modeling/fig_cluster.html" style="width: 100%; height: 100%; border: none;">
 
 </iframe>
 :::
@@ -474,7 +454,7 @@ world_map
 </iframe>
 :::
 
-# Evolution of Research
+# Word Network 
 
 ### Word Usage Summary
 
@@ -856,6 +836,8 @@ suppressWarnings(htmlwidgets::saveWidget(
 </iframe>
 :::
 
+# Bayesian Modeling 
+
 ### Bayesian Negative Binomial Piecewise Regression
 
 #### Dispersion Ratio
@@ -888,81 +870,41 @@ new_word_count_data <- new_word_count_data %>%
 #### Estimate the Model (Reference: Topic 2)
 
 ```{r, eval=FALSE}
-new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
-new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
+topic_models <- map(unique(new_word_count_data$Topic), function(topic_id) {
+  topic_data <- filter(new_word_count_data, Topic == topic_id)
+  
+  brm(Count ~ 1 + year_init_c + jump_2010 + slope_2010,
+      data = topic_data,
+      family = negbinomial(link = "log"),
+      control = list(adapt_delta = 0.95, max_treedepth = 12),
+      iter = 2000,
+      warmup = 1000,
+      cores = 4,
+      chains = 4,
+      seed = 2025)
+})
 
-formula_new_word <- bf(
-  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
-    Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
-)
+names(topic_models) <- unique(new_word_count_data$Topic)
 
-model_new_word <- brm(
-  formula = formula_new_word,
-  data = new_word_count_data,
-  family = negbinomial(link = "log"),
-  control = list(adapt_delta = 0.95, max_treedepth = 12),
-  iter = 2000,
-  warmup = 1000,
-  cores = 4, 
-  chains = 4,
-  seed = 2025
-)
-
-coefs_df <- data.frame(
-  Variable = rownames(coefs),
-  Estimate = coefs[,"Estimate"], 
-  Est.Error  = coefs[, "Est.Error"], 
-  Q2.5 = coefs[,"Q2.5"], 
-  Q97.5 = coefs[,"Q97.5"],
-  stringsAsFactors = FALSE
-)
-
-irr_df <- data.frame(
-  Variable   = rownames(coefs),
-  IRR     = exp(coefs[,"Estimate"]),  
-  IRR_Q2.5 = exp(coefs[,"Q2.5"]), 
-  IRR_Q97.5 = exp(coefs[,"Q97.5"]), 
-  stringsAsFactors = FALSE
-)
-
-model_new_word_results <- merge(coefs_df, irr_df, by = "Variable") %>% 
-  mutate_if(is.numeric, ~ round(., 3))
-
-model_new_word_results <- model_new_word_results %>%
-  mutate(
-    is_interaction = str_detect(Variable, ":"),
-    main_effect = if_else(is_interaction, str_remove(Variable, ":.*$"), Variable),
-    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
-    
-    order_group = case_when(
-      Variable == "Intercept"                ~ 1,
-      str_detect(Variable, "^Topic\\d+$")    ~ 2,
-      main_effect == "year_init_c" & !is_interaction ~ 3,
-      main_effect == "year_init_c" & is_interaction  ~ 4,
-      main_effect == "jump_2010" & !is_interaction   ~ 5,
-      main_effect == "jump_2010" & is_interaction    ~ 6,
-      main_effect == "slope_2010" & !is_interaction  ~ 7,
-      main_effect == "slope_2010" & is_interaction   ~ 8,
-      TRUE                                    ~ 9
-    ),
-    order_within_group = if_else(is.na(topic_num), 0L, topic_num)
-  ) %>%
-  arrange(order_group, order_within_group) %>%
-  select(-is_interaction, -main_effect, -topic_num, -order_group, -order_within_group)
-
-names(model_new_word_results) <- c("Variable",
-                                   "Estimate",
-                                   "Est.Error",
-                                   "Q2.5",
-                                   "Q97.5",
-                                   "IRR",
-                                   "IRR_Q2.5",
-                                   "IRR_Q97.5")
+model_new_word_results <- map_dfr(names(topic_models), function(topic_id) {
+  coefs <- fixef(topic_models[[topic_id]])
+  data.frame(
+    Topic = topic_id,
+    Variable = rownames(coefs),
+    Estimate = round(coefs[,"Estimate"], 3),
+    Est.Error = round(coefs[,"Est.Error"], 3),
+    Q2.5 = round(coefs[,"Q2.5"], 3),
+    Q97.5 = round(coefs[,"Q97.5"], 3),
+    IRR = round(exp(coefs[,"Estimate"]), 3),
+    IRR_Q2.5 = round(exp(coefs[,"Q2.5"]), 3),
+    IRR_Q97.5 = round(exp(coefs[,"Q97.5"]), 3),
+    stringsAsFactors = FALSE
+  )
+}) %>%
+  arrange(Topic, Variable)
 ```
 
 ```{r, echo=FALSE}
-# knitr::kable(model_new_word_results, row.names = FALSE)
-
 DT::datatable(
   model_new_word_results,
   options = list(
@@ -991,7 +933,9 @@ summary(model_new_word)
 
 ```{r}
 #| code-fold: false
-pp_check(model_new_word)
+posterior_summary <- posterior_summary(model_new_word)
+loo_result <- loo(model_new_word)
+pp_check(model_new_word, ndraws = 100)
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -1008,3 +952,4 @@ mcmc_plot(model_new_word, type = "trace")
 save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
      new_word_gg, file = "evolution/bayes_model.RData")
 ```
+
