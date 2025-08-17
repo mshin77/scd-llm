@@ -7600,7 +7600,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Sun Aug 17 11:59:15 2025       
+<pre>Sun Aug 17 15:44:28 2025       
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
 |-----------------------------------------+------------------------+----------------------+
@@ -7609,7 +7609,7 @@ a.anchor-link {
 |                                         |                        |               MIG M. |
 |=========================================+========================+======================|
 |   0  NVIDIA A100-SXM4-40GB          Off |   00000000:00:04.0 Off |                    0 |
-| N/A   34C    P0             44W /  400W |       0MiB /  40960MiB |      0%      Default |
+| N/A   31C    P0             41W /  400W |       0MiB /  40960MiB |      0%      Default |
 |                                         |                        |             Disabled |
 +-----------------------------------------+------------------------+----------------------+
                                                                                          
@@ -7648,7 +7648,7 @@ a.anchor-link {
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
 <pre>               total        used        free      shared  buff/cache   available
-Mem:            83Gi       1.5Gi        60Gi       5.0Mi        21Gi        81Gi
+Mem:            83Gi       1.0Gi        79Gi       1.0Mi       3.0Gi        81Gi
 Swap:             0B          0B          0B
 </pre>
 </div>
@@ -10167,7 +10167,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [41]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="n">merged_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">publication_embeddings_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'UT'</span><span class="p">)</span>
@@ -10200,7 +10200,7 @@ Swap:             0B          0B          0B
     <span class="n">cosine_sim_df</span><span class="p">,</span>
     <span class="n">color_continuous_scale</span><span class="o">=</span><span class="s2">"YlGnBu"</span><span class="p">,</span>
     <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">,</span>
-    <span class="n">labels</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">"Cosine Similarity"</span><span class="p">),</span>
+    <span class="n">labels</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">"Similarity"</span><span class="p">),</span>
     <span class="n">x</span><span class="o">=</span><span class="n">cosine_sim_df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
     <span class="n">y</span><span class="o">=</span><span class="n">cosine_sim_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
     <span class="n">text_auto</span><span class="o">=</span><span class="kc">True</span>
@@ -10210,22 +10210,22 @@ Swap:             0B          0B          0B
     <span class="n">tickmode</span><span class="o">=</span><span class="s1">'array'</span><span class="p">,</span>
     <span class="n">tickvals</span><span class="o">=</span><span class="n">cosine_sim_df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span>
     <span class="n">ticktext</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">topic</span><span class="p">)</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">cosine_sim_df</span><span class="o">.</span><span class="n">columns</span><span class="p">],</span>
-    <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="n">fig_cosine_sim</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span>
     <span class="n">tickmode</span><span class="o">=</span><span class="s1">'array'</span><span class="p">,</span>
     <span class="n">tickvals</span><span class="o">=</span><span class="n">cosine_sim_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
     <span class="n">ticktext</span><span class="o">=</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">topic</span><span class="p">)</span> <span class="k">for</span> <span class="n">topic</span> <span class="ow">in</span> <span class="n">cosine_sim_df</span><span class="o">.</span><span class="n">index</span><span class="p">],</span>
-    <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+    <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="n">fig_cosine_sim</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
     <span class="n">texttemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{z:.2f}</span><span class="s1">'</span><span class="p">,</span>
-    <span class="n">textfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">),</span>
+    <span class="n">textfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">),</span>
     <span class="n">customdata</span><span class="o">=</span><span class="n">hover_text</span><span class="p">,</span>
     <span class="n">hovertemplate</span><span class="o">=</span><span class="s1">'%</span><span class="si">{customdata}</span><span class="s1">&lt;extra&gt;&lt;/extra&gt;'</span><span class="p">,</span>
-    <span class="n">hoverlabel</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">font_size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">hoverlabel</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">font_size</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
 <span class="p">)</span>
 
 <span class="n">fig_cosine_sim</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
@@ -10236,12 +10236,28 @@ Swap:             0B          0B          0B
     <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span>
     <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s1">'white'</span><span class="p">,</span>
     <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span>
-    <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span>
     <span class="n">showlegend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">legend_title_text</span><span class="o">=</span><span class="s2">"Topic"</span><span class="p">,</span>
     <span class="n">legend_title_font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">),</span>
-    <span class="n">legend_font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">),</span>
-    <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">legend_font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">),</span>
+    <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">x_dom</span> <span class="o">=</span> <span class="n">fig_cosine_sim</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">domain</span>
+<span class="n">x_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_dom</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_dom</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="n">x_len</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">x_dom</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_dom</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">fig_cosine_sim</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">coloraxis_colorbar</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+        <span class="n">orientation</span><span class="o">=</span><span class="s1">'h'</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">x_center</span><span class="p">,</span>
+        <span class="n">xanchor</span><span class="o">=</span><span class="s1">'center'</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=-</span><span class="mf">0.13</span><span class="p">,</span>
+        <span class="n">yanchor</span><span class="o">=</span><span class="s1">'top'</span><span class="p">,</span>
+        <span class="nb">len</span><span class="o">=</span><span class="n">x_len</span><span class="p">,</span>
+        <span class="n">thickness</span><span class="o">=</span><span class="mi">12</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 
 <span class="n">fig_cosine_sim</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">autosize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -10260,10 +10276,10 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [19]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [42]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-python"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">'results/fig_cosine_sim.html'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>
+<div class="highlight hl-python"><pre><span></span><span class="n">IFrame</span><span class="p">(</span><span class="n">src</span><span class="o">=</span><span class="s1">'results/fig_cosine_sim.html'</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">900</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -10274,9 +10290,9 @@ Swap:             0B          0B          0B
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[42]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<iframe allowfullscreen="" frameborder="0" height="800" src="results/fig_cosine_sim.html" width="900"></iframe>
+<iframe allowfullscreen="" frameborder="0" height="900" src="results/fig_cosine_sim.html" width="900"></iframe>
 </div>
 </div>
 </div>
@@ -10360,7 +10376,7 @@ Swap:             0B          0B          0B
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [21]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-python"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">nbconvert</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTMLExporter</span>
