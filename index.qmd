@@ -100,6 +100,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 </style>
 ```
 
+::: panel-tabset
 
 # Pipeline
 
@@ -442,7 +443,7 @@ world_map
 
 [<i class="fas fa-code"></i> Code](topic_modeling/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 4](topic_modeling/fig_cluster.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 5](topic_modeling/fig_cosine_sim.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
-::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
+::: {.iframe-container style="width: 100%; max-width: 800px; height: 1000px; margin: 0 auto;"}
 <iframe src="topic_modeling/fig_cluster.html" style="width: 100%; height: 100%; border: none;">
 
 </iframe>
@@ -953,3 +954,4 @@ save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model
      new_word_gg, file = "evolution/bayes_model.RData")
 ```
 
+:::
