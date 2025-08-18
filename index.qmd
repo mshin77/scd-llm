@@ -144,6 +144,7 @@ suppressPackageStartupMessages({
   library(visNetwork)
   library(htmltools)
   library(RColorBrewer)
+  library(flextable)
 })
 
 load("evolution/bayes_model.RData")
@@ -305,7 +306,7 @@ DT::datatable(
   extensions = 'Buttons',
   class = "cell-border stripe",
   rownames = FALSE
-) 
+)
 ```
 
 
@@ -662,11 +663,13 @@ openxlsx::write.xlsx(
 word_usage_table <- DT::datatable(
   word_usage_df,
   options = list(
-    pageLength = 25, 
-    scrollX = TRUE,
-    dom = 'Bfrtip', 
-    buttons = c('copy','csv','excel')
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
   ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
   rownames = FALSE
 )
 
@@ -690,7 +693,6 @@ count_new_word_topic_year <- function(df) {
 }
 
 new_word_count_df <- count_new_word_topic_year(unigrams_df)
-# Convert Topic to factor with proper numerical ordering
 topic_levels <- unique(new_word_count_df$Topic)
 topic_levels <- topic_levels[order(as.numeric(topic_levels))]
 new_word_count_df$Topic <- factor(new_word_count_df$Topic, levels = topic_levels)
@@ -916,63 +918,61 @@ model_new_word <- brm(
 )
 
 coefs <- fixef(model_new_word)
-coefs_df <- data.frame(
-  Variable = rownames(coefs),
-  Estimate = coefs[,"Estimate"], 
-  Est.Error  = coefs[, "Est.Error"], 
-  Q2.5 = coefs[,"Q2.5"], 
-  Q97.5 = coefs[,"Q97.5"],
-  stringsAsFactors = FALSE
-)
 
-irr_df <- data.frame(
-  Variable   = rownames(coefs),
-  IRR     = exp(coefs[,"Estimate"]),  
-  IRR_Q2.5 = exp(coefs[,"Q2.5"]), 
-  IRR_Q97.5 = exp(coefs[,"Q97.5"]), 
-  stringsAsFactors = FALSE
-)
-
-model_new_word_results <- merge(coefs_df, irr_df, by = "Variable") %>% 
-  mutate_if(is.numeric, ~ round(., 2))
-
-model_new_word_results <- model_new_word_results %>%
+model_new_word_results <- coefs %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Variable") %>%
   mutate(
-    is_interaction = str_detect(Variable, ":"),
-    main_effect = if_else(is_interaction, str_remove(Variable, ":.*$"), Variable),
-    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
+    IRR = exp(Estimate),
+    IRR_Q2.5 = exp(Q2.5),
+    IRR_Q97.5 = exp(Q97.5),
+    across(where(is.numeric), ~round(., 2)),
     
-    order_group = case_when(
-      Variable == "Intercept"                ~ 1,
-      str_detect(Variable, "^Topic\\d+$")    ~ 2,
-      main_effect == "year_init_c" & !is_interaction ~ 3,
-      main_effect == "year_init_c" & is_interaction  ~ 4,
-      main_effect == "jump_2010" & !is_interaction   ~ 5,
-      main_effect == "jump_2010" & is_interaction    ~ 6,
-      main_effect == "slope_2010" & !is_interaction  ~ 7,
-      main_effect == "slope_2010" & is_interaction   ~ 8,
-      TRUE                                    ~ 9
-    ),
-    order_within_group = if_else(is.na(topic_num), 0L, topic_num)
+    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
+    sort_key = case_when(
+      Variable == "Intercept" ~ "1",
+      str_detect(Variable, "^Topic\\d+$") ~ paste0("2_", sprintf("%02d", topic_num)),
+      str_detect(Variable, "year_init_c") & !str_detect(Variable, ":") ~ "3",
+      str_detect(Variable, "year_init_c:") ~ paste0("4_", sprintf("%02d", topic_num)),
+      str_detect(Variable, "jump_2010") & !str_detect(Variable, ":") ~ "5",
+      str_detect(Variable, "jump_2010:") ~ paste0("6_", sprintf("%02d", topic_num)),
+      str_detect(Variable, "slope_2010") & !str_detect(Variable, ":") ~ "7",
+      str_detect(Variable, "slope_2010:") ~ paste0("8_", sprintf("%02d", topic_num)),
+      TRUE ~ "9"
+    )
   ) %>%
-  arrange(order_group, order_within_group) %>%
-  select(-is_interaction, -main_effect, -topic_num, -order_group, -order_within_group)
+  arrange(sort_key) %>%
+  select(-topic_num, -sort_key)
 
-names(model_new_word_results) <- c("Variable",
-                                   "Estimate",
-                                   "Est.Error",
-                                   "Q2.5",
-                                   "Q97.5",
-                                   "IRR",
-                                   "IRR_Q2.5",
-                                   "IRR_Q97.5")
+model_new_word_results_apa <- model_new_word_results %>%
+  mutate(
+    `Estimate (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
+    `Estimate 95% CI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
+    `IRR` = sprintf("%.2f", IRR),
+    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
+    
+    Variable = case_when(
+      Variable == "Intercept" ~ "Intercept",
+      str_detect(Variable, "^Topic\\d+$") ~ paste("Topic", str_extract(Variable, "\\d+")),
+      Variable == "year_init_c" ~ "Year (centered)",
+      Variable == "jump_2010" ~ "Jump at 2010",
+      Variable == "slope_2010" ~ "Slope change at 2010",
+      str_detect(Variable, "year_init_c:Topic") ~ paste("Year × Topic", str_extract(Variable, "\\d+$")),
+      str_detect(Variable, "jump_2010:Topic") ~ paste("Jump 2010 × Topic", str_extract(Variable, "\\d+$")),
+      str_detect(Variable, "slope_2010:Topic") ~ paste("Slope 2010 × Topic", str_extract(Variable, "\\d+$")),
+      TRUE ~ Variable
+    )
+  ) %>%
+  select(Variable, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`)
+
+save_as_docx(flextable(model_new_word_results_apa), 
+             path = "evolution/model_new_word_results_apa.docx")
 ```
 
-```{r, echo=FALSE}
-# knitr::kable(model_new_word_results, row.names = FALSE)
 
+```{r, echo=FALSE}
 DT::datatable(
-  model_new_word_results,
+  model_new_word_results_apa,
   options = list(
     dom = 'Bfrtip',
     buttons = c('copy', 'csv', 'excel', 'pdf'),
@@ -984,6 +984,7 @@ DT::datatable(
   rownames = FALSE
 ) 
 ```
+
 
 ```{r, eval=FALSE, echo=FALSE}
 #| code-fold: false
@@ -1014,7 +1015,7 @@ mcmc_plot(model_new_word, type = "trace")
 
 ```{r, echo=FALSE}
 # save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
-#      new_word_gg, file = "evolution/bayes_model.RData")
+     # model_new_word_results_apa, new_word_gg, file = "evolution/bayes_model.RData")
 ```
 
 
