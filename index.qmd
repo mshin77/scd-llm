@@ -982,7 +982,7 @@ DT::datatable(
   extensions = 'Buttons',
   class = "cell-border stripe",
   rownames = FALSE
-) 
+)
 ```
 
 
