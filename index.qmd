@@ -690,6 +690,10 @@ count_new_word_topic_year <- function(df) {
 }
 
 new_word_count_df <- count_new_word_topic_year(unigrams_df)
+# Convert Topic to factor with proper numerical ordering
+topic_levels <- unique(new_word_count_df$Topic)
+topic_levels <- topic_levels[order(as.numeric(topic_levels))]
+new_word_count_df$Topic <- factor(new_word_count_df$Topic, levels = topic_levels)
 new_word_count_df$Decade <- paste0(floor(new_word_count_df$Year/10)*10, "s")
 
 write.xlsx(new_word_count_df, file = "evolution/new_word_count_df.xlsx", colNames = TRUE)
@@ -731,6 +735,7 @@ DT::datatable(
 
 </iframe>
 :::
+
 
 ### Changes in New Word Counts
 
@@ -803,8 +808,37 @@ new_word_gg <- ggplot() +
   )
 ```
 
+
 ```{r, echo=FALSE}
-new_word_plot <- plotly::ggplotly(new_word_gg, width = 800, height = 800) %>% 
+df_labels <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
+  select(Topic, CustomLabel) %>%
+  distinct()
+
+topic_labels <- setNames(df_labels$CustomLabel, as.character(df_labels$Topic))
+
+new_word_plot <- plotly::ggplotly(new_word_gg, width = 800, height = 800)
+
+update_tooltip <- function(text_field) {
+  if(is.null(text_field)) return(NULL)
+  topic_num <- stringr::str_extract(text_field[1], "(?<=Topic: )\\d+")
+  if(!is.na(topic_num) && topic_num %in% names(topic_labels)) {
+    stringr::str_replace_all(
+      text_field,
+      paste0("Topic: ", topic_num),
+      paste0("Topic ", topic_num, ": ", topic_labels[[topic_num]])
+    )
+  } else {
+    text_field
+  }
+}
+
+new_word_plot$x$data <- purrr::map(new_word_plot$x$data, ~ {
+  .x$text <- update_tooltip(.x$text)
+  .x$hovertext <- update_tooltip(.x$hovertext)
+  .x
+})
+
+new_word_plot <- new_word_plot %>% 
   plotly::layout(
     margin = list(t = 40, b = 80, l = 80, r = 20),   
     legend = list(
@@ -815,20 +849,10 @@ new_word_plot <- plotly::ggplotly(new_word_gg, width = 800, height = 800) %>%
     )
   )
 
-suppressWarnings(htmlwidgets::saveWidget(
-  widget = new_word_plot %>% 
-    plotly::layout(
-      autosize = TRUE,
-      margin = list(t = 40, b = 80, l = 80, r = 20),
-      legend = list(
-        orientation = "h",
-        x = 0.5,
-        xanchor = "center",
-        y = -0.1
-      )
-    ), 
+htmlwidgets::saveWidget(
+  new_word_plot, 
   file = "evolution/new_word_plot.html",
-  selfcontained = TRUE))
+  selfcontained = TRUE)
 ```
 
 ::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
@@ -871,41 +895,82 @@ new_word_count_data <- new_word_count_data %>%
 #### Estimate the Model (Reference: Topic 2)
 
 ```{r, eval=FALSE}
-topic_models <- map(unique(new_word_count_data$Topic), function(topic_id) {
-  topic_data <- filter(new_word_count_data, Topic == topic_id)
-  
-  brm(Count ~ 1 + year_init_c + jump_2010 + slope_2010,
-      data = topic_data,
-      family = negbinomial(link = "log"),
-      control = list(adapt_delta = 0.95, max_treedepth = 12),
-      iter = 2000,
-      warmup = 1000,
-      cores = 4,
-      chains = 4,
-      seed = 2025)
-})
+new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
+new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
 
-names(topic_models) <- unique(new_word_count_data$Topic)
+formula_new_word <- bf(
+  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
+    Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
+)
 
-model_new_word_results <- map_dfr(names(topic_models), function(topic_id) {
-  coefs <- fixef(topic_models[[topic_id]])
-  data.frame(
-    Topic = topic_id,
-    Variable = rownames(coefs),
-    Estimate = round(coefs[,"Estimate"], 3),
-    Est.Error = round(coefs[,"Est.Error"], 3),
-    Q2.5 = round(coefs[,"Q2.5"], 3),
-    Q97.5 = round(coefs[,"Q97.5"], 3),
-    IRR = round(exp(coefs[,"Estimate"]), 3),
-    IRR_Q2.5 = round(exp(coefs[,"Q2.5"]), 3),
-    IRR_Q97.5 = round(exp(coefs[,"Q97.5"]), 3),
-    stringsAsFactors = FALSE
-  )
-}) %>%
-  arrange(Topic, Variable)
+model_new_word <- brm(
+  formula = formula_new_word,
+  data = new_word_count_data,
+  family = negbinomial(link = "log"),
+  control = list(adapt_delta = 0.95, max_treedepth = 12),
+  iter = 2000,
+  warmup = 1000,
+  cores = 4, 
+  chains = 4,
+  seed = 2025
+)
+
+coefs <- fixef(model_new_word)
+coefs_df <- data.frame(
+  Variable = rownames(coefs),
+  Estimate = coefs[,"Estimate"], 
+  Est.Error  = coefs[, "Est.Error"], 
+  Q2.5 = coefs[,"Q2.5"], 
+  Q97.5 = coefs[,"Q97.5"],
+  stringsAsFactors = FALSE
+)
+
+irr_df <- data.frame(
+  Variable   = rownames(coefs),
+  IRR     = exp(coefs[,"Estimate"]),  
+  IRR_Q2.5 = exp(coefs[,"Q2.5"]), 
+  IRR_Q97.5 = exp(coefs[,"Q97.5"]), 
+  stringsAsFactors = FALSE
+)
+
+model_new_word_results <- merge(coefs_df, irr_df, by = "Variable") %>% 
+  mutate_if(is.numeric, ~ round(., 2))
+
+model_new_word_results <- model_new_word_results %>%
+  mutate(
+    is_interaction = str_detect(Variable, ":"),
+    main_effect = if_else(is_interaction, str_remove(Variable, ":.*$"), Variable),
+    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
+    
+    order_group = case_when(
+      Variable == "Intercept"                ~ 1,
+      str_detect(Variable, "^Topic\\d+$")    ~ 2,
+      main_effect == "year_init_c" & !is_interaction ~ 3,
+      main_effect == "year_init_c" & is_interaction  ~ 4,
+      main_effect == "jump_2010" & !is_interaction   ~ 5,
+      main_effect == "jump_2010" & is_interaction    ~ 6,
+      main_effect == "slope_2010" & !is_interaction  ~ 7,
+      main_effect == "slope_2010" & is_interaction   ~ 8,
+      TRUE                                    ~ 9
+    ),
+    order_within_group = if_else(is.na(topic_num), 0L, topic_num)
+  ) %>%
+  arrange(order_group, order_within_group) %>%
+  select(-is_interaction, -main_effect, -topic_num, -order_group, -order_within_group)
+
+names(model_new_word_results) <- c("Variable",
+                                   "Estimate",
+                                   "Est.Error",
+                                   "Q2.5",
+                                   "Q97.5",
+                                   "IRR",
+                                   "IRR_Q2.5",
+                                   "IRR_Q97.5")
 ```
 
 ```{r, echo=FALSE}
+# knitr::kable(model_new_word_results, row.names = FALSE)
+
 DT::datatable(
   model_new_word_results,
   options = list(
@@ -934,9 +999,7 @@ summary(model_new_word)
 
 ```{r}
 #| code-fold: false
-posterior_summary <- posterior_summary(model_new_word)
-loo_result <- loo(model_new_word)
-pp_check(model_new_word, ndraws = 100)
+pp_check(model_new_word)
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
@@ -950,8 +1013,8 @@ mcmc_plot(model_new_word, type = "trace")
 ```
 
 ```{r, echo=FALSE}
-save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
-     new_word_gg, file = "evolution/bayes_model.RData")
+# save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
+#      new_word_gg, file = "evolution/bayes_model.RData")
 ```
 
 
