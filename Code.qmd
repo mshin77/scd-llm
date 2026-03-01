@@ -762,7 +762,7 @@ new_word_count_data <- new_word_count_data %>%
   select(-init_year) 
 ```
 
-#### Estimate the Model (Reference: Topic 4)
+#### Estimate the Model
 
 ```{r, eval=FALSE}
 new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
@@ -818,7 +818,8 @@ model_new_word_results_apa <- model_new_word_results %>%
     `Estimate 95% CI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
     `IRR` = sprintf("%.2f", IRR),
     `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
-    
+    Sig = ifelse(Q2.5 > 0 | Q97.5 < 0, "*", ""),
+
     Variable = case_when(
       Variable == "Intercept" ~ "Intercept",
       str_detect(Variable, "^Topic\\d+$") ~ paste("Topic", str_extract(Variable, "\\d+")),
@@ -831,11 +832,84 @@ model_new_word_results_apa <- model_new_word_results %>%
       TRUE ~ Variable
     )
   ) %>%
-  select(Variable, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`)
+  select(Variable, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`, Sig)
 
 save_as_docx(flextable(model_new_word_results_apa),
              path = "evolution/model_new_word_results_apa.docx")
 ```
+
+#### Step 1: Per-Topic Piecewise Effects
+
+```{r, eval=FALSE}
+# Total piecewise effects per topic via hypothesis()
+topics_other <- setdiff(levels(new_word_count_data$Topic), "4")
+
+hyp_strings <- c(
+  # Topic 4 (reference) — main effects are the total effects
+  "year_init_c = 0",
+  "jump_2010 = 0",
+  "slope_2010 = 0",
+  # Other topics — main + interaction = total effect
+  paste0("year_init_c + year_init_c:Topic", topics_other, " = 0"),
+  paste0("jump_2010 + jump_2010:Topic", topics_other, " = 0"),
+  paste0("slope_2010 + slope_2010:Topic", topics_other, " = 0")
+)
+
+hyp <- hypothesis(model_new_word, hyp_strings)
+
+n_other <- length(topics_other)
+topic_vec <- c(rep("4", 3), rep(topics_other, 3))
+effect_vec <- c(
+  "Pre-2010 slope", "Jump at 2010", "Post-2010 slope change",
+  rep("Pre-2010 slope", n_other),
+  rep("Jump at 2010", n_other),
+  rep("Post-2010 slope change", n_other)
+)
+
+topic_labels_df <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
+  select(Topic, CustomLabel) %>%
+  distinct()
+
+per_topic_effects <- hyp$hypothesis %>%
+  mutate(
+    Topic = topic_vec,
+    Effect = effect_vec,
+    IRR = exp(Estimate),
+    IRR_lower = exp(CI.Lower),
+    IRR_upper = exp(CI.Upper),
+    Sig = ifelse(CI.Lower > 0 | CI.Upper < 0, "*", "")
+  ) %>%
+  left_join(topic_labels_df, by = "Topic") %>%
+  mutate(
+    `Topic` = paste0(Topic, ": ", CustomLabel),
+    `Estimate (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
+    `Estimate 95% CI` = sprintf("[%.2f, %.2f]", CI.Lower, CI.Upper),
+    `IRR` = sprintf("%.2f", IRR),
+    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
+  ) %>%
+  select(Topic, Effect, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`, Sig) %>%
+  arrange(Effect, as.integer(str_extract(Topic, "^\\d+")))
+
+save_as_docx(flextable(per_topic_effects),
+             path = "evolution/per_topic_effects.docx")
+```
+
+```{r, echo=FALSE}
+DT::datatable(
+  per_topic_effects,
+  options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+)
+```
+
+#### Step 2: Differences from Reference Group (Topic 4)
 
 ```{r, echo=FALSE}
 DT::datatable(
@@ -860,14 +934,18 @@ predData <- expand.grid(
   Topic = unique(new_word_count_df$Topic)
 )
 
-predData <- predData %>%
+topic_starts <- new_word_count_df %>%
   group_by(Topic) %>%
-  dplyr::mutate(
-    year_init_c = Year - first(na.omit(Year)),
+  summarise(init_year = min(Year, na.rm = TRUE))
+
+predData <- predData %>%
+  left_join(topic_starts, by = "Topic") %>%
+  mutate(
+    year_init_c = Year - init_year,
     jump_2010 = as.integer(I(Year >= 2010)),
-    slope_2010 = (Year - 2010)*jump_2010
+    slope_2010 = (Year - 2010) * jump_2010
   ) %>%
-  ungroup()
+  select(-init_year)
 
 pred <- predict(model_new_word, newdata = predData, probs = c(0.025, 0.975))
 predData$pred <- pred[, "Estimate"]
@@ -983,7 +1061,7 @@ pp_check(model_new_word)
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
-save(new_word_count_df, model_new_word, model_new_word_results_apa, new_word_gg,
-     word_usage_summary, new_word_plot,
+save(new_word_count_df, model_new_word, model_new_word_results_apa,
+     per_topic_effects, new_word_gg, word_usage_summary, new_word_plot,
      file = "evolution/bayes_model.RData")
 ```
