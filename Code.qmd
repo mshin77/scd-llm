@@ -21,11 +21,6 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-  .responsive-figure {
-    width: 100% !important;
-    height: auto;
-  }
-
 .hover-effect:hover {
   color: #2B6CB0 !important;
     transition: color 0.3s ease;
@@ -36,12 +31,6 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
   height: auto;
   min-height: 400px;
   max-width: 100%;
-}
-
-.responsive-table {
-  width: 100% !important;
-  overflow-x: auto;
-  display: block;
 }
 
 .iframe-container {
@@ -100,13 +89,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 </style>
 ```
 
-
-
 # Pipeline
 
-Figure 1. Semi-Automated AI-Driven Publication Screening
-
-![](files/screening_procedure.png)
+![Figure 1. Semi-Automated AI-Driven Publication Screening](files/screening_procedure.png)
 
 # Screening
 
@@ -125,14 +110,9 @@ suppressPackageStartupMessages({
   library(knitr)
   library(readxl)
   library(data.table)
-  library(purrr)
   library(broom.mixed)
   library(DT)
   library(bibliometrix)
-  library(dplyr)
-  library(tidyr)
-  library(ggplot2)
-  library(stringr)
   library(openxlsx)
   library(sf)
   library(rnaturalearth)
@@ -169,7 +149,7 @@ wos_5501_5935 <- convert2df("5501_5935.ciw", dbsource = "wos", format = "endnote
 ```
 
 ```{r, eval=FALSE}
-wos_5935 <- rbind.fill(wos_1_500,
+wos_5935 <- bind_rows(wos_1_500,
                        wos_501_1000,
                        wos_1001_1500,
                        wos_1501_2000,
@@ -190,17 +170,31 @@ write.csv(wos, "init_all_data.csv", row.names = FALSE)
 
 ### Model Training and Validation for Document Classification Tasks
 
-#### `Step 1. Text classification for using single case design`
+A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combined transformer embeddings with categorical and numeric features for binary classification. The model was trained on human-labeled records and used to predict labels for unlabeled records. Classification was performed sequentially: first for single-case design, then for technology use.
 
-[<i class="fas fa-code"></i> Code](single_case/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| Figure 2 (A). Single Case Design Classification
+#### `Step 1. Text classification for single-case design`
 
-![](files/single-case-results.png)
+[<i class="fas fa-code"></i> Code](single_case/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
-#### `Step 2. Text classification for using technology`
+![Figure 2 (a). Training Loss and Accuracy](files/single-case-results.png){alt="Figure 2 (a). Training Loss and Accuracy"}
 
-[<i class="fas fa-code"></i> Code](technology_use/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| Figure 2 (B). Technology Use Classification
+::: {layout-ncol="2"}
+![Confusion Matrix](files/confusion_matrix_single_case.png)
 
-![](files/technology-use-results.png)
+![ROC Curve](files/roc_curve_single_case.png)
+:::
+
+#### `Step 2. Text classification for technology use`
+
+[<i class="fas fa-code"></i> Code](technology_use/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
+
+![Figure 2 (b). Training Loss and Accuracy](files/technology-use-results.png)
+
+::: {layout-ncol="2"}
+![Confusion Matrix](files/confusion_matrix_technology_use.png)
+
+![ROC Curve](files/roc_curve_technology_use.png)
+:::
 
 #### `Step 3. Filtering studies including methodology content`
 
@@ -216,7 +210,7 @@ write.csv(wos, "init_all_data.csv", row.names = FALSE)
 ```{r, eval=FALSE}
 data <- read.xlsx("../data/df.xlsx")
 
-data <- data %>% filter(data$filtered == "Yes")
+data <- data %>% filter(filtered == "Yes")
 
 data_descriptive <- data %>%
   dplyr::mutate(Study = paste("study", row_number(), sep = "")) %>%
@@ -308,7 +302,6 @@ DT::datatable(
   rownames = FALSE
 )
 ```
-
 
 ### Map Publications and Citations Across Countries
 
@@ -435,6 +428,10 @@ ggsave('files/world_map.png',
 save(world_map, file = "files/world_map.RData")
 ```
 
+Figure 3. Map of Publications and Citations Across Countries
+
+[<i class="fas fa-external-link-alt"></i> Interactive Map](world_map/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
+
 ```{r, echo=FALSE}
 load("files/world_map.RData")
 world_map
@@ -456,7 +453,7 @@ world_map
 </iframe>
 :::
 
-# Word Network 
+# Word Network
 
 ### Word Usage Summary
 
@@ -673,10 +670,6 @@ word_usage_table <- DT::datatable(
   rownames = FALSE
 )
 
-htmlwidgets::saveWidget(word_usage_table, "evolution/word_usage_table.html")
-
-message("Word usage summary complete!") 
-
 count_new_word_topic_year <- function(df) {
   df %>%
     group_by(Topic, Year) %>%
@@ -728,6 +721,8 @@ DT::datatable(
 )
 ```
 
+# Bayesian Modeling
+
 ### Word Co-Occurrence Network Analysis
 
 [<i class="fas fa-external-link-alt"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
@@ -738,6 +733,124 @@ DT::datatable(
 </iframe>
 :::
 
+### Bayesian Negative Binomial Piecewise Regression
+
+#### Dispersion Ratio
+
+```{r}
+mean_val <- mean(new_word_count_df$Count)
+var_val  <- var(new_word_count_df$Count)
+overdispersion_ratio <- var_val / mean_val
+overdispersion_ratio
+```
+
+#### Preprocess
+
+```{r, eval=FALSE}
+#| code-fold: false
+new_word_count_data <- new_word_count_df %>%
+  group_by(Topic) %>%
+  dplyr::mutate(
+    init_year = min(Year, na.rm = TRUE)) %>%
+  ungroup()
+
+new_word_count_data <- new_word_count_data %>%
+  group_by(Topic) %>%
+  dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
+  dplyr::mutate(jump_2010 = as.integer(I(Year >= 2010))) %>%
+  dplyr::mutate(slope_2010 = (Year - 2010)*jump_2010) %>%
+  select(-init_year) 
+```
+
+#### Estimate the Model (Reference: Topic 4)
+
+```{r, eval=FALSE}
+new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
+new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "4")
+
+formula_new_word <- bf(
+  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
+    Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
+)
+
+model_new_word <- brm(
+  formula = formula_new_word,
+  data = new_word_count_data,
+  family = negbinomial(link = "log"),
+  control = list(adapt_delta = 0.95, max_treedepth = 12),
+  iter = 2000,
+  warmup = 1000,
+  cores = 4, 
+  chains = 4,
+  seed = 2025
+)
+
+coefs <- fixef(model_new_word)
+
+model_new_word_results <- coefs %>%
+  as.data.frame() %>%
+  tibble::rownames_to_column("Variable") %>%
+  mutate(
+    IRR = exp(Estimate),
+    IRR_Q2.5 = exp(Q2.5),
+    IRR_Q97.5 = exp(Q97.5),
+    across(where(is.numeric), ~round(., 2)),
+    
+    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
+    sort_key = case_when(
+      Variable == "Intercept" ~ "1",
+      str_detect(Variable, "^Topic\\d+$") ~ paste0("2_", sprintf("%02d", topic_num)),
+      str_detect(Variable, "year_init_c") & !str_detect(Variable, ":") ~ "3",
+      str_detect(Variable, "year_init_c:") ~ paste0("4_", sprintf("%02d", topic_num)),
+      str_detect(Variable, "jump_2010") & !str_detect(Variable, ":") ~ "5",
+      str_detect(Variable, "jump_2010:") ~ paste0("6_", sprintf("%02d", topic_num)),
+      str_detect(Variable, "slope_2010") & !str_detect(Variable, ":") ~ "7",
+      str_detect(Variable, "slope_2010:") ~ paste0("8_", sprintf("%02d", topic_num)),
+      TRUE ~ "9"
+    )
+  ) %>%
+  arrange(sort_key) %>%
+  select(-topic_num, -sort_key)
+
+model_new_word_results_apa <- model_new_word_results %>%
+  mutate(
+    `Estimate (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
+    `Estimate 95% CI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
+    `IRR` = sprintf("%.2f", IRR),
+    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
+    
+    Variable = case_when(
+      Variable == "Intercept" ~ "Intercept",
+      str_detect(Variable, "^Topic\\d+$") ~ paste("Topic", str_extract(Variable, "\\d+")),
+      Variable == "year_init_c" ~ "Year (centered)",
+      Variable == "jump_2010" ~ "Jump at 2010",
+      Variable == "slope_2010" ~ "Slope change at 2010",
+      str_detect(Variable, "year_init_c:Topic") ~ paste("Year × Topic", str_extract(Variable, "\\d+$")),
+      str_detect(Variable, "jump_2010:Topic") ~ paste("Jump 2010 × Topic", str_extract(Variable, "\\d+$")),
+      str_detect(Variable, "slope_2010:Topic") ~ paste("Slope 2010 × Topic", str_extract(Variable, "\\d+$")),
+      TRUE ~ Variable
+    )
+  ) %>%
+  select(Variable, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`)
+
+save_as_docx(flextable(model_new_word_results_apa),
+             path = "evolution/model_new_word_results_apa.docx")
+```
+
+```{r, echo=FALSE}
+DT::datatable(
+  model_new_word_results_apa,
+  options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+)
+```
 
 ### Changes in New Word Counts
 
@@ -810,7 +923,6 @@ new_word_gg <- ggplot() +
   )
 ```
 
-
 ```{r, echo=FALSE}
 df_labels <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
   select(Topic, CustomLabel) %>%
@@ -863,139 +975,6 @@ htmlwidgets::saveWidget(
 </iframe>
 :::
 
-# Bayesian Modeling 
-
-### Bayesian Negative Binomial Piecewise Regression
-
-#### Dispersion Ratio
-
-```{r}
-mean_val <- mean(new_word_count_df$Count)
-var_val  <- var(new_word_count_df$Count)
-overdispersion_ratio <- var_val / mean_val
-overdispersion_ratio
-```
-
-#### Preprocess
-
-```{r, eval=FALSE}
-#| code-fold: false
-new_word_count_data <- new_word_count_df %>%
-  group_by(Topic) %>%
-  dplyr::mutate(
-    init_year = min(Year, na.rm = TRUE)) %>%
-  ungroup()
-
-new_word_count_data <- new_word_count_data %>%
-  group_by(Topic) %>%
-  dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
-  dplyr::mutate(jump_2010 = as.integer(I(Year >= 2010))) %>%
-  dplyr::mutate(slope_2010 = (Year - 2010)*jump_2010) %>%
-  select(-init_year) 
-```
-
-#### Estimate the Model (Reference: Topic 2)
-
-```{r, eval=FALSE}
-new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
-new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "2")
-
-formula_new_word <- bf(
-  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
-    Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
-)
-
-model_new_word <- brm(
-  formula = formula_new_word,
-  data = new_word_count_data,
-  family = negbinomial(link = "log"),
-  control = list(adapt_delta = 0.95, max_treedepth = 12),
-  iter = 2000,
-  warmup = 1000,
-  cores = 4, 
-  chains = 4,
-  seed = 2025
-)
-
-coefs <- fixef(model_new_word)
-
-model_new_word_results <- coefs %>%
-  as.data.frame() %>%
-  tibble::rownames_to_column("Variable") %>%
-  mutate(
-    IRR = exp(Estimate),
-    IRR_Q2.5 = exp(Q2.5),
-    IRR_Q97.5 = exp(Q97.5),
-    across(where(is.numeric), ~round(., 2)),
-    
-    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
-    sort_key = case_when(
-      Variable == "Intercept" ~ "1",
-      str_detect(Variable, "^Topic\\d+$") ~ paste0("2_", sprintf("%02d", topic_num)),
-      str_detect(Variable, "year_init_c") & !str_detect(Variable, ":") ~ "3",
-      str_detect(Variable, "year_init_c:") ~ paste0("4_", sprintf("%02d", topic_num)),
-      str_detect(Variable, "jump_2010") & !str_detect(Variable, ":") ~ "5",
-      str_detect(Variable, "jump_2010:") ~ paste0("6_", sprintf("%02d", topic_num)),
-      str_detect(Variable, "slope_2010") & !str_detect(Variable, ":") ~ "7",
-      str_detect(Variable, "slope_2010:") ~ paste0("8_", sprintf("%02d", topic_num)),
-      TRUE ~ "9"
-    )
-  ) %>%
-  arrange(sort_key) %>%
-  select(-topic_num, -sort_key)
-
-model_new_word_results_apa <- model_new_word_results %>%
-  mutate(
-    `Estimate (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
-    `Estimate 95% CI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
-    `IRR` = sprintf("%.2f", IRR),
-    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
-    
-    Variable = case_when(
-      Variable == "Intercept" ~ "Intercept",
-      str_detect(Variable, "^Topic\\d+$") ~ paste("Topic", str_extract(Variable, "\\d+")),
-      Variable == "year_init_c" ~ "Year (centered)",
-      Variable == "jump_2010" ~ "Jump at 2010",
-      Variable == "slope_2010" ~ "Slope change at 2010",
-      str_detect(Variable, "year_init_c:Topic") ~ paste("Year × Topic", str_extract(Variable, "\\d+$")),
-      str_detect(Variable, "jump_2010:Topic") ~ paste("Jump 2010 × Topic", str_extract(Variable, "\\d+$")),
-      str_detect(Variable, "slope_2010:Topic") ~ paste("Slope 2010 × Topic", str_extract(Variable, "\\d+$")),
-      TRUE ~ Variable
-    )
-  ) %>%
-  select(Variable, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`)
-
-save_as_docx(flextable(model_new_word_results_apa), 
-             path = "evolution/model_new_word_results_apa.docx")
-```
-
-
-```{r, echo=FALSE}
-DT::datatable(
-  model_new_word_results_apa,
-  options = list(
-    dom = 'Bfrtip',
-    buttons = c('copy', 'csv', 'excel', 'pdf'),
-    pageLength = 10,
-    scrollX = TRUE
-  ),
-  extensions = 'Buttons',
-  class = "cell-border stripe",
-  rownames = FALSE
-)
-```
-
-
-```{r, eval=FALSE, echo=FALSE}
-#| code-fold: false
-prior_summary(model_new_word)
-```
-
-```{r, eval=FALSE, echo=FALSE}
-#| code-fold: false
-summary(model_new_word)
-```
-
 #### Posterior Predictive Checks
 
 ```{r}
@@ -1004,18 +983,7 @@ pp_check(model_new_word)
 ```
 
 ```{r, eval=FALSE, echo=FALSE}
-#| code-fold: false
-plot(model_new_word)
+save(new_word_count_df, model_new_word, model_new_word_results_apa, new_word_gg,
+     word_usage_summary, new_word_plot,
+     file = "evolution/bayes_model.RData")
 ```
-
-```{r, eval=FALSE, echo=FALSE}
-#| code-fold: false
-mcmc_plot(model_new_word, type = "trace")
-```
-
-```{r, echo=FALSE}
-# save(new_word_count_df, new_word_plot, word_usage_summary, model_new_word, model_new_word_results,
-     # model_new_word_results_apa, new_word_gg, file = "evolution/bayes_model.RData")
-```
-
-
