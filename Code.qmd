@@ -770,17 +770,25 @@ new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "4")
 
 formula_new_word <- bf(
   Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
-    Topic + year_init_c*Topic + jump_2010*Topic + slope_2010*Topic 
+    Topic + year_init_c:Topic + jump_2010:Topic + slope_2010:Topic
+)
+
+priors_new_word <- c(
+  prior(normal(0, 5), class = "Intercept"),
+  prior(normal(0, 2), class = "b"),
+  prior(gamma(0.01, 0.01), class = "shape")
 )
 
 model_new_word <- brm(
   formula = formula_new_word,
   data = new_word_count_data,
   family = negbinomial(link = "log"),
+  prior = priors_new_word,
+  sample_prior = "yes",
   control = list(adapt_delta = 0.95, max_treedepth = 12),
   iter = 2000,
   warmup = 1000,
-  cores = 4, 
+  cores = 4,
   chains = 4,
   seed = 2025
 )
@@ -838,7 +846,28 @@ save_as_docx(flextable(model_new_word_results_apa),
              path = "evolution/model_new_word_results_apa.docx")
 ```
 
-#### Step 1: Per-Topic Piecewise Effects
+::: {.callout-note collapse="true" appearance="simple" icon=false}
+## MCMC Diagnostics
+
+```{r, echo=FALSE}
+summary(model_new_word)
+```
+:::
+
+#### Posterior Predictive Checks
+
+```{r, echo=FALSE}
+pp_check(model_new_word, type = "bars", ndraws = 100)
+```
+
+#### LOO-CV
+
+```{r, echo=FALSE}
+loo_piecewise <- loo(model_new_word, moment_match = TRUE)
+print(loo_piecewise)
+```
+
+#### Topic-Specific Piecewise Effects
 
 ```{r, eval=FALSE}
 # Total piecewise effects per topic via hypothesis()
@@ -846,10 +875,12 @@ topics_other <- setdiff(levels(new_word_count_data$Topic), "4")
 
 hyp_strings <- c(
   # Topic 4 (reference) — main effects are the total effects
+  "Intercept = 0",
   "year_init_c = 0",
   "jump_2010 = 0",
   "slope_2010 = 0",
   # Other topics — main + interaction = total effect
+  paste0("Intercept + Topic", topics_other, " = 0"),
   paste0("year_init_c + year_init_c:Topic", topics_other, " = 0"),
   paste0("jump_2010 + jump_2010:Topic", topics_other, " = 0"),
   paste0("slope_2010 + slope_2010:Topic", topics_other, " = 0")
@@ -858,9 +889,10 @@ hyp_strings <- c(
 hyp <- hypothesis(model_new_word, hyp_strings)
 
 n_other <- length(topics_other)
-topic_vec <- c(rep("4", 3), rep(topics_other, 3))
+topic_vec <- c(rep("4", 4), rep(topics_other, 4))
 effect_vec <- c(
-  "Pre-2010 slope", "Jump at 2010", "Post-2010 slope change",
+  "Intercept", "Pre-2010 slope", "Jump at 2010", "Post-2010 slope change",
+  rep("Intercept", n_other),
   rep("Pre-2010 slope", n_other),
   rep("Jump at 2010", n_other),
   rep("Post-2010 slope change", n_other)
@@ -909,7 +941,7 @@ DT::datatable(
 )
 ```
 
-#### Step 2: Differences from Reference Group (Topic 4)
+#### Between-Topic Comparisons
 
 ```{r, echo=FALSE}
 DT::datatable(
@@ -926,7 +958,7 @@ DT::datatable(
 )
 ```
 
-### Changes in New Word Counts
+#### Predicted New Word Trajectories
 
 ```{r, eval=FALSE}
 predData <- expand.grid(
@@ -1052,13 +1084,6 @@ htmlwidgets::saveWidget(
 
 </iframe>
 :::
-
-#### Posterior Predictive Checks
-
-```{r}
-#| code-fold: false
-pp_check(model_new_word)
-```
 
 ```{r, eval=FALSE, echo=FALSE}
 save(new_word_count_df, model_new_word, model_new_word_results_apa,
