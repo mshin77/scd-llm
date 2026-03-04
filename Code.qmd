@@ -721,8 +721,6 @@ DT::datatable(
 )
 ```
 
-# Bayesian Modeling
-
 ### Word Co-Occurrence Network Analysis
 
 [<i class="fas fa-external-link-alt"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
@@ -732,6 +730,8 @@ DT::datatable(
 
 </iframe>
 :::
+
+# Bayesian Modeling
 
 ### Bayesian Negative Binomial Piecewise Regression
 
