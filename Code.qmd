@@ -775,8 +775,7 @@ formula_new_word <- bf(
 
 priors_new_word <- c(
   prior(normal(0, 5), class = "Intercept"),
-  prior(normal(0, 2), class = "b"),
-  prior(gamma(0.01, 0.01), class = "shape")
+  prior(normal(0, 2), class = "b")
 )
 
 model_new_word <- brm(
@@ -784,7 +783,6 @@ model_new_word <- brm(
   data = new_word_count_data,
   family = negbinomial(link = "log"),
   prior = priors_new_word,
-  sample_prior = "yes",
   control = list(adapt_delta = 0.95, max_treedepth = 12),
   iter = 2000,
   warmup = 1000,
@@ -857,7 +855,9 @@ summary(model_new_word)
 #### Posterior Predictive Checks
 
 ```{r, echo=FALSE}
-pp_check(model_new_word, type = "bars", ndraws = 100)
+pp_check(model_new_word, type = "ecdf_overlay", ndraws = 100) +
+  xlab("Count of new words") +
+  ylab("Cumulative proportion")
 ```
 
 #### LOO-CV
@@ -920,7 +920,7 @@ per_topic_effects <- hyp$hypothesis %>%
     `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
   ) %>%
   select(Topic, Effect, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`, Sig) %>%
-  arrange(Effect, as.integer(str_extract(Topic, "^\\d+")))
+  arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Effect, levels = c("Intercept", "Pre-2010 slope", "Jump at 2010", "Post-2010 slope change")))
 
 save_as_docx(flextable(per_topic_effects),
              path = "evolution/per_topic_effects.docx")
