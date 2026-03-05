@@ -829,12 +829,12 @@ model_new_word_results_apa <- model_new_word_results %>%
     Variable = case_when(
       Variable == "Intercept" ~ "Intercept",
       str_detect(Variable, "^Topic\\d+$") ~ paste("Topic", str_extract(Variable, "\\d+")),
-      Variable == "year_init_c" ~ "Year (centered)",
-      Variable == "jump_2010" ~ "Jump at 2010",
-      Variable == "slope_2010" ~ "Slope change at 2010",
-      str_detect(Variable, "year_init_c:Topic") ~ paste("Year × Topic", str_extract(Variable, "\\d+$")),
-      str_detect(Variable, "jump_2010:Topic") ~ paste("Jump 2010 × Topic", str_extract(Variable, "\\d+$")),
-      str_detect(Variable, "slope_2010:Topic") ~ paste("Slope 2010 × Topic", str_extract(Variable, "\\d+$")),
+      Variable == "year_init_c" ~ "Trend before 2010",
+      Variable == "jump_2010" ~ "Level change in 2010",
+      Variable == "slope_2010" ~ "Trend change since 2010",
+      str_detect(Variable, "year_init_c:Topic") ~ paste("Trend before 2010 × Topic", str_extract(Variable, "\\d+$")),
+      str_detect(Variable, "jump_2010:Topic") ~ paste("Level change in 2010 × Topic", str_extract(Variable, "\\d+$")),
+      str_detect(Variable, "slope_2010:Topic") ~ paste("Trend change since 2010 × Topic", str_extract(Variable, "\\d+$")),
       TRUE ~ Variable
     )
   ) %>%
@@ -891,11 +891,11 @@ hyp <- hypothesis(model_new_word, hyp_strings)
 n_other <- length(topics_other)
 topic_vec <- c(rep("4", 4), rep(topics_other, 4))
 effect_vec <- c(
-  "Intercept", "Pre-2010 slope", "Jump at 2010", "Post-2010 slope change",
+  "Intercept", "Trend before 2010", "Level change in 2010", "Trend change since 2010",
   rep("Intercept", n_other),
-  rep("Pre-2010 slope", n_other),
-  rep("Jump at 2010", n_other),
-  rep("Post-2010 slope change", n_other)
+  rep("Trend before 2010", n_other),
+  rep("Level change in 2010", n_other),
+  rep("Trend change since 2010", n_other)
 )
 
 topic_labels_df <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
@@ -920,7 +920,7 @@ per_topic_effects <- hyp$hypothesis %>%
     `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
   ) %>%
   select(Topic, Effect, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`, Sig) %>%
-  arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Effect, levels = c("Intercept", "Pre-2010 slope", "Jump at 2010", "Post-2010 slope change")))
+  arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Effect, levels = c("Intercept", "Trend before 2010", "Level change in 2010", "Trend change since 2010")))
 
 save_as_docx(flextable(per_topic_effects),
              path = "evolution/per_topic_effects.docx")
