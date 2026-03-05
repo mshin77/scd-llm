@@ -731,11 +731,9 @@ DT::datatable(
 </iframe>
 :::
 
-# Bayesian Modeling
+# Bayesian Negative Binomial Piecewise Regression
 
-### Bayesian Negative Binomial Piecewise Regression
-
-#### Dispersion Ratio
+### Dispersion Ratio
 
 ```{r}
 mean_val <- mean(new_word_count_df$Count)
@@ -744,25 +742,21 @@ overdispersion_ratio <- var_val / mean_val
 overdispersion_ratio
 ```
 
-#### Preprocess
+### Preprocess
 
 ```{r, eval=FALSE}
 #| code-fold: false
 new_word_count_data <- new_word_count_df %>%
   group_by(Topic) %>%
-  dplyr::mutate(
-    init_year = min(Year, na.rm = TRUE)) %>%
+  mutate(
+    year_init_c = Year - min(Year, na.rm = TRUE),
+    jump_2010 = as.integer(Year >= 2010),
+    slope_2010 = (Year - 2010) * jump_2010
+  ) %>%
   ungroup()
-
-new_word_count_data <- new_word_count_data %>%
-  group_by(Topic) %>%
-  dplyr::mutate(year_init_c = Year - first(na.omit(init_year))) %>%
-  dplyr::mutate(jump_2010 = as.integer(I(Year >= 2010))) %>%
-  dplyr::mutate(slope_2010 = (Year - 2010)*jump_2010) %>%
-  select(-init_year) 
 ```
 
-#### Estimate the Model
+### Estimate the Model
 
 ```{r, eval=FALSE}
 new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
@@ -820,10 +814,10 @@ model_new_word_results <- coefs %>%
 
 model_new_word_results_apa <- model_new_word_results %>%
   mutate(
-    `Estimate (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
-    `Estimate 95% CI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
+    `Est (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
+    `95% CrI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
     `IRR` = sprintf("%.2f", IRR),
-    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
+    `IRR 95% CrI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
     Sig = ifelse(Q2.5 > 0 | Q97.5 < 0, "*", ""),
 
     Variable = case_when(
@@ -838,7 +832,7 @@ model_new_word_results_apa <- model_new_word_results %>%
       TRUE ~ Variable
     )
   ) %>%
-  select(Variable, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`, Sig)
+  select(Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig)
 
 save_as_docx(flextable(model_new_word_results_apa),
              path = "evolution/model_new_word_results_apa.docx")
@@ -852,7 +846,7 @@ summary(model_new_word)
 ```
 :::
 
-#### Posterior Predictive Checks
+### Posterior Predictive Checks
 
 ```{r, echo=FALSE}
 pp_check(model_new_word, type = "ecdf_overlay", ndraws = 100) +
@@ -860,14 +854,14 @@ pp_check(model_new_word, type = "ecdf_overlay", ndraws = 100) +
   ylab("Cumulative proportion")
 ```
 
-#### LOO-CV
+### LOO-CV
 
 ```{r, echo=FALSE}
 loo_piecewise <- loo(model_new_word, moment_match = TRUE)
 print(loo_piecewise)
 ```
 
-#### Topic-Specific Piecewise Effects
+### Piecewise Regressions by Topic
 
 ```{r, eval=FALSE}
 # Total piecewise effects per topic via hypothesis()
@@ -905,7 +899,7 @@ topic_labels_df <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
 per_topic_effects <- hyp$hypothesis %>%
   mutate(
     Topic = topic_vec,
-    Effect = effect_vec,
+    Variable = effect_vec,
     IRR = exp(Estimate),
     IRR_lower = exp(CI.Lower),
     IRR_upper = exp(CI.Upper),
@@ -914,13 +908,13 @@ per_topic_effects <- hyp$hypothesis %>%
   left_join(topic_labels_df, by = "Topic") %>%
   mutate(
     `Topic` = paste0(Topic, ": ", CustomLabel),
-    `Estimate (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
-    `Estimate 95% CI` = sprintf("[%.2f, %.2f]", CI.Lower, CI.Upper),
+    `Est (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
+    `95% CrI` = sprintf("[%.2f, %.2f]", CI.Lower, CI.Upper),
     `IRR` = sprintf("%.2f", IRR),
-    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
+    `IRR 95% CrI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
   ) %>%
-  select(Topic, Effect, `Estimate (SD)`, `Estimate 95% CI`, IRR, `IRR 95% CI`, Sig) %>%
-  arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Effect, levels = c("Intercept", "Trend before 2010", "Level change in 2010", "Trend change since 2010")))
+  select(Topic, Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig) %>%
+  arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Variable, levels = c("Intercept", "Trend before 2010", "Level change in 2010", "Trend change since 2010")))
 
 save_as_docx(flextable(per_topic_effects),
              path = "evolution/per_topic_effects.docx")
@@ -941,7 +935,7 @@ DT::datatable(
 )
 ```
 
-#### Between-Topic Comparisons
+### Piecewise Contrasts Between Topics
 
 ```{r, echo=FALSE}
 DT::datatable(
@@ -958,7 +952,7 @@ DT::datatable(
 )
 ```
 
-#### Predicted New Word Trajectories
+### Predicted New Word Trajectories
 
 ```{r, eval=FALSE}
 predData <- expand.grid(
@@ -974,7 +968,7 @@ predData <- predData %>%
   left_join(topic_starts, by = "Topic") %>%
   mutate(
     year_init_c = Year - init_year,
-    jump_2010 = as.integer(I(Year >= 2010)),
+    jump_2010 = as.integer(Year >= 2010),
     slope_2010 = (Year - 2010) * jump_2010
   ) %>%
   select(-init_year)
