@@ -787,13 +787,41 @@ model_new_word <- brm(
 
 coefs <- fixef(model_new_word)
 
+topic_labels_df <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
+  select(Topic, CustomLabel) %>%
+  distinct()
+
+topic_starts <- new_word_count_df %>%
+  group_by(Topic) %>%
+  summarise(First_Year = as.character(min(Year, na.rm = TRUE)), .groups = "drop")
+```
+
+::: {.callout-note collapse="true" appearance="simple" icon=false}
+
+## MCMC Diagnostics
+
+```{r, echo=FALSE}
+summary(model_new_word)
+```
+:::
+
+### Posterior Predictive Checks
+
+```{r, echo=FALSE}
+pp_check(model_new_word, type = "ecdf_overlay", ndraws = 100) +
+  xlab("Count of new words") +
+  ylab("Cumulative proportion")
+```
+
+### Piecewise Contrasts Between Topics
+
+```{r, eval=FALSE}
 topics <- sort(as.integer(str_extract(
   grep("^Topic\\d+$", rownames(coefs), value = TRUE), "\\d+"
 )))
-var_order <- c("Intercept", paste0("Topic", topics),
-  "year_c", paste0("year_c:Topic", topics),
-  "post_2010",  paste0("post_2010:Topic", topics),
-  "post_2010_years", paste0("post_2010_years:Topic", topics))
+var_order <- c("Intercept", "year_c", "post_2010", "post_2010_years",
+  paste0(rep(c("", "year_c:", "post_2010:", "post_2010_years:"), times = length(topics)),
+         "Topic", rep(topics, each = 4)))
 
 model_new_word_results <- coefs %>%
   as.data.frame() %>%
@@ -822,28 +850,26 @@ save_as_docx(flextable(model_new_word_results_apa),
              path = "evolution/model_new_word_results_apa.docx")
 ```
 
-::: {.callout-note collapse="true" appearance="simple" icon=false}
-
-## MCMC Diagnostics
-
 ```{r, echo=FALSE}
-summary(model_new_word)
-```
-:::
-
-### Posterior Predictive Checks
-
-```{r, echo=FALSE}
-pp_check(model_new_word, type = "ecdf_overlay", ndraws = 100) +
-  xlab("Count of new words") +
-  ylab("Cumulative proportion")
+DT::datatable(
+  model_new_word_results_apa,
+  options = list(
+    dom = 'Bfrtip',
+    buttons = c('copy', 'csv', 'excel', 'pdf'),
+    pageLength = 10,
+    scrollX = TRUE
+  ),
+  extensions = 'Buttons',
+  class = "cell-border stripe",
+  rownames = FALSE
+)
 ```
 
 ### Piecewise Regressions by Topic
 
 ```{r, eval=FALSE}
-# Total piecewise effects per topic via hypothesis()
 topics_other <- setdiff(levels(new_word_count_data$Topic), "4")
+effects <- c("Intercept", "year_c", "post_2010", "post_2010_years")
 
 hyp_strings <- c(
   # Topic 4 (reference) — main effects are the total effects
@@ -862,16 +888,7 @@ hyp <- hypothesis(model_new_word, hyp_strings)
 
 n_other <- length(topics_other)
 topic_vec <- c(rep("4", 4), rep(topics_other, 4))
-effects <- c("Intercept", "year_c", "post_2010", "post_2010_years")
 effect_vec <- c(effects, rep(effects, each = n_other))
-
-topic_labels_df <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
-  select(Topic, CustomLabel) %>%
-  distinct()
-
-topic_starts <- new_word_count_df %>%
-  group_by(Topic) %>%
-  summarise(First_Year = as.character(min(Year, na.rm = TRUE)), .groups = "drop")
 
 per_topic_effects <- hyp$hypothesis %>%
   mutate(
@@ -913,23 +930,6 @@ DT::datatable(
 )
 ```
 
-### Piecewise Contrasts Between Topics
-
-```{r, echo=FALSE}
-DT::datatable(
-  model_new_word_results_apa,
-  options = list(
-    dom = 'Bfrtip',
-    buttons = c('copy', 'csv', 'excel', 'pdf'),
-    pageLength = 10,
-    scrollX = TRUE
-  ),
-  extensions = 'Buttons',
-  class = "cell-border stripe",
-  rownames = FALSE
-)
-```
-
 ### Predicted New Word Trajectories
 
 ```{r, eval=FALSE}
@@ -938,18 +938,14 @@ predData <- expand.grid(
   Topic = unique(new_word_count_df$Topic)
 )
 
-topic_starts <- new_word_count_df %>%
-  group_by(Topic) %>%
-  summarise(init_year = min(Year, na.rm = TRUE))
-
 predData <- predData %>%
-  left_join(topic_starts, by = "Topic") %>%
+  left_join(topic_starts %>% mutate(First_Year = as.integer(First_Year)), by = "Topic") %>%
   mutate(
-    year_c = Year - init_year,
+    year_c = Year - First_Year,
     post_2010 = as.integer(Year >= 2010),
     post_2010_years = (Year - 2010) * post_2010
   ) %>%
-  select(-init_year)
+  select(-First_Year)
 
 pred <- predict(model_new_word, newdata = predData, probs = c(0.025, 0.975))
 predData$pred <- pred[, "Estimate"]
