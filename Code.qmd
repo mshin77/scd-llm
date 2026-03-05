@@ -839,12 +839,12 @@ model_new_word_results <- coefs %>%
 model_new_word_results_apa <- model_new_word_results %>%
   mutate(
     `Est (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
-    `95% CrI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
+    `95% CI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
     `IRR` = sprintf("%.2f", IRR),
-    `IRR 95% CrI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
+    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
     Sig = ifelse(Q2.5 > 0 | Q97.5 < 0, "*", "")
   ) %>%
-  select(Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig)
+  select(Variable, `Est (SD)`, `95% CI`, IRR, `IRR 95% CI`, Sig)
 
 save_as_docx(flextable(model_new_word_results_apa),
              path = "evolution/model_new_word_results_apa.docx")
@@ -904,11 +904,11 @@ per_topic_effects <- hyp$hypothesis %>%
   mutate(
     `Topic` = paste0(Topic, ": ", CustomLabel),
     `Est (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
-    `95% CrI` = sprintf("[%.2f, %.2f]", CI.Lower, CI.Upper),
+    `95% CI` = sprintf("[%.2f, %.2f]", CI.Lower, CI.Upper),
     `IRR` = sprintf("%.2f", IRR),
-    `IRR 95% CrI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
+    `IRR 95% CI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
   ) %>%
-  select(Topic, First_Year, Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig) %>%
+  select(Topic, First_Year, Variable, `Est (SD)`, `95% CI`, IRR, `IRR 95% CI`, Sig) %>%
   arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Variable, levels = effects))
 
 save_as_docx(flextable(per_topic_effects),
