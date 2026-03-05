@@ -869,6 +869,10 @@ topic_labels_df <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
   select(Topic, CustomLabel) %>%
   distinct()
 
+topic_starts <- new_word_count_df %>%
+  group_by(Topic) %>%
+  summarise(First_Year = min(Year, na.rm = TRUE), .groups = "drop")
+
 per_topic_effects <- hyp$hypothesis %>%
   mutate(
     Topic = topic_vec,
@@ -879,6 +883,7 @@ per_topic_effects <- hyp$hypothesis %>%
     Sig = ifelse(CI.Lower > 0 | CI.Upper < 0, "*", "")
   ) %>%
   left_join(topic_labels_df, by = "Topic") %>%
+  left_join(topic_starts, by = "Topic") %>%
   mutate(
     `Topic` = paste0(Topic, ": ", CustomLabel),
     `Est (SD)` = sprintf("%.2f (%.2f)", Estimate, Est.Error),
@@ -886,7 +891,7 @@ per_topic_effects <- hyp$hypothesis %>%
     `IRR` = sprintf("%.2f", IRR),
     `IRR 95% CrI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
   ) %>%
-  select(Topic, Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig) %>%
+  select(Topic, First_Year, Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig) %>%
   arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Variable, levels = effects))
 
 save_as_docx(flextable(per_topic_effects),
