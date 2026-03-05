@@ -749,9 +749,9 @@ overdispersion_ratio
 new_word_count_data <- new_word_count_df %>%
   group_by(Topic) %>%
   mutate(
-    year_init_c = Year - min(Year, na.rm = TRUE),
-    jump_2010 = as.integer(Year >= 2010),
-    slope_2010 = (Year - 2010) * jump_2010
+    year_c = Year - min(Year, na.rm = TRUE),
+    post_2010 = as.integer(Year >= 2010),
+    post_2010_years = (Year - 2010) * post_2010
   ) %>%
   ungroup()
 ```
@@ -763,8 +763,8 @@ new_word_count_data$Topic <- as.factor(new_word_count_data$Topic)
 new_word_count_data$Topic <- relevel(new_word_count_data$Topic, ref = "4")
 
 formula_new_word <- bf(
-  Count ~ 1 + year_init_c + jump_2010 + slope_2010 +
-    Topic + year_init_c:Topic + jump_2010:Topic + slope_2010:Topic
+  Count ~ 1 + year_c + post_2010 + post_2010_years +
+    Topic + year_c:Topic + post_2010:Topic + post_2010_years:Topic
 )
 
 priors_new_word <- c(
@@ -787,6 +787,14 @@ model_new_word <- brm(
 
 coefs <- fixef(model_new_word)
 
+topics <- sort(as.integer(str_extract(
+  grep("^Topic\\d+$", rownames(coefs), value = TRUE), "\\d+"
+)))
+var_order <- c("Intercept", paste0("Topic", topics),
+  "year_c", paste0("year_c:Topic", topics),
+  "post_2010",  paste0("post_2010:Topic", topics),
+  "post_2010_years", paste0("post_2010_years:Topic", topics))
+
 model_new_word_results <- coefs %>%
   as.data.frame() %>%
   tibble::rownames_to_column("Variable") %>%
@@ -795,22 +803,10 @@ model_new_word_results <- coefs %>%
     IRR_Q2.5 = exp(Q2.5),
     IRR_Q97.5 = exp(Q97.5),
     across(where(is.numeric), ~round(., 2)),
-    
-    topic_num = as.integer(str_extract(Variable, "(?<=Topic)\\d+")),
-    sort_key = case_when(
-      Variable == "Intercept" ~ "1",
-      str_detect(Variable, "^Topic\\d+$") ~ paste0("2_", sprintf("%02d", topic_num)),
-      str_detect(Variable, "year_init_c") & !str_detect(Variable, ":") ~ "3",
-      str_detect(Variable, "year_init_c:") ~ paste0("4_", sprintf("%02d", topic_num)),
-      str_detect(Variable, "jump_2010") & !str_detect(Variable, ":") ~ "5",
-      str_detect(Variable, "jump_2010:") ~ paste0("6_", sprintf("%02d", topic_num)),
-      str_detect(Variable, "slope_2010") & !str_detect(Variable, ":") ~ "7",
-      str_detect(Variable, "slope_2010:") ~ paste0("8_", sprintf("%02d", topic_num)),
-      TRUE ~ "9"
-    )
+    Variable = factor(Variable, levels = var_order)
   ) %>%
-  arrange(sort_key) %>%
-  select(-topic_num, -sort_key)
+  arrange(Variable) %>%
+  mutate(Variable = as.character(Variable))
 
 model_new_word_results_apa <- model_new_word_results %>%
   mutate(
@@ -818,19 +814,7 @@ model_new_word_results_apa <- model_new_word_results %>%
     `95% CrI` = sprintf("[%.2f, %.2f]", Q2.5, Q97.5),
     `IRR` = sprintf("%.2f", IRR),
     `IRR 95% CrI` = sprintf("[%.2f, %.2f]", IRR_Q2.5, IRR_Q97.5),
-    Sig = ifelse(Q2.5 > 0 | Q97.5 < 0, "*", ""),
-
-    Variable = case_when(
-      Variable == "Intercept" ~ "Intercept",
-      str_detect(Variable, "^Topic\\d+$") ~ paste("Topic", str_extract(Variable, "\\d+")),
-      Variable == "year_init_c" ~ "Trend before 2010",
-      Variable == "jump_2010" ~ "Level change in 2010",
-      Variable == "slope_2010" ~ "Trend change since 2010",
-      str_detect(Variable, "year_init_c:Topic") ~ paste("Trend before 2010 × Topic", str_extract(Variable, "\\d+$")),
-      str_detect(Variable, "jump_2010:Topic") ~ paste("Level change in 2010 × Topic", str_extract(Variable, "\\d+$")),
-      str_detect(Variable, "slope_2010:Topic") ~ paste("Trend change since 2010 × Topic", str_extract(Variable, "\\d+$")),
-      TRUE ~ Variable
-    )
+    Sig = ifelse(Q2.5 > 0 | Q97.5 < 0, "*", "")
   ) %>%
   select(Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig)
 
@@ -839,6 +823,7 @@ save_as_docx(flextable(model_new_word_results_apa),
 ```
 
 ::: {.callout-note collapse="true" appearance="simple" icon=false}
+
 ## MCMC Diagnostics
 
 ```{r, echo=FALSE}
@@ -854,13 +839,6 @@ pp_check(model_new_word, type = "ecdf_overlay", ndraws = 100) +
   ylab("Cumulative proportion")
 ```
 
-### LOO-CV
-
-```{r, echo=FALSE}
-loo_piecewise <- loo(model_new_word, moment_match = TRUE)
-print(loo_piecewise)
-```
-
 ### Piecewise Regressions by Topic
 
 ```{r, eval=FALSE}
@@ -870,27 +848,22 @@ topics_other <- setdiff(levels(new_word_count_data$Topic), "4")
 hyp_strings <- c(
   # Topic 4 (reference) — main effects are the total effects
   "Intercept = 0",
-  "year_init_c = 0",
-  "jump_2010 = 0",
-  "slope_2010 = 0",
+  "year_c = 0",
+  "post_2010 = 0",
+  "post_2010_years = 0",
   # Other topics — main + interaction = total effect
   paste0("Intercept + Topic", topics_other, " = 0"),
-  paste0("year_init_c + year_init_c:Topic", topics_other, " = 0"),
-  paste0("jump_2010 + jump_2010:Topic", topics_other, " = 0"),
-  paste0("slope_2010 + slope_2010:Topic", topics_other, " = 0")
+  paste0("year_c + year_c:Topic", topics_other, " = 0"),
+  paste0("post_2010 + post_2010:Topic", topics_other, " = 0"),
+  paste0("post_2010_years + post_2010_years:Topic", topics_other, " = 0")
 )
 
 hyp <- hypothesis(model_new_word, hyp_strings)
 
 n_other <- length(topics_other)
 topic_vec <- c(rep("4", 4), rep(topics_other, 4))
-effect_vec <- c(
-  "Intercept", "Trend before 2010", "Level change in 2010", "Trend change since 2010",
-  rep("Intercept", n_other),
-  rep("Trend before 2010", n_other),
-  rep("Level change in 2010", n_other),
-  rep("Trend change since 2010", n_other)
-)
+effects <- c("Intercept", "year_c", "post_2010", "post_2010_years")
+effect_vec <- c(effects, rep(effects, each = n_other))
 
 topic_labels_df <- readxl::read_excel("../data/df.xlsx", col_types = "text") %>%
   select(Topic, CustomLabel) %>%
@@ -914,7 +887,7 @@ per_topic_effects <- hyp$hypothesis %>%
     `IRR 95% CrI` = sprintf("[%.2f, %.2f]", IRR_lower, IRR_upper)
   ) %>%
   select(Topic, Variable, `Est (SD)`, `95% CrI`, IRR, `IRR 95% CrI`, Sig) %>%
-  arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Variable, levels = c("Intercept", "Trend before 2010", "Level change in 2010", "Trend change since 2010")))
+  arrange(as.integer(str_extract(Topic, "^\\d+")), factor(Variable, levels = effects))
 
 save_as_docx(flextable(per_topic_effects),
              path = "evolution/per_topic_effects.docx")
@@ -967,9 +940,9 @@ topic_starts <- new_word_count_df %>%
 predData <- predData %>%
   left_join(topic_starts, by = "Topic") %>%
   mutate(
-    year_init_c = Year - init_year,
-    jump_2010 = as.integer(Year >= 2010),
-    slope_2010 = (Year - 2010) * jump_2010
+    year_c = Year - init_year,
+    post_2010 = as.integer(Year >= 2010),
+    post_2010_years = (Year - 2010) * post_2010
   ) %>%
   select(-init_year)
 
