@@ -91,9 +91,9 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 # Pipeline
 
-![Figure 1. Semi-Automated AI-Driven Publication Screening](files/screening_procedure.png)
+![Figure 1. Semi-Automated Publication Screening](files/screening_procedure.png)
 
-# Screening
+# Semi-Automated Publication Screening 
 
 ### Search Strategy
 
@@ -172,7 +172,7 @@ write.csv(wos, "init_all_data.csv", row.names = FALSE)
 
 A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combined transformer embeddings with categorical and numeric features for binary classification. The model was trained on human-labeled records and used to predict labels for unlabeled records. Classification was performed sequentially: first for single-case design, then for technology use.
 
-#### `Step 1. Text classification for single-case design`
+#### Step 1. Text classification for single-case design
 
 [<i class="fas fa-code"></i> Code](single_case/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
@@ -184,7 +184,7 @@ A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combi
 ![ROC Curve](files/roc_curve_single_case.png)
 :::
 
-#### `Step 2. Text classification for technology use`
+#### Step 2. Text classification for technology use
 
 [<i class="fas fa-code"></i> Code](technology_use/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
@@ -196,14 +196,13 @@ A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combi
 ![ROC Curve](files/roc_curve_technology_use.png)
 :::
 
-#### `Step 3. Filtering studies including methodology content`
+#### Step 3. Filtering studies including methodology content
 
 [<i class="fas fa-code"></i> Code](methodology/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
--   Employed a list of **77 wild expressions**, composed with **regular expressions** to process the data.
--   See Code to get the full list of methodology-related terms.
+[Employed a list of **77 wildcard expressions** using **regular expressions** to filter methodology content. See Code for the full list.]{style="background-color: #EBECF0; padding: 5px; border-left: 3px solid #949494; display: inline-block; margin: 10px 0;"}
 
-# Bibliometrics
+# Descriptive Bibliometric Analysis 
 
 ### Main Findings
 
@@ -437,7 +436,7 @@ load("files/world_map.RData")
 world_map
 ```
 
-# Topic Modeling
+# Contextualized Topic Modeling and LLM-Assisted Topic Labeling 
 
 [<i class="fas fa-code"></i> Code](topic_modeling/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 4](topic_modeling/fig_cluster.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 5](topic_modeling/fig_cosine_sim.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
@@ -453,7 +452,19 @@ world_map
 </iframe>
 :::
 
-# Word Network
+
+# Word Co-Occurrence Network Analysis
+
+### Interactive Word Networks 
+
+[<i class="fas fa-external-link-alt"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
+
+::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
+<iframe src="https://mkshin.shinyapps.io/scd_network/" style="width: 100%; height: 100%; border: none;">
+
+</iframe>
+:::
+
 
 ### Word Usage Summary
 
@@ -721,15 +732,6 @@ DT::datatable(
 )
 ```
 
-### Word Co-Occurrence Network Analysis
-
-[<i class="fas fa-external-link-alt"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
-
-::: {.iframe-container style="width: 100%; max-width: 800px; height: 800px; margin: 0 auto;"}
-<iframe src="https://mkshin.shinyapps.io/scd_network/" style="width: 100%; height: 100%; border: none;">
-
-</iframe>
-:::
 
 # Bayesian Negative Binomial Piecewise Regression
 
