@@ -13,6 +13,10 @@ format:
     highlight: tango
 ---
 
+[This website](https://mshin77.github.io/scd-llm/) contains `Data` and `R and Python code` used for the analyses in Shin and McKenna (in press). The scripts were also posted through an online data repository at [Center for Open Science](http://osf.io/fyajc) and [GitHub](https://github.com/mshin77/scd-llm).
+
+Shin, M., & McKenna, J. (in press). Exploring the research landscape on single-case design methodology using technology through text mining and large language models. *Journal of Behavioral Education*.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
@@ -176,13 +180,9 @@ A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combi
 
 [<i class="fas fa-code"></i> Code](single_case/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
-![Figure 2 (a). Training Loss and Accuracy](files/single-case-results.png){alt="Figure 2 (a). Training Loss and Accuracy"}
+![Figure 2 (a). Training Loss and Accuracy](files/single-case-results.png)
 
-::: {layout-ncol="2"}
-![Confusion Matrix](files/confusion_matrix_single_case.png)
-
-![ROC Curve](files/roc_curve_single_case.png)
-:::
+![](files/confusion_roc_single_case.png)
 
 #### Step 2. Text classification for technology use
 
@@ -190,11 +190,7 @@ A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combi
 
 ![Figure 2 (b). Training Loss and Accuracy](files/technology-use-results.png)
 
-::: {layout-ncol="2"}
-![Confusion Matrix](files/confusion_matrix_technology_use.png)
-
-![ROC Curve](files/roc_curve_technology_use.png)
-:::
+![](files/confusion_roc_technology_use.png)
 
 #### Step 3. Filtering studies including methodology content
 
