@@ -97,7 +97,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 ![Figure 1. Semi-Automated Publication Screening](files/screening_procedure.png)
 
-# Semi-Automated Publication Screening 
+# Semi-Automated Publication Screening
 
 ### Search Strategy
 
@@ -182,15 +182,12 @@ A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combi
 
 ![Figure 2 (a). Training Loss and Accuracy](files/single-case-results.png)
 
-![](files/confusion_roc_single_case.png)
-
 #### Step 2. Text classification for technology use
 
 [<i class="fas fa-code"></i> Code](technology_use/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
 ![Figure 2 (b). Training Loss and Accuracy](files/technology-use-results.png)
 
-![](files/confusion_roc_technology_use.png)
 
 #### Step 3. Filtering studies including methodology content
 
@@ -198,7 +195,7 @@ A Transformer-MLP classifier ([pubmlp](https://github.com/mshin77/pubmlp)) combi
 
 [Employed a list of **77 wildcard expressions** using **regular expressions** to filter methodology content. See Code for the full list.]{style="background-color: #EBECF0; padding: 5px; border-left: 3px solid #949494; display: inline-block; margin: 10px 0;"}
 
-# Descriptive Bibliometric Analysis 
+# Descriptive Bibliometric Analysis
 
 ### Main Findings
 
@@ -432,7 +429,7 @@ load("files/world_map.RData")
 world_map
 ```
 
-# Contextualized Topic Modeling and LLM-Assisted Topic Labeling 
+# Contextualized Topic Modeling and LLM-Assisted Topic Labeling
 
 [<i class="fas fa-code"></i> Code](topic_modeling/index.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 4](topic_modeling/fig_cluster.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"} \| [Figure 5](topic_modeling/fig_cosine_sim.html){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
@@ -448,10 +445,9 @@ world_map
 </iframe>
 :::
 
-
 # Word Co-Occurrence Network Analysis
 
-### Interactive Word Networks 
+### Interactive Word Networks
 
 [<i class="fas fa-external-link-alt"></i> Web APP](https://mkshin.shinyapps.io/scd_network/){.hover-effect style="color: #6D6D6D; text-decoration: none;"}
 
@@ -460,7 +456,6 @@ world_map
 
 </iframe>
 :::
-
 
 ### Word Usage Summary
 
@@ -728,7 +723,6 @@ DT::datatable(
 )
 ```
 
-
 # Bayesian Negative Binomial Piecewise Regression
 
 ### Dispersion Ratio
@@ -794,8 +788,7 @@ topic_starts <- new_word_count_df %>%
   summarise(First_Year = as.character(min(Year, na.rm = TRUE)), .groups = "drop")
 ```
 
-::: {.callout-note collapse="true" appearance="simple" icon=false}
-
+::: {.callout-note collapse="true" appearance="simple" icon="false"}
 ## MCMC Diagnostics
 
 ```{r, echo=FALSE}
